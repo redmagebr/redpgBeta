@@ -845,10 +845,6 @@ declare module Server {
     var WEBSOCKET_SERVERURL: string;
     var WEBSOCKET_CONTEXT: string;
     var WEBSOCKET_PORTS: Array<number>;
-    var APPLICATION_URL: string;
-    var WEBSOCKET_SERVERURL: string;
-    var WEBSOCKET_CONTEXT: string;
-    var WEBSOCKET_PORTS: Array<number>;
     function getWebsocketURL(): string;
 }
 declare module Server.AJAX {
