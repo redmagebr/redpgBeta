@@ -1,0 +1,27 @@
+$mainFont: alegreya;
+$secondaryFont: caudex;
+$chatFont: caudex;
+$blueBG : #b2b9cf;
+
+@import "allFonts";
+
+@import "compass/utilities/sprites";
+
+$icons-layout:smart;
+@import "icons/*.png";
+@include all-icons-sprites;
+
+@import "compass/reset";
+
+b { font-weight: bold; }
+
+@import "generalView";
+@import "login";
+@import "windows";
+@import "mainWindow";
+@import "mainWindowSounds";
+@import "mainConfig";
+@import "mainWindowSimple";
+@import "mainChat";
+@import "mainChatMessages";
+@import "buttons";
