@@ -14,8 +14,8 @@ module UI.SoundController {
     bgmSound.parentNode.removeChild(bgmSound);
     seSound.parentNode.removeChild(seSound);
 
-    Application.Config.getConfig("seVolume").addChangeListener(new SimpleListener(function (e : NumberConfiguration) { UI.SoundController.updateSEVolume(e.getValue())}));
-    Application.Config.getConfig("bgmVolume").addChangeListener(new SimpleListener(function (e : NumberConfiguration) { UI.SoundController.updateBGMVolume(e.getValue())}));
+    Application.Config.getConfig("seVolume").addChangeListener(function (e : NumberConfiguration) { UI.SoundController.updateSEVolume(e.getValue())});
+    Application.Config.getConfig("bgmVolume").addChangeListener(function (e : NumberConfiguration) { UI.SoundController.updateBGMVolume(e.getValue())});
 
     export function updateSEVolume (newVolume : number) {
         var volume : number;
@@ -48,10 +48,12 @@ module UI.SoundController {
         var msg = new ChatSystemMessage(true);
         msg.addText("_CHATBGMERROR_");
         msg.addText(" ");
-        var list = new SimpleListener(function () {
-            this.soundList.click();
-        });
-        list.setValue("soundList", soundList);
+        var list = {
+            soundList : soundList,
+            handleEvent : function () {
+                this.soundList.click();
+            }
+        }
         msg.addTextLink("_CHATSOUNDADDMORE_", true, list);
 
         UI.Chat.printElement(msg.getElement());
@@ -61,14 +63,20 @@ module UI.SoundController {
         var msg = new ChatSystemMessage(true);
         msg.addText("_CHATSEERROR_");
         msg.addText(" ");
-        var list = new SimpleListener(function () {
-            this.soundList.click();
-        });
-        list.setValue("soundList", soundList);
+        var list = {
+            soundList : soundList,
+            handleEvent : function () {
+                this.soundList.click();
+            }
+        };
         msg.addTextLink("_CHATSOUNDADDMORE_", true, list);
 
         UI.Chat.printElement(msg.getElement());
     });
+
+    export function getSoundList() {
+        return soundList;
+    }
 
     export function getBGM () {
         return bgmSound;

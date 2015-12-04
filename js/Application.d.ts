@@ -37,6 +37,27 @@ interface ChatController {
     onReady: Listener;
     end(): void;
 }
+interface ImageInt {
+    getName(): string;
+    getLink(): string;
+    getId(): string;
+}
+declare class ImageRed implements ImageInt {
+    private name;
+    private uploader;
+    private uuid;
+    getLink(): string;
+    getName(): string;
+    getId(): string;
+}
+declare class ImageLink implements ImageInt {
+    private name;
+    private id;
+    private url;
+    getLink(): string;
+    getId(): string;
+    getName(): string;
+}
 declare class User {
     nickname: string;
     nicknamesufix: string;
@@ -151,28 +172,23 @@ declare class SheetInstance {
     setValues(values: Object, local: boolean): void;
     updateFromObject(obj: Object): void;
 }
-declare class SimpleListener implements Listener {
-    handleEvent: Function;
-    constructor(f: Function);
-    setValue(id: string, value: any): void;
-    getValue(id: string): any;
-}
 declare class AJAXConfig {
     private _target;
     private _url;
     private _timeout;
     private _responseType;
     private _data;
-    TARGET_NONE: number;
-    TARGET_GLOBAL: number;
-    TARGET_LEFT: number;
-    TARGET_RIGHT: number;
+    static TARGET_NONE: number;
+    static TARGET_GLOBAL: number;
+    static TARGET_LEFT: number;
+    static TARGET_RIGHT: number;
     constructor(url: string);
     target: number;
     url: string;
     timeout: number;
     responseType: string;
     data: Object;
+    setData(id: string, value: any): void;
     setResponseTypeJSON(): void;
     setResponseTypeText(): void;
     setTargetNone(): void;
@@ -186,7 +202,10 @@ declare class WebsocketController {
     private keepAlive;
     private keepAliveTime;
     private keepAliveInterval;
+    private static READYSTATE_CONNECTING;
     private static READYSTATE_OPEN;
+    private static READYSTATE_CLOSING;
+    private static READYSTATE_CLOSED;
     private onOpen;
     private onClose;
     private onMessage;
@@ -231,7 +250,7 @@ declare class Configuration {
     constructor(defV: any);
     getDefault(): any;
     reset(): void;
-    addChangeListener(listener: Listener): void;
+    addChangeListener(listener: Listener | Function): void;
     storeValue(value: any): boolean;
     getValue(): any;
 }
@@ -370,7 +389,7 @@ declare class ChatSystemMessage {
     private hasLanguage;
     constructor(hasLanguage: boolean);
     addLangVar(id: string, value: string): void;
-    addTextLink(text: string, hasLanguage: boolean, click: Listener): void;
+    addTextLink(text: string, hasLanguage: boolean, click: Listener | Function): void;
     addText(text: string): void;
     addElement(ele: HTMLElement): void;
     getElement(): HTMLElement;
@@ -411,6 +430,7 @@ declare class Message extends SlashCommand {
     private updatedListeners;
     protected html: HTMLElement;
     clone: boolean;
+    getDate(): string;
     onPrint(): void;
     setPersona(name: string): void;
     getPersona(): string;
@@ -434,7 +454,7 @@ declare class Message extends SlashCommand {
     setMsg(str: string): void;
     getMsg(): string;
     unsetSpecial(id: string): void;
-    addUpdatedListener(list: Listener): void;
+    addUpdatedListener(list: Listener | Function): void;
     triggerUpdated(): void;
     doNotPrint(): boolean;
 }
@@ -640,14 +660,16 @@ declare module Application {
 }
 declare module Application.Config {
     function getConfig(id: string): Configuration;
-    function registerChangeListener(id: string, listener: Listener): void;
+    function registerChangeListener(id: string, listener: Listener | Function): void;
     function registerConfiguration(id: string, config: Configuration): void;
     function exportAsObject(): {
         [id: string]: any;
     };
+    function reset(): void;
     function updateFromObject(obj: {
         [id: string]: any;
     }): void;
+    function saveConfig(cbs?: Listener | Function, cbe?: Listener | Function): void;
 }
 declare module Application.LocalMemory {
     function getMemory(id: string, defaultValue: any): any;
@@ -703,6 +725,8 @@ declare module UI.WindowManager {
 }
 declare module UI.Config {
     function bindInput(configName: string, input: HTMLInputElement): void;
+    function saveConfig(): void;
+    function setUniqueTimeout(f: Function, t: number): void;
 }
 declare module UI.PageManager {
     var $pages: {
@@ -756,6 +780,7 @@ declare module UI.Games {
 declare module UI.SoundController {
     function updateSEVolume(newVolume: number): void;
     function updateBGMVolume(newVolume: number): void;
+    function getSoundList(): HTMLInputElement;
     function getBGM(): HTMLAudioElement;
     function playDice(): void;
     function playAlert(): void;
@@ -842,18 +867,29 @@ declare module UI.Chat.PersonaDesigner {
 }
 declare module Server {
     var APPLICATION_URL: string;
+    var IMAGE_URL: string;
+    var WEBSOCKET_SERVERURL: string;
+    var WEBSOCKET_CONTEXT: string;
+    var WEBSOCKET_PORTS: Array<number>;
+    var APPLICATION_URL: string;
     var WEBSOCKET_SERVERURL: string;
     var WEBSOCKET_CONTEXT: string;
     var WEBSOCKET_PORTS: Array<number>;
     function getWebsocketURL(): string;
 }
 declare module Server.AJAX {
-    function requestPage(ajax: AJAXConfig, success: any, error: any): void;
+    function requestPage(ajax: AJAXConfig, success: Listener | Function, error: Listener | Function): void;
+}
+declare module Server.Config {
+    function saveConfig(config: Object, cbs?: Listener | Function, cbe?: Listener | Function): void;
 }
 declare module Server.Login {
     function requestSession(silent: boolean, cbs?: Listener, cbe?: Listener): void;
     function doLogin(email: string, password: string, cbs?: Listener, cbe?: Listener): void;
     function doLogout(cbs?: Listener, cbe?: Listener): void;
+}
+declare module Server.Images {
+    function getImages(cbs?: Listener, cbe?: Listener): void;
 }
 declare module Server.Games {
     function updateLists(cbs?: Listener, cbe?: Listener): void;
@@ -889,4 +925,9 @@ declare module Server.Chat.Memory {
     function updateFromObject(obj: {
         [id: string]: any;
     }): void;
+}
+declare module Server.Storage {
+    function requestSounds(ajaxTarget: number, cbs?: Listener, cbe?: Listener): void;
+    function requestImages(ajaxTarget: number, cbs?: Listener, cbe?: Listener): void;
+    function requestStorage(id: string, ajaxTarget: number, cbs?: Listener, cbe?: Listener): void;
 }

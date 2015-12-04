@@ -2,7 +2,7 @@
  * Created by Reddo on 16/09/2015.
  */
 class Configuration {
-    private changeListeners : Array <Listener> = [];
+    private changeListeners : Array <Listener | Function> = [];
     protected value : any = null;
     public defValue : any = null;
 
@@ -19,10 +19,10 @@ class Configuration {
     }
 
     public reset () {
-        this.value = this.defValue;
+        this.storeValue(this.defValue);
     }
 
-    public addChangeListener (listener : Listener) {
+    public addChangeListener (listener : Listener | Function) {
         this.changeListeners.push(listener);
     }
 
@@ -37,7 +37,11 @@ class Configuration {
 
         if (newValue !== oldValue) {
             for (var i = 0; i < this.changeListeners.length; i++) {
-                this.changeListeners[i].handleEvent(this);
+                if (typeof this.changeListeners[i] === 'function') {
+                    (<Function> this.changeListeners[i])(this);
+                } else {
+                    (<Listener> this.changeListeners[i]).handleEvent(this);
+                }
             }
             return true;
         }

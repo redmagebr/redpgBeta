@@ -12,7 +12,7 @@ class ChatSystemMessage {
         UI.Language.addLanguageVariable(this.element, id, value);
     }
 
-    public addTextLink (text : string, hasLanguage : boolean, click : Listener) {
+    public addTextLink (text : string, hasLanguage : boolean, click : Listener | Function) {
         var a = document.createElement("a");
         a.classList.add("textLink");
 

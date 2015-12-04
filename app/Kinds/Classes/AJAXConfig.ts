@@ -8,10 +8,10 @@ class AJAXConfig {
     private _responseType : string = "json";
     private _data : Object = null;
 
-    public TARGET_NONE = 0;
-    public TARGET_GLOBAL = 1;
-    public TARGET_LEFT = 2;
-    public TARGET_RIGHT = 3;
+    public static TARGET_NONE = 0;
+    public static TARGET_GLOBAL = 1;
+    public static TARGET_LEFT = 2;
+    public static TARGET_RIGHT = 3;
 
     constructor (url : string) {
         this._url = url;
@@ -57,6 +57,13 @@ class AJAXConfig {
         this._data = value;
     }
 
+    public setData (id : string, value : any) {
+        if (this.data === null) {
+            this.data = {};
+        }
+        this.data[id] = value;
+    }
+
     public setResponseTypeJSON () {
         this._responseType = "json";
     }
@@ -66,18 +73,18 @@ class AJAXConfig {
     }
 
     public setTargetNone () {
-        this._target = this.TARGET_NONE;
+        this._target = AJAXConfig.TARGET_NONE;
     }
 
     public setTargetGlobal () {
-        this._target = this.TARGET_GLOBAL;
+        this._target = AJAXConfig.TARGET_GLOBAL;
     }
 
     public setTargetLeftWindow () {
-        this._target = this.TARGET_LEFT;
+        this._target = AJAXConfig.TARGET_LEFT;
     }
 
     public setTargetRightWindow () {
-        this._target = this.TARGET_RIGHT;
+        this._target = AJAXConfig.TARGET_RIGHT;
     }
 }

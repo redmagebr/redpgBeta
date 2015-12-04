@@ -36,6 +36,7 @@
           <a class='musicPlayerButton icons-soundPlayerPause' id='musicPlayerPlayPause'></a>
           <a class='musicPlayerButton icons-soundPlayerStop' id='musicPlayerStop'></a>
           <a class='musicPlayerButton icons-soundPlayerRepeatActive' id='musicPlayerRepeat'></a>
+          <div class='buttonBehavior icons-soundPlayerListButton' id='musicPlayerLocal'></div>
         </div>
       </div>
       <div class='handleBar' id='leftHandleBar'>
@@ -71,6 +72,15 @@
       <div class='leftSideWindow' id='configSideWindow'>
         <div class='mainWindowHeader language'>_CONFIGTITLE_</div>
         <div class='mainWindowContent singleton'>
+          <p class='hoverable mainWindowParagraph centered'>
+            <a class='textLink language' id='configSave'>_CONFIGSAVE_</a>
+            -
+            <a class='textLink language' id='configReset'>_CONFIGRESET_</a>
+          </p>
+          <p class='mainWindowParagraph centered' id='configMessages'>
+            <b class='language' id='configError'>_CONFIGERROR_</b>
+            <b class='language' id='configSuccess'>_CONFIGSUCCESS_</b>
+          </p>
           <label class='configLabel'>
             <b class='configName language'>_CONFIGCHATMAXMESSAGES_</b>
             <input class='configInput' id='configChatMaxMessages' max='10000' min='60' type='number' value='120'>
@@ -151,6 +161,20 @@
             <input class='configInput' id='configAnimTime' max='300' min='0' type='range' value='150'>
             <div class='configExplanation language'>
               _ANIMATIONTIMEEXP01_<br>_ANIMATIONTIMEEXP02_
+            </div>
+          </label>
+          <label class='configLabel'>
+            <b class='configName language'>_CONFIGBGMVOLUME_</b>
+            <input class='configInput' id='configBGMVolume' max='100' min='0' type='range' value='0'>
+            <div class='configExplanation language'>
+              _CONFIGBGMVOLUMEEXP_
+            </div>
+          </label>
+          <label class='configLabel'>
+            <b class='configName language'>_CONFIGSEVOLUME_</b>
+            <input class='configInput' id='configSEVolume' max='100' min='0' type='range' value='0'>
+            <div class='configExplanation language'>
+              _CONFIGSEVOLUMEEXP_
             </div>
           </label>
         </div>

@@ -21,11 +21,18 @@ class Message extends SlashCommand {
     public origin : number = 0;
     public destination : Number | Array<number> = null;
 
-    private updatedListeners : Array<Listener> = [];
+    private updatedListeners : Array<Listener | Function> = [];
 
     protected html : HTMLElement = null;
 
     public clone : boolean = false;
+
+    public getDate () {
+        if (this.date === "" || this.date === null) {
+            return null;
+        }
+        return this.date;
+    }
 
     public onPrint () {};
 
@@ -295,13 +302,17 @@ class Message extends SlashCommand {
         delete (this.special[id]);
     }
 
-    public addUpdatedListener (list : Listener) {
+    public addUpdatedListener (list : Listener | Function) {
         this.updatedListeners.push(list);
     }
 
     public triggerUpdated () {
         for (var i = 0; i < this.updatedListeners.length; i++) {
-            this.updatedListeners[i].handleEvent(this);
+            if (typeof this.updatedListeners[i] === 'function') {
+                (<Function> this.updatedListeners[i])(this);
+            } else {
+                (<Listener> this.updatedListeners[i]).handleEvent(this);
+            }
         }
 
         if (this.sending !== null) {

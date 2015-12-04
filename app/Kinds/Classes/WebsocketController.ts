@@ -5,7 +5,10 @@ class WebsocketController {
     private keepAliveTime : number = 15 * 1000;
     private keepAliveInterval = null;
 
+    private static READYSTATE_CONNECTING : number = 0;
     private static READYSTATE_OPEN : number = 1;
+    private static READYSTATE_CLOSING : number = 2;
+    private static READYSTATE_CLOSED : number = 3;
 
     private onOpen : Array<Listener> = [];
     private onClose : Array<Listener> = [];
@@ -106,7 +109,9 @@ class WebsocketController {
     }
 
     public close () {
-        this.socket.close();
+        if (this.socket !== null && (this.socket.readyState === WebsocketController.READYSTATE_CONNECTING || this.socket.readyState === WebsocketController.READYSTATE_OPEN)) {
+            this.socket.close();
+        }
     }
 
     public addCloseListener (obj : Listener) {

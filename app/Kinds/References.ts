@@ -7,14 +7,16 @@
 /// <reference path='Interfaces/PersonaInfo.ts' />
 /// <reference path='Interfaces/PersonaLocalInfo.ts' />
 /// <reference path='Interfaces/ChatController.ts' />
+/// <reference path='Interfaces/ImageInt.ts' />
 
+/// <reference path='Classes/ImageRed.ts' />
+/// <reference path='Classes/ImageLink.ts' />
 /// <reference path='Classes/User.ts' />
 /// <reference path='Classes/UserGameContext.ts' />
 /// <reference path='Classes/UserRoomContext.ts' />
 /// <reference path='Classes/Room.ts' />
 /// <reference path='Classes/Game.ts' />
 /// <reference path='Classes/SheetInstance.ts' />
-/// <reference path='Classes/SimpleListener.ts' />
 
 /// <reference path='Classes/AJAXConfig.ts' />
 /// <reference path='Classes/WebsocketController.ts' />

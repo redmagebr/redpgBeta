@@ -1,3 +1,15 @@
+#configError {
+  color: #d7003b;
+}
+
+#configSuccess {
+  color: #00a603;
+}
+
+#configMessages {
+  min-height: 20px;
+}
+
 .configLabel {
   @extend .hoverable;
   display: block;

@@ -15,6 +15,11 @@ Application.Login.addListener({
     handleEvent: function () {
         if (Application.Login.isLogged()) {
             UI.WindowManager.callWindow(('mainWindow'));
+
+            // Set up initial pages of main window
+            UI.PageManager.callPage(UI.idChangelog);
+            UI.PageManager.callPage(UI.idHome);
+            //UI.PageManager.callPage(UI.idChat);
         } else {
             UI.WindowManager.callWindow("loginWindow");
             UI.Login.resetState();
@@ -34,11 +39,6 @@ if (Application.Login.hasSession()) {
 } else {
     UI.Login.resetFocus();
 }
-
-// Set up initial pages of main window
-UI.PageManager.callPage(UI.idChangelog);
-UI.PageManager.callPage(UI.idHome);
-UI.PageManager.callPage(UI.idChat);
 
 // Call any onReady listeners
 allReady();

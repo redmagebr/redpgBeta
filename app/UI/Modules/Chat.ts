@@ -1,4 +1,6 @@
 module UI.Chat {
+    var lastDate : string = "";
+
     // Main Box
     var chatBox : HTMLElement = document.getElementById("chatBox");
     var $chatBox : JQuery = $(chatBox);
@@ -95,6 +97,12 @@ module UI.Chat {
     }
 
     export function clearRoom () {
+        var dateObj = new Date();
+        var month = dateObj.getUTCMonth() + 1; //months from 1-12
+        var day = dateObj.getUTCDate();
+        var year = dateObj.getUTCFullYear();
+        lastDate = year + "-" + month + "-" + day;
+
         var parent = chatTarget.parentNode;
         parent.removeChild(chatTarget);
         while (chatTarget.lastChild !== null) {
@@ -127,6 +135,14 @@ module UI.Chat {
     export function printMessage (message : Message, doScroll? : boolean) {
         var element = message.getHTML();
         if (element !== null) {
+            if (message.getDate() !== null && message.getDate() !== lastDate) {
+                lastDate = message.getDate();
+                var msg = new ChatSystemMessage(true);
+                msg.addText("_CHATMESSAGESFROM_");
+                msg.addLangVar("a", lastDate);
+                printElement(msg.getElement());
+            }
+
             chatInfoFloater.bindMessage(message, element);
             printElement(element);
         }

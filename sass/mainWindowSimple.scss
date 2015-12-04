@@ -31,6 +31,11 @@
   line-height: 20px;
   text-align: justify;
   text-indent: 10px;
+
+  &.centered {
+    text-indent: 0px;
+    text-align: center;
+  }
 }
 
 .hoverable:hover {

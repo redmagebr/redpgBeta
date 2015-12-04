@@ -7,7 +7,7 @@ class MessageCountdown extends Message {
     constructor () {
         super();
 
-        this.addUpdatedListener(new SimpleListener(function (e : MessageCountdown) {
+        this.addUpdatedListener(function (e : MessageCountdown) {
             var target = e.getTarget();
             if (target !== null) {
                 var msg : MessageCountdown = <MessageCountdown> DB.MessageDB.getMessage(target);
@@ -17,7 +17,7 @@ class MessageCountdown extends Message {
             } else {
                 e.updateCounter(parseInt(e.getMsg()));
             }
-        }));
+        });
     }
 
     public createHTML () {

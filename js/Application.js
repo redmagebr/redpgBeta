@@ -21,6 +21,35 @@ function allReady() {
         onReady[i].handleEvent();
     }
 }
+var ImageRed = (function () {
+    function ImageRed() {
+    }
+    ImageRed.prototype.getLink = function () {
+        var url = Server.IMAGE_URL + this.uploader + "_" + this.uuid;
+        return url;
+    };
+    ImageRed.prototype.getName = function () {
+        return this.name;
+    };
+    ImageRed.prototype.getId = function () {
+        return this.uuid;
+    };
+    return ImageRed;
+})();
+var ImageLink = (function () {
+    function ImageLink() {
+    }
+    ImageLink.prototype.getLink = function () {
+        return this.url;
+    };
+    ImageLink.prototype.getId = function () {
+        return this.id.toString();
+    };
+    ImageLink.prototype.getName = function () {
+        return this.name;
+    };
+    return ImageLink;
+})();
 var User = (function () {
     function User() {
         this.nickname = "Undefined";
@@ -498,21 +527,6 @@ var SheetInstance = (function () {
     };
     return SheetInstance;
 })();
-var SimpleListener = (function () {
-    function SimpleListener(f) {
-        this.handleEvent = function (e) {
-            console.error("[SimpleListener] Was triggered without having implemented a handleEvent.", arguments);
-        };
-        this.handleEvent = f;
-    }
-    SimpleListener.prototype.setValue = function (id, value) {
-        this[id] = value;
-    };
-    SimpleListener.prototype.getValue = function (id) {
-        return this[id];
-    };
-    return SimpleListener;
-})();
 var AJAXConfig = (function () {
     function AJAXConfig(url) {
         this._target = 0;
@@ -520,10 +534,6 @@ var AJAXConfig = (function () {
         this._timeout = 15000;
         this._responseType = "json";
         this._data = null;
-        this.TARGET_NONE = 0;
-        this.TARGET_GLOBAL = 1;
-        this.TARGET_LEFT = 2;
-        this.TARGET_RIGHT = 3;
         this._url = url;
     }
     Object.defineProperty(AJAXConfig.prototype, "target", {
@@ -576,6 +586,12 @@ var AJAXConfig = (function () {
         enumerable: true,
         configurable: true
     });
+    AJAXConfig.prototype.setData = function (id, value) {
+        if (this.data === null) {
+            this.data = {};
+        }
+        this.data[id] = value;
+    };
     AJAXConfig.prototype.setResponseTypeJSON = function () {
         this._responseType = "json";
     };
@@ -583,17 +599,21 @@ var AJAXConfig = (function () {
         this._responseType = "text";
     };
     AJAXConfig.prototype.setTargetNone = function () {
-        this._target = this.TARGET_NONE;
+        this._target = AJAXConfig.TARGET_NONE;
     };
     AJAXConfig.prototype.setTargetGlobal = function () {
-        this._target = this.TARGET_GLOBAL;
+        this._target = AJAXConfig.TARGET_GLOBAL;
     };
     AJAXConfig.prototype.setTargetLeftWindow = function () {
-        this._target = this.TARGET_LEFT;
+        this._target = AJAXConfig.TARGET_LEFT;
     };
     AJAXConfig.prototype.setTargetRightWindow = function () {
-        this._target = this.TARGET_RIGHT;
+        this._target = AJAXConfig.TARGET_RIGHT;
     };
+    AJAXConfig.TARGET_NONE = 0;
+    AJAXConfig.TARGET_GLOBAL = 1;
+    AJAXConfig.TARGET_LEFT = 2;
+    AJAXConfig.TARGET_RIGHT = 3;
     return AJAXConfig;
 })();
 var WebsocketController = (function () {
@@ -690,7 +710,9 @@ var WebsocketController = (function () {
         }
     };
     WebsocketController.prototype.close = function () {
-        this.socket.close();
+        if (this.socket !== null && (this.socket.readyState === WebsocketController.READYSTATE_CONNECTING || this.socket.readyState === WebsocketController.READYSTATE_OPEN)) {
+            this.socket.close();
+        }
     };
     WebsocketController.prototype.addCloseListener = function (obj) {
         this.onClose.push(obj);
@@ -725,7 +747,10 @@ var WebsocketController = (function () {
             this.onMessage[i].handleEvent(e);
         }
     };
+    WebsocketController.READYSTATE_CONNECTING = 0;
     WebsocketController.READYSTATE_OPEN = 1;
+    WebsocketController.READYSTATE_CLOSING = 2;
+    WebsocketController.READYSTATE_CLOSED = 3;
     return WebsocketController;
 })();
 var ChatWsController = (function () {
@@ -799,7 +824,7 @@ var Configuration = (function () {
         return this.defValue;
     };
     Configuration.prototype.reset = function () {
-        this.value = this.defValue;
+        this.storeValue(this.defValue);
     };
     Configuration.prototype.addChangeListener = function (listener) {
         this.changeListeners.push(listener);
@@ -815,7 +840,12 @@ var Configuration = (function () {
         var newValue = JSON.stringify(this.value);
         if (newValue !== oldValue) {
             for (var i = 0; i < this.changeListeners.length; i++) {
-                this.changeListeners[i].handleEvent(this);
+                if (typeof this.changeListeners[i] === 'function') {
+                    this.changeListeners[i](this);
+                }
+                else {
+                    this.changeListeners[i].handleEvent(this);
+                }
             }
             return true;
         }
@@ -1396,13 +1426,15 @@ var ChatSystemMessage = (function () {
 /// <reference path='Interfaces/PersonaInfo.ts' />
 /// <reference path='Interfaces/PersonaLocalInfo.ts' />
 /// <reference path='Interfaces/ChatController.ts' />
+/// <reference path='Interfaces/ImageInt.ts' />
+/// <reference path='Classes/ImageRed.ts' />
+/// <reference path='Classes/ImageLink.ts' />
 /// <reference path='Classes/User.ts' />
 /// <reference path='Classes/UserGameContext.ts' />
 /// <reference path='Classes/UserRoomContext.ts' />
 /// <reference path='Classes/Room.ts' />
 /// <reference path='Classes/Game.ts' />
 /// <reference path='Classes/SheetInstance.ts' />
-/// <reference path='Classes/SimpleListener.ts' />
 /// <reference path='Classes/AJAXConfig.ts' />
 /// <reference path='Classes/WebsocketController.ts' />
 /// <reference path='Classes/ChatWsController.ts' />
@@ -1561,6 +1593,12 @@ var Message = (function (_super) {
         this.html = null;
         this.clone = false;
     }
+    Message.prototype.getDate = function () {
+        if (this.date === "" || this.date === null) {
+            return null;
+        }
+        return this.date;
+    };
     Message.prototype.onPrint = function () { };
     ;
     Message.prototype.setPersona = function (name) {
@@ -1754,7 +1792,12 @@ var Message = (function (_super) {
     };
     Message.prototype.triggerUpdated = function () {
         for (var i = 0; i < this.updatedListeners.length; i++) {
-            this.updatedListeners[i].handleEvent(this);
+            if (typeof this.updatedListeners[i] === 'function') {
+                this.updatedListeners[i](this);
+            }
+            else {
+                this.updatedListeners[i].handleEvent(this);
+            }
         }
         if (this.sending !== null) {
             clearTimeout(this.sending);
@@ -1798,7 +1841,7 @@ var MessageCountdown = (function (_super) {
         _super.call(this);
         this.counter = document.createTextNode("99999");
         this.module = "countdown";
-        this.addUpdatedListener(new SimpleListener(function (e) {
+        this.addUpdatedListener(function (e) {
             var target = e.getTarget();
             if (target !== null) {
                 var msg = DB.MessageDB.getMessage(target);
@@ -1809,7 +1852,7 @@ var MessageCountdown = (function (_super) {
             else {
                 e.updateCounter(parseInt(e.getMsg()));
             }
-        }));
+        });
     }
     MessageCountdown.prototype.createHTML = function () {
         if (this.getMsg() === "") {
@@ -2236,11 +2279,11 @@ var MessageWhisper = (function (_super) {
     function MessageWhisper() {
         _super.call(this);
         this.module = "whisper";
-        var list = new SimpleListener(function (message) {
+        var list = function (message) {
             if (!message.isMine()) {
                 UI.Chat.Forms.setLastWhisperFrom(message.getUser());
             }
-        });
+        };
         this.addUpdatedListener(list);
     }
     MessageWhisper.prototype.onPrint = function () {
@@ -2314,9 +2357,11 @@ var MessageWhisper = (function (_super) {
             error.addText("_CHATMULTIPLETARGETSFOUND_");
             error.addText(": ");
             for (var i = 0; i < users.length; i++) {
-                var listener = new SimpleListener(clickF);
-                listener.setValue("target", users[i].getUniqueNickname());
-                listener.setValue("message", message);
+                var listener = {
+                    target: users[i].getUniqueNickname(),
+                    message: message,
+                    handleEvent: clickF
+                };
                 error.addTextLink(users[i].getUniqueNickname(), false, listener);
                 if ((i + 1) < users.length) {
                     error.addText(", ");
@@ -3253,6 +3298,12 @@ var Application;
             return result;
         }
         Config.exportAsObject = exportAsObject;
+        function reset() {
+            for (var key in configList) {
+                configList[key].reset();
+            }
+        }
+        Config.reset = reset;
         function updateFromObject(obj) {
             for (var key in obj) {
                 if (configList[key] === undefined) {
@@ -3264,6 +3315,10 @@ var Application;
             console.debug("[CONFIG] Updated configuration values from:", obj);
         }
         Config.updateFromObject = updateFromObject;
+        function saveConfig(cbs, cbe) {
+            Server.Config.saveConfig(exportAsObject(), cbs, cbe);
+        }
+        Config.saveConfig = saveConfig;
     })(Config = Application.Config || (Application.Config = {}));
 })(Application || (Application = {}));
 var Application;
@@ -3577,10 +3632,15 @@ ptbr.setLingo("_CHATBGMERROR_", "Erro ao tocar música.");
 ptbr.setLingo("_CHATSEERROR_", "Erro ao tocar efeito sonoro.");
 ptbr.setLingo("_CHATSOUNDADDMORE_", "Clique aqui para alterar músicas em uso.");
 ptbr.setLingo("_CHATMESSAGEANNOUNCEMENT_", "AVISO DO SISTEMA");
-ptbr.setLingo("", "");
-ptbr.setLingo("", "");
-ptbr.setLingo("", "");
-ptbr.setLingo("", "");
+ptbr.setLingo("_CHATMESSAGESFROM_", "Mensagens de %a.");
+ptbr.setLingo("_CONFIGSEVOLUME_", "Volume de Efeitos Sonoros");
+ptbr.setLingo("_CONFIGSEVOLUMEEXP_", "Define o volume para efeitos sonoros reproduzidos no RedPG.");
+ptbr.setLingo("_CONFIGBGMVOLUME_", "Volume de Músicas");
+ptbr.setLingo("_CONFIGBGMVOLUMEEXP_", "Define o volume para músicas reproduzidas no RedPG.");
+ptbr.setLingo("_CONFIGSAVE_", "Salvar Configuração");
+ptbr.setLingo("_CONFIGERROR_", "Erro salvando configuração.");
+ptbr.setLingo("_CONFIGSUCCESS_", "Configurações salvas com sucesso.");
+ptbr.setLingo("_CONFIGRESET_", "Resetar Configurações");
 ptbr.setLingo("", "");
 ptbr.setLingo("", "");
 ptbr.setLingo("_PERSONADESIGNERTITLE_", "Administrador de Personas");
@@ -3644,8 +3704,8 @@ var UI;
     Application.Config.registerConfiguration("autoBGM", new NumberConfiguration(1, 0, 2));
     Application.Config.registerConfiguration("autoSE", new NumberConfiguration(1, 0, 2));
     Application.Config.registerConfiguration("autoVIDEO", new NumberConfiguration(1, 0, 2));
-    Application.Config.registerConfiguration("bgmVolume", new NumberConfiguration(50, 25, 100));
-    Application.Config.registerConfiguration("seVolume", new NumberConfiguration(50, 25, 100));
+    Application.Config.registerConfiguration("bgmVolume", new NumberConfiguration(50, 0, 100));
+    Application.Config.registerConfiguration("seVolume", new NumberConfiguration(50, 0, 100));
     Application.Config.registerConfiguration("bgmLoop", new BooleanConfiguration(true));
 })(UI || (UI = {}));
 var UI;
@@ -3730,7 +3790,18 @@ var UI;
 (function (UI) {
     var Config;
     (function (Config) {
+        var error = document.getElementById("configError");
+        var success = document.getElementById("configSuccess");
+        var timeout = null;
+        error.style.display = "none";
+        success.style.display = "none";
         document.getElementById("configButton").addEventListener("click", function () { UI.PageManager.callPage(UI.idConfig); });
+        document.getElementById("configSave").addEventListener("click", function () {
+            UI.Config.saveConfig();
+        });
+        document.getElementById("configReset").addEventListener("click", function () {
+            Application.Config.reset();
+        });
         function bindInput(configName, input) {
             Application.Config.getConfig(configName).addChangeListener({
                 input: input,
@@ -3742,7 +3813,9 @@ var UI;
                 configName: configName,
                 input: input,
                 handleEvent: function () {
-                    Application.Config.getConfig(this.configName).storeValue(this.input.value);
+                    var cfg = Application.Config.getConfig(this.configName);
+                    cfg.storeValue(this.input.value);
+                    this.input.value = cfg.getValue().toString();
                 }
             });
             input.value = Application.Config.getConfig(configName).getValue().toString();
@@ -3757,6 +3830,42 @@ var UI;
         bindInput("autoSE", document.getElementById("configChatAutoSE"));
         bindInput("autoImage", document.getElementById("configChatAutoImage"));
         bindInput("autoVIDEO", document.getElementById("configChatAutoVideo"));
+        bindInput("bgmVolume", document.getElementById("configBGMVolume"));
+        bindInput("seVolume", document.getElementById("configSEVolume"));
+        function saveConfig() {
+            var hide = function () {
+                this.finish().fadeOut(Application.Config.getConfig("animTime").getValue());
+            };
+            var cbs = {
+                hide: hide,
+                success: success,
+                handleEvent: function () {
+                    var $success = $(this.success);
+                    $success.finish().fadeIn(Application.Config.getConfig("animTime").getValue());
+                    UI.Config.setUniqueTimeout(this.hide.bind($success), 5000);
+                }
+            };
+            var cbe = {
+                hide: hide,
+                error: error,
+                handleEvent: function () {
+                    var $error = $(this.error);
+                    $error.finish().fadeIn(Application.Config.getConfig("animTime").getValue());
+                    UI.Config.setUniqueTimeout(this.hide.bind($error), 5000);
+                }
+            };
+            success.style.display = "none";
+            error.style.display = "none";
+            Application.Config.saveConfig(cbs, cbe);
+        }
+        Config.saveConfig = saveConfig;
+        function setUniqueTimeout(f, t) {
+            if (timeout !== null) {
+                clearTimeout(timeout);
+            }
+            timeout = setTimeout(f, t);
+        }
+        Config.setUniqueTimeout = setUniqueTimeout;
     })(Config = UI.Config || (UI.Config = {}));
 })(UI || (UI = {}));
 var UI;
@@ -4254,8 +4363,8 @@ var UI;
         alertSound.parentNode.removeChild(alertSound);
         bgmSound.parentNode.removeChild(bgmSound);
         seSound.parentNode.removeChild(seSound);
-        Application.Config.getConfig("seVolume").addChangeListener(new SimpleListener(function (e) { UI.SoundController.updateSEVolume(e.getValue()); }));
-        Application.Config.getConfig("bgmVolume").addChangeListener(new SimpleListener(function (e) { UI.SoundController.updateBGMVolume(e.getValue()); }));
+        Application.Config.getConfig("seVolume").addChangeListener(function (e) { UI.SoundController.updateSEVolume(e.getValue()); });
+        Application.Config.getConfig("bgmVolume").addChangeListener(function (e) { UI.SoundController.updateBGMVolume(e.getValue()); });
         function updateSEVolume(newVolume) {
             var volume;
             if (newVolume > 100) {
@@ -4290,10 +4399,12 @@ var UI;
             var msg = new ChatSystemMessage(true);
             msg.addText("_CHATBGMERROR_");
             msg.addText(" ");
-            var list = new SimpleListener(function () {
-                this.soundList.click();
-            });
-            list.setValue("soundList", soundList);
+            var list = {
+                soundList: soundList,
+                handleEvent: function () {
+                    this.soundList.click();
+                }
+            };
             msg.addTextLink("_CHATSOUNDADDMORE_", true, list);
             UI.Chat.printElement(msg.getElement());
         });
@@ -4301,13 +4412,19 @@ var UI;
             var msg = new ChatSystemMessage(true);
             msg.addText("_CHATSEERROR_");
             msg.addText(" ");
-            var list = new SimpleListener(function () {
-                this.soundList.click();
-            });
-            list.setValue("soundList", soundList);
+            var list = {
+                soundList: soundList,
+                handleEvent: function () {
+                    this.soundList.click();
+                }
+            };
             msg.addTextLink("_CHATSOUNDADDMORE_", true, list);
             UI.Chat.printElement(msg.getElement());
         });
+        function getSoundList() {
+            return soundList;
+        }
+        SoundController.getSoundList = getSoundList;
         function getBGM() {
             return bgmSound;
         }
@@ -4409,6 +4526,18 @@ var UI;
             var playpause = document.getElementById("musicPlayerPlayPause");
             var stop = document.getElementById("musicPlayerStop");
             var repeat = document.getElementById("musicPlayerRepeat");
+            var soundListButtonText = document.createTextNode("0");
+            document.getElementById("musicPlayerLocal").addEventListener("click", function (e) {
+                UI.SoundController.getSoundList().click();
+            });
+            document.getElementById("musicPlayerLocal").appendChild(soundListButtonText);
+            UI.SoundController.getSoundList().addEventListener("change", {
+                button: soundListButtonText,
+                list: UI.SoundController.getSoundList(),
+                handleEvent: function () {
+                    this.button.nodeValue = this.list.files.length;
+                }
+            });
             parent.removeChild(button);
             button.removeChild(container);
             playpause.addEventListener("click", function () {
@@ -4527,6 +4656,7 @@ var UI;
 (function (UI) {
     var Chat;
     (function (Chat) {
+        var lastDate = "";
         var chatBox = document.getElementById("chatBox");
         var $chatBox = $(chatBox);
         var $chatBoxScrollDown = $("#chatScrollDown");
@@ -4601,6 +4731,11 @@ var UI;
         }
         Chat.getRoom = getRoom;
         function clearRoom() {
+            var dateObj = new Date();
+            var month = dateObj.getUTCMonth() + 1;
+            var day = dateObj.getUTCDate();
+            var year = dateObj.getUTCFullYear();
+            lastDate = year + "-" + month + "-" + day;
             var parent = chatTarget.parentNode;
             parent.removeChild(chatTarget);
             while (chatTarget.lastChild !== null) {
@@ -4631,6 +4766,13 @@ var UI;
         function printMessage(message, doScroll) {
             var element = message.getHTML();
             if (element !== null) {
+                if (message.getDate() !== null && message.getDate() !== lastDate) {
+                    lastDate = message.getDate();
+                    var msg = new ChatSystemMessage(true);
+                    msg.addText("_CHATMESSAGESFROM_");
+                    msg.addLangVar("a", lastDate);
+                    printElement(msg.getElement());
+                }
                 chatInfoFloater.bindMessage(message, element);
                 printElement(element);
             }
@@ -5076,9 +5218,11 @@ var UI;
                                     error.addText("_CHATMULTIPLETARGETSFOUND_");
                                     error.addText(": ");
                                     for (var i = 0; i < users.length; i++) {
-                                        var listener = new SimpleListener(clickF);
-                                        listener.setValue("target", users[i].getUniqueNickname());
-                                        listener.setValue("message", message);
+                                        var listener = {
+                                            target: users[i].getUniqueNickname(),
+                                            message: message,
+                                            handleEvent: clickF
+                                        };
                                         error.addTextLink(users[i].getUniqueNickname(), false, listener);
                                         if ((i + 1) < users.length) {
                                             error.addText(", ");
@@ -5620,9 +5764,14 @@ var UI;
 var Server;
 (function (Server) {
     Server.APPLICATION_URL = "http://app.redpg.com.br/service/";
+    Server.IMAGE_URL = "http://img.redpg.com.br/";
     Server.WEBSOCKET_SERVERURL = "ws://app.redpg.com.br";
     Server.WEBSOCKET_CONTEXT = "/service/";
     Server.WEBSOCKET_PORTS = [80, 8080, 8081];
+    Server.APPLICATION_URL = "http://localhost:8080/";
+    Server.WEBSOCKET_SERVERURL = "ws://localhost";
+    Server.WEBSOCKET_CONTEXT = "/";
+    Server.WEBSOCKET_PORTS = [8080];
     Application.Config.registerConfiguration("wsPort", new WsportConfiguration(Server.WEBSOCKET_PORTS[0]));
     function getWebsocketURL() {
         return Server.WEBSOCKET_SERVERURL + ":" + Application.Config.getConfig("wsPort").getValue() + Server.WEBSOCKET_CONTEXT;
@@ -5649,14 +5798,14 @@ var Server;
                 ajax: ajax,
                 handleEvent: function (e) {
                     console.debug("AJAX request for " + this.ajax.url + " is complete.");
-                    if (this.ajax.target !== this.ajax.TARGET_NONE) {
-                        if (this.ajax.target === this.ajax.TARGET_GLOBAL) {
+                    if (this.ajax.target !== AJAXConfig.TARGET_NONE) {
+                        if (this.ajax.target === AJAXConfig.TARGET_GLOBAL) {
                             UI.Loading.stopLoading();
                         }
-                        else if (this.ajax.target === this.ajax.TARGET_LEFT) {
+                        else if (this.ajax.target === AJAXConfig.TARGET_LEFT) {
                             UI.Loading.unblockLeft();
                         }
-                        else if (this.ajax.target === this.ajax.TARGET_RIGHT) {
+                        else if (this.ajax.target === AJAXConfig.TARGET_RIGHT) {
                             UI.Loading.unblockRight();
                         }
                     }
@@ -5669,12 +5818,22 @@ var Server;
                 error: error,
                 handleEvent: function (e) {
                     if (this.xhr.status >= 200 && this.xhr.status < 300) {
-                        console.debug("[SUCCESS]: AJAX (" + this.ajax.url + ")...", { Status: this.xhr.status, XHR: this.xhr });
-                        this.success.handleEvent(this.xhr.response, this.xhr);
+                        console.debug("[SUCCESS " + this.xhr.status + "]: AJAX (" + this.ajax.url + ")...", this.xhr);
+                        if (typeof this.success === 'function') {
+                            this.success(this.xhr.response, this.xhr);
+                        }
+                        else {
+                            this.success.handleEvent(this.xhr.response, this.xhr);
+                        }
                     }
                     else {
-                        console.error("[ERROR]: AJAX (" + this.ajax.url + ")...", { Status: this.xhr.status, XHR: this.xhr });
-                        this.error.handleEvent(this.xhr.response, this.xhr);
+                        console.error("[ERROR " + this.xhr.status + "]: AJAX (" + this.ajax.url + ")...", this.xhr);
+                        if (typeof this.error === 'function') {
+                            this.error(this.xhr.response, this.xhr);
+                        }
+                        else {
+                            this.error.handleEvent(this.xhr.response, this.xhr);
+                        }
                     }
                 }
             });
@@ -5684,17 +5843,22 @@ var Server;
                 error: error,
                 handleEvent: function (e) {
                     console.error("[ERROR] AJAX call for " + this.ajax.url + " resulted in network error. Event, XHR:", e, this.xhr);
-                    this.error.handleEvent(e, this.xhr);
+                    if (typeof this.error === 'function') {
+                        this.error(this.xhr.response, this.xhr);
+                    }
+                    else {
+                        this.error.handleEvent(this.xhr.response, this.xhr);
+                    }
                 }
             });
-            if (ajax.target !== ajax.TARGET_NONE) {
-                if (ajax.target === ajax.TARGET_GLOBAL) {
+            if (ajax.target !== AJAXConfig.TARGET_NONE) {
+                if (ajax.target === AJAXConfig.TARGET_GLOBAL) {
                     UI.Loading.startLoading();
                 }
-                else if (ajax.target === ajax.TARGET_LEFT) {
+                else if (ajax.target === AJAXConfig.TARGET_LEFT) {
                     UI.Loading.blockLeft();
                 }
-                else if (ajax.target === ajax.TARGET_RIGHT) {
+                else if (ajax.target === AJAXConfig.TARGET_RIGHT) {
                     UI.Loading.blockRight();
                 }
             }
@@ -5718,6 +5882,48 @@ var Server;
         }
         AJAX.requestPage = requestPage;
     })(AJAX = Server.AJAX || (Server.AJAX = {}));
+})(Server || (Server = {}));
+var Server;
+(function (Server) {
+    var Config;
+    (function (Config) {
+        var CONFIG_URL = "Account";
+        function saveConfig(config, cbs, cbe) {
+            var ajax = new AJAXConfig(CONFIG_URL);
+            ajax.setData("action", "StoreConfig");
+            ajax.setData("config", config);
+            ajax.setTargetLeftWindow();
+            ajax.setResponseTypeJSON();
+            var success = {
+                cbs: cbs,
+                handleEvent: function (response, xhr) {
+                    if (this.cbs !== null) {
+                        if (typeof this.cbs === "function") {
+                            this.cbs(response, xhr);
+                        }
+                        else {
+                            this.cbs.handleEvent(response, xhr);
+                        }
+                    }
+                }
+            };
+            var error = {
+                cbe: cbe,
+                handleEvent: function (response, xhr) {
+                    if (this.cbe !== null) {
+                        if (typeof this.cbe === "function") {
+                            this.cbe(response, xhr);
+                        }
+                        else {
+                            this.cbe.handleEvent(response, xhr);
+                        }
+                    }
+                }
+            };
+            Server.AJAX.requestPage(ajax, success, error);
+        }
+        Config.saveConfig = saveConfig;
+    })(Config = Server.Config || (Server.Config = {}));
 })(Server || (Server = {}));
 var Server;
 (function (Server) {
@@ -5820,6 +6026,30 @@ var Server;
         }
         Login.doLogout = doLogout;
     })(Login = Server.Login || (Server.Login = {}));
+})(Server || (Server = {}));
+var Server;
+(function (Server) {
+    var Images;
+    (function (Images) {
+        var IMAGES_URL = "Image";
+        var emptyCallback = function () { };
+        function getImages(cbs, cbe) {
+            var success = {
+                cbs: cbs,
+                handleEvent: function (response, xhr) {
+                    if (this.cbs !== undefined)
+                        this.cbs.handleEvent(response, xhr);
+                }
+            };
+            var error = cbe === undefined ? emptyCallback : cbe;
+            var ajax = new AJAXConfig(IMAGES_URL);
+            ajax.setResponseTypeJSON();
+            ajax.data = { action: "list" };
+            ajax.setTargetRightWindow();
+            Server.AJAX.requestPage(ajax, success, error);
+        }
+        Images.getImages = getImages;
+    })(Images = Server.Images || (Server.Images = {}));
 })(Server || (Server = {}));
 var Server;
 (function (Server) {
@@ -6172,13 +6402,48 @@ var Server;
         })(Memory = Chat.Memory || (Chat.Memory = {}));
     })(Chat = Server.Chat || (Server.Chat = {}));
 })(Server || (Server = {}));
+var Server;
+(function (Server) {
+    var Storage;
+    (function (Storage) {
+        var STORAGE_URL = "Storage";
+        var validStorage = ["sounds", "images", "custom1", "custom2"];
+        var emptyCallback = { handleEvent: function () { } };
+        function requestSounds(ajaxTarget, cbs, cbe) {
+            requestStorage("sounds", ajaxTarget, cbs, cbe);
+        }
+        Storage.requestSounds = requestSounds;
+        function requestImages(ajaxTarget, cbs, cbe) {
+            requestStorage("images", ajaxTarget, cbs, cbe);
+        }
+        Storage.requestImages = requestImages;
+        function requestStorage(id, ajaxTarget, cbs, cbe) {
+            if (validStorage.indexOf(id) === -1) {
+                console.error("[STORAGE] Attempt to access invalid storage at " + id + ".");
+                cbe.handleEvent();
+                return;
+            }
+            var success = cbs === undefined ? emptyCallback : cbs;
+            var error = cbe === undefined ? emptyCallback : cbe;
+            var ajax = new AJAXConfig(STORAGE_URL);
+            ajax.target = ajaxTarget;
+            ajax.setResponseTypeJSON();
+            ajax.data = { action: "restore", id: id };
+            Server.AJAX.requestPage(ajax, success, error);
+        }
+        Storage.requestStorage = requestStorage;
+    })(Storage = Server.Storage || (Server.Storage = {}));
+})(Server || (Server = {}));
 /// <reference path='Server.ts' />
 /// <reference path='Modules/AJAX.ts' />
+/// <reference path='Modules/Config.ts' />
 /// <reference path='Modules/Login.ts' />
+/// <reference path='Modules/Images.ts' />
 /// <reference path='Modules/Games.ts' />
 /// <reference path='Modules/URL.ts' />
 /// <reference path='Modules/Chat.ts' />
-/// <reference path='Modules/Chat/Memory.ts' /> 
+/// <reference path='Modules/Chat/Memory.ts' />
+/// <reference path='Modules/Storage.ts' /> 
 /// <reference path='../typings/jquery/jquery.d.ts' />
 /// <reference path='../typings/jqueryui/jqueryui.d.ts' />
 /// <reference path='../typings/NonLatin.d.ts' />
@@ -6199,6 +6464,8 @@ Application.Login.addListener({
     handleEvent: function () {
         if (Application.Login.isLogged()) {
             UI.WindowManager.callWindow(('mainWindow'));
+            UI.PageManager.callPage(UI.idChangelog);
+            UI.PageManager.callPage(UI.idHome);
         }
         else {
             UI.WindowManager.callWindow("loginWindow");
@@ -6216,8 +6483,5 @@ if (Application.Login.hasSession()) {
 else {
     UI.Login.resetFocus();
 }
-UI.PageManager.callPage(UI.idChangelog);
-UI.PageManager.callPage(UI.idHome);
-UI.PageManager.callPage(UI.idChat);
 allReady();
 //# sourceMappingURL=Application.js.map

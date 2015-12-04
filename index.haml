@@ -32,6 +32,7 @@
           %a#musicPlayerPlayPause.musicPlayerButton.icons-soundPlayerPause
           %a#musicPlayerStop.musicPlayerButton.icons-soundPlayerStop
           %a#musicPlayerRepeat.musicPlayerButton.icons-soundPlayerRepeatActive
+          #musicPlayerLocal.buttonBehavior.icons-soundPlayerListButton
       -# Left Ear
       #leftHandleBar.handleBar
         #leftHandleIcon.icons-handlerLTR
@@ -61,6 +62,13 @@
       #configSideWindow.leftSideWindow
         .mainWindowHeader.language="_CONFIGTITLE_"
         .mainWindowContent.singleton
+          %p.hoverable.mainWindowParagraph.centered
+            %a#configSave.textLink.language="_CONFIGSAVE_"
+            \-
+            %a#configReset.textLink.language="_CONFIGRESET_"
+          %p.mainWindowParagraph.centered#configMessages
+            %b#configError.language="_CONFIGERROR_"
+            %b#configSuccess.language="_CONFIGSUCCESS_"
           %label.configLabel
             %b.configName.language="_CONFIGCHATMAXMESSAGES_"
             %input.configInput#configChatMaxMessages{:type => "number", :value => "120", :min => "60", :max => "10000"}
@@ -120,6 +128,16 @@
             %input.configInput#configAnimTime{:type => "range", :value => "150", :min => "0", :max => "300"}
             .configExplanation.language
               _ANIMATIONTIMEEXP01_<br>_ANIMATIONTIMEEXP02_
+          %label.configLabel
+            %b.configName.language="_CONFIGBGMVOLUME_"
+            %input.configInput#configBGMVolume{:type => "range", :value => "0", :min => "0", :max => "100"}
+            .configExplanation.language
+              _CONFIGBGMVOLUMEEXP_
+          %label.configLabel
+            %b.configName.language="_CONFIGSEVOLUME_"
+            %input.configInput#configSEVolume{:type => "range", :value => "0", :min => "0", :max => "100"}
+            .configExplanation.language
+              _CONFIGSEVOLUMEEXP_
       #gamesSideWindow.leftSideWindow
         .language.mainWindowHeader
           _GAMESTITLE_

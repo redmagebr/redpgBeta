@@ -7,15 +7,33 @@
   bottom: 0px;
 }
 
+#musicPlayerLocal {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 40px;
+  height: 16px;
+  padding-top: 24px;
+  line-height: 16px;
+  font-size: 14px;
+  text-align: center;
+  font-weight: bold;
+  color: #fff;
+  font-family: sans-serif;
+
+  &:active {
+    height: 15px;
+    padding-top: 25px;
+  }
+}
 
 #musicPlayerContainer {
   position: absolute;
   left: 10px;
   bottom: 40px;
-  width: 120px;
+  width: 160px;
   height: 40px;
   border: solid 1px #363636;
-  background-color: white;
 }
 
 #musicPlayerContainer:before {
@@ -30,7 +48,7 @@
 
 #musicPlayerProgress {
   height: 10px;
-  width:100%;
+  width: 120px;
   display: block;
   appearance: none;
   -webkit-appearance: none;

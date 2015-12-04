@@ -9,6 +9,21 @@ module UI.SoundController.MusicPlayer {
     var stop = <HTMLElement> document.getElementById("musicPlayerStop");
     var repeat = <HTMLElement> document.getElementById("musicPlayerRepeat");
 
+    var soundListButtonText = document.createTextNode("0");
+
+    document.getElementById("musicPlayerLocal").addEventListener("click", function (e) {
+        UI.SoundController.getSoundList().click();
+    });
+
+    document.getElementById("musicPlayerLocal").appendChild(soundListButtonText);
+
+    UI.SoundController.getSoundList().addEventListener("change", {
+        button : soundListButtonText,
+        list : UI.SoundController.getSoundList(),
+        handleEvent : function () {
+            this.button.nodeValue = this.list.files.length;
+        }
+    });
 
     parent.removeChild(button);
     button.removeChild(container);

@@ -4,11 +4,11 @@ class MessageWhisper extends Message {
     constructor () {
         super();
 
-        var list = new SimpleListener(function (message : MessageWhisper) {
+        var list = function (message : MessageWhisper) {
             if (!message.isMine()) {
                 UI.Chat.Forms.setLastWhisperFrom(message.getUser());
             }
-        });
+        };
 
         this.addUpdatedListener(list);
     }
@@ -93,9 +93,11 @@ class MessageWhisper extends Message {
             error.addText("_CHATMULTIPLETARGETSFOUND_");
             error.addText(": ");
             for (var i = 0; i < users.length; i++) {
-                var listener = new SimpleListener(clickF);
-                listener.setValue("target", users[i].getUniqueNickname());
-                listener.setValue("message", message);
+                var listener = {
+                    target : users[i].getUniqueNickname(),
+                    message : message,
+                    handleEvent : clickF
+                };
                 error.addTextLink(users[i].getUniqueNickname(), false, listener);
 
                 if ((i + 1) < users.length) {

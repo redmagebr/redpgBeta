@@ -27,7 +27,7 @@ module UI {
     Application.Config.registerConfiguration("autoBGM", new NumberConfiguration(1, 0, 2)); // Automatically open shared BGMs
     Application.Config.registerConfiguration("autoSE", new NumberConfiguration(1, 0, 2)); // Automatically open shared Sound Effects
     Application.Config.registerConfiguration("autoVIDEO", new NumberConfiguration(1, 0, 2)); // Automatically open shared Videos
-    Application.Config.registerConfiguration("bgmVolume", new NumberConfiguration(50, 25, 100)); // Volume for BGM
-    Application.Config.registerConfiguration("seVolume", new NumberConfiguration(50, 25, 100)); // Volume for Sound Effect
+    Application.Config.registerConfiguration("bgmVolume", new NumberConfiguration(50, 0, 100)); // Volume for BGM
+    Application.Config.registerConfiguration("seVolume", new NumberConfiguration(50, 0, 100)); // Volume for Sound Effect
     Application.Config.registerConfiguration("bgmLoop", new BooleanConfiguration(true)); // Whether BGMs loop or not
 }

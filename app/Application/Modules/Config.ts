@@ -8,7 +8,7 @@ module Application.Config {
         return configList[id];
     }
 
-    export function registerChangeListener (id : string, listener : Listener) {
+    export function registerChangeListener (id : string, listener : Listener | Function) {
         if (configList[id] === undefined) {
             console.warn("[CONFIG] Attempt to register a listener to unregistered configuration at " + id + ". Offending listener:", listener);
             return;
@@ -35,6 +35,12 @@ module Application.Config {
         return result;
     }
 
+    export function reset () {
+        for (var key in configList) {
+            configList[key].reset();
+        }
+    }
+
     export function updateFromObject (obj : {[id : string] : any}) {
         for (var key in obj) {
             if (configList[key] === undefined) {
@@ -44,5 +50,9 @@ module Application.Config {
             configList[key].storeValue(obj[key]);
         }
         console.debug("[CONFIG] Updated configuration values from:", obj);
+    }
+
+    export function saveConfig (cbs? : Listener | Function, cbe? : Listener | Function) {
+        Server.Config.saveConfig(exportAsObject(), cbs, cbe);
     }
 }
