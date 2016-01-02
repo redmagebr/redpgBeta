@@ -50,6 +50,11 @@ module Server.AJAX {
                     }
                 } else {
                     console.error("[ERROR " + this.xhr.status + "]: AJAX (" + this.ajax.url + ")...", this.xhr);
+
+                    if (this.xhr.status === 401) {
+                        Server.Login.requestSession(false);
+                    }
+
                     if (typeof this.error === 'function') {
                         (<Function> this.error)(this.xhr.response, this.xhr);
                     } else {

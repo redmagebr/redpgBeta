@@ -3,6 +3,27 @@
  */
 module UI.Language {
     var currentLanguage : Lingo = null;
+    var flagContainer = document.getElementById("loginFlagContainer");
+
+    var list = LingoList.getLingos();
+    var a : HTMLElement;
+    var clickF = function () {
+        localStorage.setItem("lastLanguage", this.ids[0]);
+        Application.Config.getConfig("language").storeValue(this.ids[0]);
+    };
+    for (var i = 0; i < list.length; i++) {
+        a = document.createElement("a");
+        a.classList.add("flagIcon");
+        a.classList.add("icons-flag" + list[i].flagIcon);
+        a.classList.add("buttonBehavior");
+
+        a.addEventListener("click", clickF.bind(list[i]));
+
+        a.setAttribute("title", list[i].name);
+
+        flagContainer.appendChild(a);
+    }
+    delete (list, i, a, clickF);
 
     Application.Config.registerChangeListener("language", <Listener> {
         handleEvent : function () {
@@ -125,9 +146,12 @@ module UI.Language {
         element.dataset['titlelingo'] = value;
     }
 
-    export function markLanguage (element : HTMLElement) {
-        element.classList.add("language");
-        processElement(element);
-        updateText(element);
+    export function markLanguage (...elements : HTMLElement[]) {
+        for (var i = 0; i < elements.length; i++) {
+            var element = elements[i];
+            element.classList.add("language");
+            processElement(element);
+            updateText(element);
+        }
     }
 }

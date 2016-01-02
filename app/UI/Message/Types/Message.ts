@@ -21,7 +21,7 @@ class Message extends SlashCommand {
     public origin : number = 0;
     public destination : Number | Array<number> = null;
 
-    private updatedListeners : Array<Listener | Function> = [];
+    private updatedTrigger = new Trigger();
 
     protected html : HTMLElement = null;
 
@@ -303,17 +303,11 @@ class Message extends SlashCommand {
     }
 
     public addUpdatedListener (list : Listener | Function) {
-        this.updatedListeners.push(list);
+        this.updatedTrigger.addListener(list);
     }
 
     public triggerUpdated () {
-        for (var i = 0; i < this.updatedListeners.length; i++) {
-            if (typeof this.updatedListeners[i] === 'function') {
-                (<Function> this.updatedListeners[i])(this);
-            } else {
-                (<Listener> this.updatedListeners[i]).handleEvent(this);
-            }
-        }
+        this.updatedTrigger.trigger(this);
 
         if (this.sending !== null) {
             clearTimeout(<number> this.sending);

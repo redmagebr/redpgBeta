@@ -23,8 +23,11 @@ html, body {
 }
 
 body {
-  background-color: $blueBG;
   font-family: $mainFont;
+}
+
+#loginWindow {
+  background-color: $blueBG;
 }
 
 #loadingWindow {

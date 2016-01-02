@@ -25,10 +25,11 @@ module UI.PageManager {
 
             closeLeftPage();
 
+            $page.finish();
             mainWindow.appendChild($page[0]);
             $page[0].style.left = offLeft + "px";
 
-            $page.finish().animate({
+            $page.animate({
                 left : (UI.Handles.isAlwaysUp() ? 60 : 10)
             }, animationTime, function () {
                 this.style.left = "";
@@ -42,10 +43,11 @@ module UI.PageManager {
 
             var offRight = (UI.Handles.isAlwaysUp() ? 60 : 10) - UI.WindowManager.currentRightSize;
 
+            $page.finish();
             mainWindow.appendChild($page[0]);
             $page[0].style.right = offRight + "px";
 
-            $page.finish().animate({
+            $page.animate({
                 right : (UI.Handles.isAlwaysUp() ? 60 : 10)
             }, animationTime, function () {
                 this.style.right = "";
@@ -60,7 +62,7 @@ module UI.PageManager {
         var offLeft = (UI.Handles.isAlwaysUp() ? 60 : 10) - UI.WindowManager.currentLeftSize;
         var animationTime = getAnimationTime();
         if ($currentLeft !== null) {
-            $currentLeft.animate({
+            $currentLeft.finish().animate({
                 left: offLeft
             }, animationTime, function () {
                 this.style.left = "";

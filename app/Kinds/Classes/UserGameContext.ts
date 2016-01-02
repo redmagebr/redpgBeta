@@ -1,19 +1,19 @@
 class UserGameContext {
     private user : User;
-    private gameid : number;
+    private gameid : number = 0;
 
     constructor (user : User) {
         this.user = user;
     }
 
-    public createRoom : boolean;
-    public createSheet : boolean;
-    public editSheet : boolean;
-    public viewSheet : boolean;
-    public deleteSheet : boolean;
+    public createRoom : boolean = false;
+    public createSheet : boolean = false;
+    public editSheet : boolean = false;
+    public viewSheet : boolean = false;
+    public deleteSheet : boolean = false;
 
-    public invite : boolean;
-    public promote : boolean;
+    public invite : boolean = false;
+    public promote : boolean = false;
 
     public getUser () {
         return this.user;

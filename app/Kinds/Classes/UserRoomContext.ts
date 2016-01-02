@@ -3,6 +3,10 @@ class UserRoomContext {
 
     public roomid : number;
 
+    private logger : boolean = false;
+    private cleaner : boolean = false;
+    private storyteller : boolean = false;
+
     constructor (user : User) {
         this.user = user;
     }
@@ -15,9 +19,6 @@ class UserRoomContext {
     public getUser () {
         return this.user;
     }
-
-    private cleaner : boolean = false;
-    private storyteller : boolean = false;
 
     public isStoryteller () : boolean {
         return this.storyteller;

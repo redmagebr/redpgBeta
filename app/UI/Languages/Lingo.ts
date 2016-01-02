@@ -5,6 +5,7 @@ class Lingo {
     public ids : Array<string> = [];
     public name : string;
     public shortname : string;
+    public flagIcon : string;
 
     public unknownLingo : string = " :( ";
 
@@ -33,6 +34,24 @@ class Lingo {
 
 module LingoList {
     var lingos :{ [id : string] : Lingo } = {};
+
+    export function getLingos () : Array<Lingo> {
+        var list = [];
+
+        for (var id in lingos) {
+            if (list.indexOf(lingos[id]) === -1) list.push(lingos[id]);
+        }
+
+        list.sort(function (a : Lingo, b : Lingo) {
+            var na = a.name.toLowerCase();
+            var nb = b.name.toLowerCase();
+            if (na < nb) return -1;
+            if (na > nb) return 1;
+            return 0;
+        });
+
+        return list;
+    }
 
     export function getLingo (id : string) : Lingo {
         id = id.toLowerCase().trim();

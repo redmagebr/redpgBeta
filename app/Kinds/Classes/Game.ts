@@ -11,6 +11,18 @@ class Game {
     public creatornick : string = null;
     public creatorsufix : string = null;
 
+    public getCreatorFullNickname () {
+        return this.creatornick + "#" + this.creatorsufix;
+    }
+
+    public isMyCreation () : boolean {
+        return Application.isMe(this.creatorid);
+    }
+
+    public getMe () : UserGameContext {
+        return this.getUser(Application.getMyId());
+    }
+
     public getUser (id : number) : UserGameContext {
         if (this.users[id] === undefined) {
             return null;
@@ -87,6 +99,23 @@ class Game {
                     }
                 }
             }
+        }
+
+        // This game has the permissions for ME
+        if (game["createRoom"] !== undefined) {
+            this.users[Application.getMyId()] = DB.UserDB.getUser(Application.getMyId());
+            var updateObj = {
+                gameid : this.id,
+                createRoom : game["createRoom"],
+                createSheet : game["createSheet"],
+                deleteSheet : game["deleteSheet"],
+                editSheet : game["editSheet"],
+                invite : game["invite"],
+                promote : game["promote"],
+                viewSheet : game["viewSheet"]
+            };
+
+            this.users[Application.getMyId()].updateFromObject(updateObj);
         }
 
         if (game['rooms'] !== undefined) {

@@ -2,7 +2,7 @@
  * Created by Reddo on 16/09/2015.
  */
 class Configuration {
-    private changeListeners : Array <Listener | Function> = [];
+    private changeTrigger = new Trigger();
     protected value : any = null;
     public defValue : any = null;
 
@@ -23,7 +23,7 @@ class Configuration {
     }
 
     public addChangeListener (listener : Listener | Function) {
-        this.changeListeners.push(listener);
+        this.changeTrigger.addListener(listener);
     }
 
     public storeValue (value : any) {
@@ -36,13 +36,7 @@ class Configuration {
         var newValue = JSON.stringify(this.value);
 
         if (newValue !== oldValue) {
-            for (var i = 0; i < this.changeListeners.length; i++) {
-                if (typeof this.changeListeners[i] === 'function') {
-                    (<Function> this.changeListeners[i])(this);
-                } else {
-                    (<Listener> this.changeListeners[i]).handleEvent(this);
-                }
-            }
+            this.changeTrigger.trigger(this);
             return true;
         }
         return false;

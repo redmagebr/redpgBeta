@@ -1,6 +1,7 @@
 module UI.WindowManager {
     var currentWindow : string = "";
     var windowList : {[id : string] : HTMLElement}  = {};
+    var $windowList : {[id : string] : JQuery}  = {};
 
     export var currentLeftSize : number;
     export var currentRightSize : number;
@@ -16,11 +17,13 @@ module UI.WindowManager {
             var child : HTMLElement = <HTMLElement> children[i];
             if (child.classList.contains("window")) {
                 windowList[child.getAttribute("id")] = child;
+                $windowList[child.getAttribute("id")] = $(child);
             }
         }
     })();
 
     export function callWindow (id : string) {
+        var animationTime = Application.Config.getConfig("animTime").getValue() * 2;
         if (windowList[id] === undefined) {
             console.log("--- Error: Attempt to call inexistent window: " + id + ", ignoring.");
             return;
@@ -29,18 +32,38 @@ module UI.WindowManager {
         if (id === currentWindow) return; // Same window, no point
 
         if (currentWindow === "") {
-            console.debug("Detaching all windows.");
-            for (var key in windowList) {
-                document.body.removeChild(windowList[key]);
-            }
+            detachAllWindows ();
         } else {
             console.debug("Detaching current window: " + currentWindow);
-            document.body.removeChild(windowList[currentWindow]);
+            windowList[currentWindow].style.zIndex = "1";
+            windowList[currentWindow].style.opacity = "1";
         }
 
+        var oldid = currentWindow;
         currentWindow = id;
         console.debug("Appending window: " + id);
+        $windowList[currentWindow].finish().css("opacity", "0").animate({opacity : 1}, animationTime, (function () {
+            var ele = document.getElementById(this.oldid);
+            if (ele === null) {
+                return;
+            }
+            if (ele.parentNode !== null) {
+                ele.parentNode.removeChild(ele);
+            }
+        }).bind({oldid : oldid}));
+        windowList[currentWindow].style.zIndex = "2";
         document.body.appendChild(windowList[currentWindow]);
+        UI.Language.updateScreen(windowList[currentWindow]);
+    }
+
+    function detachAllWindows () {
+        for (var key in windowList) {
+            document.body.removeChild(windowList[key]);
+        }
+    }
+
+    function detachWindow (id : string) {
+        document.body.removeChild(windowList[id]);
     }
 
     export function updateWindowSizes () {

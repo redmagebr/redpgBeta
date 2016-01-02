@@ -10,7 +10,7 @@ module Application.Login {
 
     var interval = null;
 
-    var listeners : Array<Listener> = [];
+    var trigger = new Trigger();
 
     // Constants for localStorage
     var LAST_LOGIN_STORAGE = "redpg_lastLogin";
@@ -89,8 +89,9 @@ module Application.Login {
         var oldUser = currentUser;
 
         currentSession = sessionid;
-        currentUser = new User();
-        currentUser.updateFromObject(userJson);
+
+        DB.UserDB.updateFromObject([userJson]);
+        currentUser = DB.UserDB.getUser(userJson['id']);
         updateSessionLife();
 
         if (interval !== null) window.clearInterval(interval);
@@ -133,8 +134,12 @@ module Application.Login {
         Server.Login.requestSession(true, cbs);
     }
 
-    export function addListener (listener : Listener) {
-        listeners.push(listener);
+    export function setSession (a : string) {
+        currentSession = a;
+    }
+
+    export function addListener (listener : Listener | Function) {
+        trigger.addListener(listener);
     }
 
     export function getUser () : User {
@@ -142,8 +147,6 @@ module Application.Login {
     }
 
     function triggerListeners () {
-        for (var i = 0; i < listeners.length; i++) {
-            listeners[i].handleEvent(isLogged());
-        }
+        trigger.trigger(isLogged());
     }
 }

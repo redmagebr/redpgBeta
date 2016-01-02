@@ -62,7 +62,8 @@ module UI.Chat {
     var lastPrintedId : number = 0;
     var scrolledDown : boolean = true;
     var currentRoom : Room = null;
-    var roomListeners : Array<Listener> = [];
+    //var roomListeners : Array<Listener> = [];
+    var roomTrigger = new Trigger();
     export var messageCounter : number = 0;
 
     export function doAutomation () {
@@ -82,14 +83,12 @@ module UI.Chat {
         triggerRoomChanged();
     }
 
-    export function addRoomChangedListener (listener : Listener) {
-        roomListeners.push(listener);
+    export function addRoomChangedListener (listener : Listener | Function) {
+        roomTrigger.addListener(listener);
     }
 
     function triggerRoomChanged () {
-        for (var i = 0; i < roomListeners.length; i++) {
-            roomListeners[i].handleEvent(currentRoom);
-        }
+        roomTrigger.trigger(currentRoom);
     }
 
     export function getRoom () {
@@ -265,6 +264,14 @@ module UI.Chat {
         return getAllForMeText.getElement();
     }
 
+    export function leave () {
+        Server.Chat.end();
+        currentRoom = null;
+        triggerRoomChanged();
+
+        UI.Games.callSelf();
+    }
+
     export function printGetAllButtonAtStart () {
         if (chatTarget.firstChild !== null) {
             var html = getGetAllButton();
@@ -300,4 +307,18 @@ module UI.Chat {
         DB.MessageDB.releaseAllLocalMessages(); // On clear, all temporary messages will be lost anyway. This ties up loose ends.
     }
     delete(i);
+
+    var chatButton = document.getElementById("openChatButton");
+    chatButton.style.display = "none";
+
+    addRoomChangedListener(<Listener> {
+        button : chatButton,
+        handleEvent : function (room : Room) {
+            if (room === null) {
+                this.button.style.display = "none";
+            } else {
+                this.button.style.display = "";
+            }
+        }
+    });
 }

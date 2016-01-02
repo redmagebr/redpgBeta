@@ -69,6 +69,7 @@ declare class User {
     roomContexts: {
         [id: number]: UserRoomContext;
     };
+    private changedTrigger;
     isMe(): boolean;
     getGameContext(id: number): UserGameContext;
     releaseGameContext(id: number): void;
@@ -97,11 +98,12 @@ declare class UserGameContext {
 declare class UserRoomContext {
     private user;
     roomid: number;
+    private logger;
+    private cleaner;
+    private storyteller;
     constructor(user: User);
     getRoom(): Room;
     getUser(): User;
-    private cleaner;
-    private storyteller;
     isStoryteller(): boolean;
     isCleaner(): boolean;
     updateFromObject(user: Object): void;
@@ -119,9 +121,9 @@ declare class Room {
     getOrderedMessages(): Array<Message>;
     getOrderedUsers(): Array<User>;
     getStorytellers(): Array<UserRoomContext>;
+    getMe(): UserRoomContext;
     getUser(id: number): UserRoomContext;
     getUsersByName(str: string): Array<UserRoomContext>;
-    getMe(): UserRoomContext;
     getGame(): Game;
     updateFromObject(room: Object, cleanup: boolean): void;
 }
@@ -136,6 +138,9 @@ declare class Game {
     creatorid: number;
     creatornick: string;
     creatorsufix: string;
+    getCreatorFullNickname(): string;
+    isMyCreation(): boolean;
+    getMe(): UserGameContext;
     getUser(id: number): UserGameContext;
     getRoom(id: number): Room;
     getSheet(id: number): SheetInstance;
@@ -163,14 +168,21 @@ declare class SheetInstance {
     promote: boolean;
     isPublic: boolean;
     changed: boolean;
-    changeListeners: Array<Listener>;
-    addChangeListener(list: Listener): void;
+    private changeTrigger;
+    addChangeListener(list: Listener | Function): void;
     triggerChanged(): void;
     getMemoryId(): string;
     setSaved(): void;
     setName(name: string): void;
     setValues(values: Object, local: boolean): void;
     updateFromObject(obj: Object): void;
+}
+declare class Trigger {
+    private functions;
+    private objects;
+    removeListener(f: Function | Listener): void;
+    addListener(f: Function | Listener): void;
+    trigger(...args: any[]): void;
 }
 declare class AJAXConfig {
     private _target;
@@ -242,7 +254,7 @@ declare class ChatWsController implements ChatController {
     addMessageListener(type: string, obj: Listener): void;
 }
 declare class Configuration {
-    private changeListeners;
+    private changeTrigger;
     protected value: any;
     defValue: any;
     setFunction: Function;
@@ -274,7 +286,7 @@ declare class BooleanConfiguration extends Configuration {
     getFunction: () => boolean;
 }
 declare class Memory {
-    private changeListeners;
+    private changeTrigger;
     protected value: any;
     defValue: any;
     setFunction: Function;
@@ -282,7 +294,7 @@ declare class Memory {
     constructor(defV: any);
     getDefault(): any;
     reset(): void;
-    addChangeListener(listener: Listener): void;
+    addChangeListener(listener: Listener | Function): void;
     storeValue(value: any): boolean;
     getValue(): any;
 }
@@ -427,7 +439,7 @@ declare class Message extends SlashCommand {
     private sending;
     origin: number;
     destination: Number | Array<number>;
-    private updatedListeners;
+    private updatedTrigger;
     protected html: HTMLElement;
     clone: boolean;
     getDate(): string;
@@ -645,8 +657,8 @@ declare module DB.MessageDB {
     function updateFromObject(obj: Array<Object>): void;
 }
 declare module DB.SheetDB {
-    function addChangeListener(list: Listener): void;
-    function removeChangeListener(list: Listener): void;
+    function addChangeListener(list: Listener | Function): void;
+    function removeChangeListener(list: Listener | Function): void;
     function triggerChanged(sheet: SheetInstance): void;
     function hasSheet(id: number): boolean;
     function getSheet(id: number): SheetInstance;
@@ -689,13 +701,15 @@ declare module Application.Login {
     function updateSessionLife(): void;
     function updateLocalStorage(): void;
     function keepAlive(): void;
-    function addListener(listener: Listener): void;
+    function setSession(a: string): void;
+    function addListener(listener: Listener | Function): void;
     function getUser(): User;
 }
 declare class Lingo {
     ids: Array<string>;
     name: string;
     shortname: string;
+    flagIcon: string;
     unknownLingo: string;
     langValues: {
         [id: string]: string;
@@ -706,15 +720,18 @@ declare class Lingo {
     }): string;
 }
 declare module LingoList {
+    function getLingos(): Array<Lingo>;
     function getLingo(id: string): Lingo;
     function storeLingo(lingo: Lingo): void;
 }
 declare var ptbr: Lingo;
+declare var en: Lingo;
 declare module UI {
     var idChangelog: string;
     var idGames: string;
     var idChat: string;
     var idConfig: string;
+    var idGameInvites: string;
     var idHome: string;
 }
 declare module UI.WindowManager {
@@ -771,11 +788,20 @@ declare module UI.Language {
     function addLanguageValue(element: HTMLElement, value: string): void;
     function addLanguagePlaceholder(element: HTMLElement, value: string): void;
     function addLanguageTitle(element: HTMLElement, value: string): void;
-    function markLanguage(element: HTMLElement): void;
+    function markLanguage(...elements: HTMLElement[]): void;
+}
+declare module UI.Rooms {
 }
 declare module UI.Games {
     function callSelf(ready?: boolean): void;
     function updateNick(isLogged: boolean): void;
+}
+declare module UI.Games.Invites {
+    function callSelf(): void;
+    function printInfo(data: any): void;
+    function accept(id: any): void;
+    function reject(id: any): void;
+    function printError(): void;
 }
 declare module UI.SoundController {
     function updateSEVolume(newVolume: number): void;
@@ -800,7 +826,7 @@ declare module UI.Chat {
     var messageCounter: number;
     function doAutomation(): boolean;
     function callSelf(roomid: number): void;
-    function addRoomChangedListener(listener: Listener): void;
+    function addRoomChangedListener(listener: Listener | Function): void;
     function getRoom(): Room;
     function clearRoom(): void;
     function printElement(element: HTMLElement, doScroll?: boolean): void;
@@ -810,6 +836,7 @@ declare module UI.Chat {
     function setScrolledDown(state: boolean): void;
     function sendMessage(message: Message): void;
     function getGetAllButton(): HTMLElement;
+    function leave(): void;
     function printGetAllButtonAtStart(): void;
     function printGetAllButton(): void;
 }
@@ -871,10 +898,6 @@ declare module Server {
     var WEBSOCKET_SERVERURL: string;
     var WEBSOCKET_CONTEXT: string;
     var WEBSOCKET_PORTS: Array<number>;
-    var APPLICATION_URL: string;
-    var WEBSOCKET_SERVERURL: string;
-    var WEBSOCKET_CONTEXT: string;
-    var WEBSOCKET_PORTS: Array<number>;
     function getWebsocketURL(): string;
 }
 declare module Server.AJAX {
@@ -893,6 +916,9 @@ declare module Server.Images {
 }
 declare module Server.Games {
     function updateLists(cbs?: Listener, cbe?: Listener): void;
+    function getInviteList(cbs?: Listener, cbe?: Listener): void;
+    function acceptInvite(gameid: number, cbs?: Listener, cbe?: Listener): void;
+    function rejectInvite(gameid: number, cbs?: Listener, cbe?: Listener): void;
 }
 declare module Server.URL {
     function fixURL(url: string): string;
@@ -914,6 +940,12 @@ declare module Server.Chat {
     function getRoom(): Room;
     function getAllMessages(roomid: number, cbs?: Listener, cbe?: Listener): void;
     function end(): void;
+    function addStatusListener(f: Function | Listener): void;
+    function triggerStatus(info: Object): void;
+    function addPersonaListener(f: Function | Listener): void;
+    function triggerPersona(f: Object): void;
+    function addMessageListener(f: Function | Listener): void;
+    function triggerMessage(f: Message): void;
 }
 declare module Server.Chat.Memory {
     function getConfig(id: string): Memory;

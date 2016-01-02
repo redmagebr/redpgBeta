@@ -28,28 +28,198 @@ module UI.Games {
 
         while (gameListTarget.lastChild !== null) gameListTarget.removeChild(gameListTarget.lastChild);
 
-        for (var i = 0; i < games.length; i++) {
-            var div = <HTMLElement> document.createElement("div");
-            var p =<HTMLElement> document.createElement("p");
+        if (games.length === 0) {
+            var p = document.createElement("p");
             p.classList.add("mainWindowParagraph");
-            p.classList.add("hoverable");
-            p.appendChild(document.createTextNode(games[i].name));
+            p.appendChild(document.createTextNode("_GAMESNOGAMES_"));
+            gameListTarget.appendChild(p);
+            UI.Language.markLanguage(p);
+            return;
+        }
 
-            var roomList = games[i].getOrderedRoomList();
-            for (var k = 0; k < roomList.length; k++) {
-                p.appendChild(document.createElement("br"));
-                var a = document.createElement("a");
-                a.classList.add("textLink");
-                a.appendChild(document.createTextNode(roomList[k].name));
-                a.addEventListener('click', {
-                    roomid : roomList[k].id,
+        for (var i = 0; i < games.length; i++) {
+            var game = games[i];
+            var div = <HTMLElement> document.createElement("div");
+            div.classList.add("mainWindowParagraph");
+            div.classList.add("gamesMainDiv");
+
+            var b =<HTMLElement> document.createElement("b");
+            b.appendChild(document.createTextNode(games[i].name));
+            b.classList.add("gamesName");
+
+            div.appendChild(b);
+
+            if (games[i].isMyCreation()) {
+                var perm = document.createElement("a");
+                perm.classList.add("gamesOwnerButton");
+                perm.classList.add("textLink");
+                perm.appendChild(document.createTextNode("_GAMESPERMISSIONS_"));
+
+                perm.addEventListener("click", {
+                    game : games[i],
                     handleEvent : function () {
-                        UI.Chat.callSelf(this.roomid);
+                        UI.Games.editGamePermissions(this.game);
                     }
                 });
-                p.appendChild(a);
+
+                var edit = document.createElement("a");
+                edit.classList.add("gamesOwnerButton");
+                edit.classList.add("textLink");
+                edit.appendChild(document.createTextNode("_GAMESEDIT_"));
+
+                edit.addEventListener("click", {
+                    game : games[i],
+                    handleEvent : function () {
+                        UI.Games.editGame(this.game);
+                    }
+                });
+
+                var deleteGame = document.createElement("a");
+                deleteGame.classList.add("gamesOwnerButton");
+                deleteGame.classList.add("textLink");
+                deleteGame.appendChild(document.createTextNode("_GAMESDELETE_"));
+
+                deleteGame.addEventListener("click", {
+                    game : games[i],
+                    handleEvent : function () {
+                        UI.Games.deleteGame(this.game);
+                    }
+                });
+
+                UI.Language.markLanguage(edit, deleteGame, perm);
+
+                div.appendChild(deleteGame);
+                div.appendChild(edit);
+                div.appendChild(perm);
+            } else {
+                var leave = document.createElement("a");
+                leave.classList.add("gamesOwnerButton");
+                leave.classList.add("textLink");
+                leave.appendChild(document.createTextNode("_GAMESLEAVE_"));
+
+                leave.addEventListener("click", {
+                    game : games[i],
+                    handleEvent : function () {
+                        UI.Games.leaveGame(this.game);
+                    }
+                });
+
+                UI.Language.markLanguage(leave);
+                div.appendChild(leave);
             }
-            div.appendChild(p);
+
+            var creatorDiv = document.createElement("div");
+            creatorDiv.classList.add("gameCreatorDiv");
+
+            var creatorTitle = document.createElement("b");
+            creatorTitle.appendChild(document.createTextNode("_GAMECREATORTITLE_"))
+            creatorTitle.appendChild(document.createTextNode(": "));
+            UI.Language.markLanguage(creatorTitle);
+
+            creatorDiv.appendChild(creatorTitle);
+            creatorDiv.appendChild(document.createTextNode(games[i].getCreatorFullNickname()));
+
+            div.appendChild(creatorDiv);
+
+
+            var roomList = games[i].getOrderedRoomList();
+
+            if (roomList.length === 0) {
+                var p = document.createElement("p");
+                p.classList.add("gamesNoRooms");
+                p.appendChild(document.createTextNode("_GAMESNOROOMS_"));
+                UI.Language.markLanguage(p);
+                div.appendChild(p);
+            } else {
+                for (var k = 0; k < roomList.length; k++) {
+                    var user = roomList[k].getMe();
+                    var room = roomList[k];
+
+                    var p = document.createElement("p");
+                    p.classList.add("gamesRoomP");
+
+                    var a = document.createElement("a");
+                    a.classList.add("textLink");
+                    a.classList.add("gameRoomLink");
+                    a.addEventListener('click', {
+                        roomid : roomList[k].id,
+                        handleEvent : function () {
+                            UI.Chat.callSelf(this.roomid);
+                        }
+                    });
+                    a.appendChild(document.createTextNode(roomList[k].name));
+                    p.appendChild(a);
+
+                    if (game.isMyCreation()) {
+                        var rDelete = document.createElement("a");
+                        rDelete.classList.add("textLink");
+                        rDelete.classList.add("roomExtraButton");
+                        rDelete.appendChild(document.createTextNode("_GAMESROOMDELETE_"));
+                        rDelete.addEventListener("click", {
+                            room : room,
+                            handleEvent : function () {
+                                UI.Rooms.deleteRoom(this.room);
+                            }
+                        });
+                        p.appendChild(rDelete);
+
+                        var rPerm = document.createElement("a");
+                        rPerm.classList.add("textLink");
+                        rPerm.classList.add("roomExtraButton");
+                        rPerm.appendChild(document.createTextNode("_GAMESROOMPERMISSIONS_"));
+                        rPerm.addEventListener("click", {
+                            room : room,
+                            handleEvent : function () {
+                                UI.Rooms.setPermissions(this.room);
+                            }
+                        });
+                        p.appendChild(rPerm);
+
+                        UI.Language.markLanguage(rPerm, rDelete);
+
+                    }
+
+                    div.appendChild(p);
+                }
+            }
+
+            if (game.isMyCreation() || gameContext.invite) {
+                var hr = document.createElement("hr");
+                hr.classList.add("gamesHR");
+                div.appendChild(hr);
+            }
+
+            if (game.isMyCreation()) {
+                var p = document.createElement("p");
+                p.className = "textLink gamesAdminButton";
+                p.appendChild(document.createTextNode("_GAMESCREATEROOM_"));
+                UI.Language.markLanguage(p);
+                div.appendChild(p);
+
+                p.addEventListener("click", {
+                    game : game,
+                    handleEvent : function () {
+                        UI.Games.createRoom(this.game);
+                    }
+                });
+            }
+
+            var gameContext = game.getMe();
+            if (game.isMyCreation() || gameContext.invite) {
+                var p = document.createElement("p");
+                p.className = "textLink gamesAdminButton";
+                p.appendChild(document.createTextNode("_GAMESSENDINVITES_"));
+                UI.Language.markLanguage(p);
+                div.appendChild(p);
+
+                p.addEventListener("click", {
+                    game : game,
+                    handleEvent : function () {
+                        UI.Games.sendInvites(this.game);
+                    }
+                });
+            }
+
             gameListTarget.appendChild(div);
         }
     };

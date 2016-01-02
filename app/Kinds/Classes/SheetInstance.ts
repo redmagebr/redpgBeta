@@ -23,16 +23,14 @@ class SheetInstance {
 
     public changed : boolean = false;
 
-    public changeListeners : Array<Listener> = [];
+    private changeTrigger = new Trigger();
 
-    public addChangeListener (list : Listener) {
-        this.changeListeners.push(list);
+    public addChangeListener (list : Listener | Function) {
+        this.changeTrigger.addListener(list);
     }
 
     public triggerChanged () {
-        for (var i = 0; i < this.changeListeners.length; i++) {
-            this.changeListeners[i].handleEvent(this);
-        }
+        this.changeTrigger.trigger(this);
         DB.SheetDB.triggerChanged(this);
     }
 

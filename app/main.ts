@@ -2,7 +2,6 @@
 
 // Set up language
 UI.Language.searchLanguage();
-UI.Language.updateScreen();
 
 // Read and detach pages
 UI.PageManager.readWindows();

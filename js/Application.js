@@ -58,6 +58,7 @@ var User = (function () {
         this.level = null;
         this.gameContexts = {};
         this.roomContexts = {};
+        this.changedTrigger = new Trigger();
     }
     User.prototype.isMe = function () {
         return this.id === Application.getMyId();
@@ -106,15 +107,26 @@ var User = (function () {
         }
         if (user['gameid'] !== undefined) {
             context = this.getGameContext(user['roomid']);
-            if (context === null)
+            if (context === null) {
                 context = new UserGameContext(this);
+                this.gameContexts[user['gameid']] = context;
+            }
             context.updateFromObject(user);
         }
+        this.changedTrigger.trigger(this);
     };
     return User;
 })();
 var UserGameContext = (function () {
     function UserGameContext(user) {
+        this.gameid = 0;
+        this.createRoom = false;
+        this.createSheet = false;
+        this.editSheet = false;
+        this.viewSheet = false;
+        this.deleteSheet = false;
+        this.invite = false;
+        this.promote = false;
         this.user = user;
     }
     UserGameContext.prototype.getUser = function () {
@@ -131,6 +143,7 @@ var UserGameContext = (function () {
 })();
 var UserRoomContext = (function () {
     function UserRoomContext(user) {
+        this.logger = false;
         this.cleaner = false;
         this.storyteller = false;
         this.user = user;
@@ -222,6 +235,9 @@ var Room = (function () {
         }
         return storytellers;
     };
+    Room.prototype.getMe = function () {
+        return this.getUser(Application.getMyId());
+    };
     Room.prototype.getUser = function (id) {
         if (this.users[id] === undefined) {
             return null;
@@ -238,9 +254,6 @@ var Room = (function () {
         }
         return list;
     };
-    Room.prototype.getMe = function () {
-        return this.getUser(Application.Login.getUser().id);
-    };
     Room.prototype.getGame = function () {
         return DB.GameDB.getGame(this.gameid);
     };
@@ -249,6 +262,16 @@ var Room = (function () {
             if (room[id] === undefined || id === "users" || id === 'messages')
                 continue;
             this[id] = room[id];
+        }
+        if (room["cleaner"] !== undefined) {
+            this.users[Application.getMyId()] = DB.UserDB.getUser(Application.getMyId());
+            var updateObj = {
+                roomid: this.id,
+                cleaner: room['cleaner'],
+                logger: room['logger'],
+                storyteller: room['storyteller']
+            };
+            this.users[Application.getMyId()].updateFromObject(updateObj);
         }
         if (room['users'] !== undefined) {
             var cleanedup = [];
@@ -308,6 +331,15 @@ var Game = (function () {
         this.creatornick = null;
         this.creatorsufix = null;
     }
+    Game.prototype.getCreatorFullNickname = function () {
+        return this.creatornick + "#" + this.creatorsufix;
+    };
+    Game.prototype.isMyCreation = function () {
+        return Application.isMe(this.creatorid);
+    };
+    Game.prototype.getMe = function () {
+        return this.getUser(Application.getMyId());
+    };
     Game.prototype.getUser = function (id) {
         if (this.users[id] === undefined) {
             return null;
@@ -383,6 +415,20 @@ var Game = (function () {
                 }
             }
         }
+        if (game["createRoom"] !== undefined) {
+            this.users[Application.getMyId()] = DB.UserDB.getUser(Application.getMyId());
+            var updateObj = {
+                gameid: this.id,
+                createRoom: game["createRoom"],
+                createSheet: game["createSheet"],
+                deleteSheet: game["deleteSheet"],
+                editSheet: game["editSheet"],
+                invite: game["invite"],
+                promote: game["promote"],
+                viewSheet: game["viewSheet"]
+            };
+            this.users[Application.getMyId()].updateFromObject(updateObj);
+        }
         if (game['rooms'] !== undefined) {
             var cleanedup = [];
             for (var i = 0; i < game['rooms'].length; i++) {
@@ -445,15 +491,13 @@ var SheetInstance = (function () {
         this.promote = false;
         this.isPublic = false;
         this.changed = false;
-        this.changeListeners = [];
+        this.changeTrigger = new Trigger();
     }
     SheetInstance.prototype.addChangeListener = function (list) {
-        this.changeListeners.push(list);
+        this.changeTrigger.addListener(list);
     };
     SheetInstance.prototype.triggerChanged = function () {
-        for (var i = 0; i < this.changeListeners.length; i++) {
-            this.changeListeners[i].handleEvent(this);
-        }
+        this.changeTrigger.trigger(this);
         DB.SheetDB.triggerChanged(this);
     };
     SheetInstance.prototype.getMemoryId = function () {
@@ -526,6 +570,47 @@ var SheetInstance = (function () {
             this.setValues(obj['values'], false);
     };
     return SheetInstance;
+})();
+var Trigger = (function () {
+    function Trigger() {
+        this.functions = [];
+        this.objects = [];
+    }
+    Trigger.prototype.removeListener = function (f) {
+        if (typeof f === "function") {
+            var i = this.functions.indexOf(f);
+            if (i !== -1) {
+                this.functions.splice(i, 1);
+            }
+        }
+        else {
+            var i = this.objects.indexOf(f);
+            if (i !== -1) {
+                this.objects.splice(i, 1);
+            }
+        }
+    };
+    Trigger.prototype.addListener = function (f) {
+        if (typeof f === "function") {
+            this.functions.push(f);
+        }
+        else {
+            this.objects.push(f);
+        }
+    };
+    Trigger.prototype.trigger = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i - 0] = arguments[_i];
+        }
+        for (var i = 0; i < this.functions.length; i++) {
+            this.functions[i].apply(null, args);
+        }
+        for (var i = 0; i < this.objects.length; i++) {
+            this.objects[i].handleEvent.apply(this.objects[i], args);
+        }
+    };
+    return Trigger;
 })();
 var AJAXConfig = (function () {
     function AJAXConfig(url) {
@@ -656,9 +741,6 @@ var WebsocketController = (function () {
             controller: this,
             handleEvent: function (e) {
                 this.controller.resetInterval();
-                if (e.data === "1") {
-                    console.warn("KEEPALIVE USED!");
-                }
                 if (e.data !== "1" && e.data.indexOf("[\"status") !== 0)
                     console.debug("[WEBSOCKET] " + this.controller.url + ": Message: ", e);
                 this.controller.triggerMessage(e);
@@ -812,7 +894,7 @@ var ChatWsController = (function () {
 })();
 var Configuration = (function () {
     function Configuration(defV) {
-        this.changeListeners = [];
+        this.changeTrigger = new Trigger();
         this.value = null;
         this.defValue = null;
         this.setFunction = null;
@@ -827,7 +909,7 @@ var Configuration = (function () {
         this.storeValue(this.defValue);
     };
     Configuration.prototype.addChangeListener = function (listener) {
-        this.changeListeners.push(listener);
+        this.changeTrigger.addListener(listener);
     };
     Configuration.prototype.storeValue = function (value) {
         var oldValue = JSON.stringify(this.value);
@@ -839,14 +921,7 @@ var Configuration = (function () {
         }
         var newValue = JSON.stringify(this.value);
         if (newValue !== oldValue) {
-            for (var i = 0; i < this.changeListeners.length; i++) {
-                if (typeof this.changeListeners[i] === 'function') {
-                    this.changeListeners[i](this);
-                }
-                else {
-                    this.changeListeners[i].handleEvent(this);
-                }
-            }
+            this.changeTrigger.trigger(this);
             return true;
         }
         return false;
@@ -942,7 +1017,7 @@ var BooleanConfiguration = (function (_super) {
 })(Configuration);
 var Memory = (function () {
     function Memory(defV) {
-        this.changeListeners = [];
+        this.changeTrigger = new Trigger();
         this.value = null;
         this.defValue = null;
         this.setFunction = null;
@@ -957,7 +1032,7 @@ var Memory = (function () {
         this.value = this.defValue;
     };
     Memory.prototype.addChangeListener = function (listener) {
-        this.changeListeners.push(listener);
+        this.changeTrigger.addListener(listener);
     };
     Memory.prototype.storeValue = function (value) {
         var oldValue = JSON.stringify(this.value);
@@ -969,9 +1044,7 @@ var Memory = (function () {
         }
         var newValue = JSON.stringify(this.value);
         if (newValue !== oldValue) {
-            for (var i = 0; i < this.changeListeners.length; i++) {
-                this.changeListeners[i].handleEvent(this);
-            }
+            this.changeTrigger.trigger(this);
             return true;
         }
         return false;
@@ -1435,6 +1508,7 @@ var ChatSystemMessage = (function () {
 /// <reference path='Classes/Room.ts' />
 /// <reference path='Classes/Game.ts' />
 /// <reference path='Classes/SheetInstance.ts' />
+/// <reference path='Classes/Trigger.ts' />
 /// <reference path='Classes/AJAXConfig.ts' />
 /// <reference path='Classes/WebsocketController.ts' />
 /// <reference path='Classes/ChatWsController.ts' />
@@ -1589,7 +1663,7 @@ var Message = (function (_super) {
         this.sending = null;
         this.origin = 0;
         this.destination = null;
-        this.updatedListeners = [];
+        this.updatedTrigger = new Trigger();
         this.html = null;
         this.clone = false;
     }
@@ -1788,17 +1862,10 @@ var Message = (function (_super) {
         delete (this.special[id]);
     };
     Message.prototype.addUpdatedListener = function (list) {
-        this.updatedListeners.push(list);
+        this.updatedTrigger.addListener(list);
     };
     Message.prototype.triggerUpdated = function () {
-        for (var i = 0; i < this.updatedListeners.length; i++) {
-            if (typeof this.updatedListeners[i] === 'function') {
-                this.updatedListeners[i](this);
-            }
-            else {
-                this.updatedListeners[i].handleEvent(this);
-            }
-        }
+        this.updatedTrigger.trigger(this);
         if (this.sending !== null) {
             clearTimeout(this.sending);
             this.html.classList.remove("chatMessageSending");
@@ -3191,22 +3258,17 @@ var DB;
     var SheetDB;
     (function (SheetDB) {
         var sheets = {};
-        var changeListeners = [];
+        var changeTrigger = new Trigger();
         function addChangeListener(list) {
-            this.changeListeners.push(list);
+            changeTrigger.addListener(list);
         }
         SheetDB.addChangeListener = addChangeListener;
         function removeChangeListener(list) {
-            var i = changeListeners.indexOf(list);
-            if (i !== -1) {
-                changeListeners.splice(i, 1);
-            }
+            changeTrigger.removeListener(list);
         }
         SheetDB.removeChangeListener = removeChangeListener;
         function triggerChanged(sheet) {
-            for (var i = 0; i < this.changeListeners.length; i++) {
-                this.changeListeners[i].handleEvent(sheet);
-            }
+            changeTrigger.trigger(sheet);
         }
         SheetDB.triggerChanged = triggerChanged;
         function hasSheet(id) {
@@ -3364,7 +3426,7 @@ var Application;
         var sessionLife = 30 * 60 * 1000;
         var keepAliveTime = 2 * 60 * 1000;
         var interval = null;
-        var listeners = [];
+        var trigger = new Trigger();
         var LAST_LOGIN_STORAGE = "redpg_lastLogin";
         var LAST_SESSION_STORAGE = "redpg_lastSession";
         var LAST_SESSION_TIME_STORAGE = "redpg_lastSessionTime";
@@ -3429,8 +3491,8 @@ var Application;
             var oldLogged = isLogged();
             var oldUser = currentUser;
             currentSession = sessionid;
-            currentUser = new User();
-            currentUser.updateFromObject(userJson);
+            DB.UserDB.updateFromObject([userJson]);
+            currentUser = DB.UserDB.getUser(userJson['id']);
             updateSessionLife();
             if (interval !== null)
                 window.clearInterval(interval);
@@ -3472,8 +3534,12 @@ var Application;
             Server.Login.requestSession(true, cbs);
         }
         Login.keepAlive = keepAlive;
+        function setSession(a) {
+            currentSession = a;
+        }
+        Login.setSession = setSession;
         function addListener(listener) {
-            listeners.push(listener);
+            trigger.addListener(listener);
         }
         Login.addListener = addListener;
         function getUser() {
@@ -3481,9 +3547,7 @@ var Application;
         }
         Login.getUser = getUser;
         function triggerListeners() {
-            for (var i = 0; i < listeners.length; i++) {
-                listeners[i].handleEvent(isLogged());
-            }
+            trigger.trigger(isLogged());
         }
     })(Login = Application.Login || (Application.Login = {}));
 })(Application || (Application = {}));
@@ -3518,6 +3582,24 @@ var Lingo = (function () {
 var LingoList;
 (function (LingoList) {
     var lingos = {};
+    function getLingos() {
+        var list = [];
+        for (var id in lingos) {
+            if (list.indexOf(lingos[id]) === -1)
+                list.push(lingos[id]);
+        }
+        list.sort(function (a, b) {
+            var na = a.name.toLowerCase();
+            var nb = b.name.toLowerCase();
+            if (na < nb)
+                return -1;
+            if (na > nb)
+                return 1;
+            return 0;
+        });
+        return list;
+    }
+    LingoList.getLingos = getLingos;
     function getLingo(id) {
         id = id.toLowerCase().trim();
         if (lingos[id] !== undefined) {
@@ -3541,6 +3623,7 @@ var ptbr = new Lingo();
 ptbr.ids = ["pt", "pt-br"];
 ptbr.name = "Português - Brasil";
 ptbr.shortname = "Português";
+ptbr.flagIcon = "PT_BR";
 ptbr.setLingo("_LOGINEMAIL_", "E-mail");
 ptbr.setLingo("_LOGINPASSWORD_", "Senha");
 ptbr.setLingo("_LOGINSUBMIT_", "Entrar");
@@ -3551,7 +3634,7 @@ ptbr.setLingo("_CHANGELOGCURRENTVERSION_", "A sua versão é");
 ptbr.setLingo("_CHANGELOGMOSTRECENTVERSION_", "A versão mais recente é");
 ptbr.setLingo("_REDPGTITLE_", "RedPG");
 ptbr.setLingo("_REDPGEXP1_", "RedPG é um sistema para facilitar RPGs de Mesa através da internet. Funções do sistema incluem o compartilhamento de Imagens, Sons, Fichas de Personagens, uma sala para troca de mensagens com suporte a dados e muito mais, com novas funções sempre sendo adicionadas.");
-ptbr.setLingo("_REDPGEXP2_", "Todos os aspectos do sistema existem e estão presos às Mesas, que ele enxerga como um grupo de RPG. Então para criar qualquer coisa ou utilizar o sistema de qualquer maneira, você precisa criar ou ser convidado a uma Mesa. Isso é feito na seção \"Mesas\", no menu à esquerda.");
+ptbr.setLingo("_REDPGEXP2_", "Todos os aspectos do sistema existem e estão presos aos Grupos, um grupo de RPG. Então para criar qualquer coisa ou utilizar o sistema de qualquer maneira, você precisa criar ou ser convidado a um Grupo. Isso é feito na seção \"Grupos\", no menu à esquerda.");
 ptbr.setLingo("_REDPGFORUMTITLE_", "Últimos posts no Fórum");
 ptbr.setLingo("_REDPGFORUM1_", "Não Implementado");
 ptbr.setLingo("_REDPGDONATIONTITLE_", "Doações");
@@ -3562,20 +3645,46 @@ ptbr.setLingo("_REDPGLINKSTITLE_", "Links úteis");
 ptbr.setLingo("_REDPGLINKFRONTBUTTON_", "RedPG Front on GitHub");
 ptbr.setLingo("_REDPGLINKFRONTEXP_", "Versão offline do cliente RedPG. Usuários que queiram abrir o RedPG a partir da própria máquina devem baixar versões atualizadas aqui. A versão offline permite que jogadores e mestres compartilhem sons que estejam dentro da pasta Sons, sem a necessidade de um servidor para compartilhar sons.");
 ptbr.setLingo("_MENULOGOUT_", "Logout");
-ptbr.setLingo("_MENUGAMES_", "Mesas");
+ptbr.setLingo("_MENUGAMES_", "Grupos");
 ptbr.setLingo("_MENUCONFIG_", "Opções");
+ptbr.setLingo("_MENUCHAT_", "Chat");
 ptbr.setLingo("", "");
 ptbr.setLingo("", "");
 ptbr.setLingo("", "");
 ptbr.setLingo("", "");
-ptbr.setLingo("", "");
-ptbr.setLingo("_GAMESTITLE_", "Mesas");
+ptbr.setLingo("_GAMESTITLE_", "Grupos");
 ptbr.setLingo("_GAMESEXP1_", "Caso precise informar seu identificador para alguém, ele é \"%a\", sem as aspas.");
-ptbr.setLingo("_GAMESEXP2_", "Aqui você pode administrar as mesas das quais você participa. Para convidar jogadores à sua mesa, você irá precisar do identificador deles.");
-ptbr.setLingo("_GAMESEXP3_", "Uma mesa nesse sistema é o lugar no qual todas as outras partes do sistema se conectam. As salas, o ambiente no qual as partidas são jogadas, ficam anexadas à uma mesa. As fichas de personagens ficam anexadas à uma mesa.");
-ptbr.setLingo("_GAMESEXP4_", "No momento não é possível pedir uma lista de mesas de livre entrada (não implementados).");
+ptbr.setLingo("_GAMESEXP2_", "Aqui você pode administrar os grupos dos quais você participa. Para convidar jogadores ao seu grupo, você irá precisar do identificador deles.");
+ptbr.setLingo("_GAMESEXP3_", "Um grupo nesse sistema é o lugar no qual todas as outras partes do sistema se conectam. As salas, o ambiente no qual as partidas são jogadas, ficam anexadas a um grupo. As fichas de personagens ficam anexadas a um grupo.");
+ptbr.setLingo("_GAMESEXP4_", "No momento não é possível pedir uma lista de grupos de livre entrada (não implementados).");
 ptbr.setLingo("_GAMESINVITES_", "Meus convites");
-ptbr.setLingo("_GAMESNEWGAME_", "Criar novo jogo");
+ptbr.setLingo("_GAMESNEWGAME_", "Criar novo grupo");
+ptbr.setLingo("_GAMEINVITESERROR_", "Houve um erro no pedido.");
+ptbr.setLingo("_GAMEINVITESEMPTY_", "Você não recebeu nenhum convite.");
+ptbr.setLingo("_GAMEINVITESREFRESH_", "Clique aqui para atualizar essa página.");
+ptbr.setLingo("_GAMEINVITESERRORTRYAGAIN_", "Tente novamente.");
+ptbr.setLingo("_GAMEINVITESGAMETITLE_", "Grupo");
+ptbr.setLingo("_GAMEINVITESSTORYTELLER_", "Mestre");
+ptbr.setLingo("_GAMEINVITESNOMESSAGE_", "Nenhuma mensagem foi adicionada ao convite.");
+ptbr.setLingo("_GAMEINVITESMESSAGE_", "Convite");
+ptbr.setLingo("_GAMEINVITESACCEPT_", "Aceitar");
+ptbr.setLingo("_GAMEINVITESREJECT_", "Recusar");
+ptbr.setLingo("_GAMESEDIT_", "Editar");
+ptbr.setLingo("_GAMESDELETE_", "Deletar");
+ptbr.setLingo("_GAMESLEAVE_", "Sair");
+ptbr.setLingo("_GAMESNOROOMS_", "Nenhuma sala visível.");
+ptbr.setLingo("_GAMESNOGAMES_", "Você não faz parte de nenhum grupo. Você pode criar seu próprio grupo ou ser convidado a algum.");
+ptbr.setLingo("_GAMECREATORTITLE_", "Criador");
+ptbr.setLingo("_GAMESPERMISSIONS_", "Permissões");
+ptbr.setLingo("_GAMESSENDINVITES_", "Enviar convites");
+ptbr.setLingo("_GAMESCREATEROOM_", "Criar sala");
+ptbr.setLingo("_GAMESROOMPERMISSIONS_", "Permissões");
+ptbr.setLingo("_GAMESROOMDELETE_", "Deletar");
+ptbr.setLingo("", "");
+ptbr.setLingo("_GAMEINVITESTITLE_", "Meus Convites");
+ptbr.setLingo("_GAMEINVITESEXP01_", "Enquanto você não aceitar um dos convites, você não faz parte do grupo.");
+ptbr.setLingo("_GAMEINVITESEXP02_", "Caso precise informar seu identificador a alguém, ele é \"%a\".");
+ptbr.setLingo("", "");
 ptbr.setLingo("", "");
 ptbr.setLingo("", "");
 ptbr.setLingo("", "");
@@ -3685,12 +3794,20 @@ ptbr.setLingo("", "");
 ptbr.setLingo("", "");
 LingoList.storeLingo(ptbr);
 delete (ptbr);
+var en = new Lingo();
+en.ids = ["en", "en-gb", "en-us"];
+en.name = "English";
+en.shortname = "English";
+en.flagIcon = "EN";
+LingoList.storeLingo(en);
+delete (en);
 var UI;
 (function (UI) {
     UI.idChangelog = "changelogSideWindow";
     UI.idGames = "gamesSideWindow";
     UI.idChat = "chatSideWindow";
     UI.idConfig = "configSideWindow";
+    UI.idGameInvites = "gameInvitesSideWindow";
     UI.idHome = "homeSideWindow";
     Application.Config.registerConfiguration("chatMaxMessages", new NumberConfiguration(120, 60, 10000));
     Application.Config.registerConfiguration("chatshowhelp", new BooleanConfiguration(true));
@@ -3714,6 +3831,7 @@ var UI;
     (function (WindowManager) {
         var currentWindow = "";
         var windowList = {};
+        var $windowList = {};
         var style = document.createElement('style');
         style.type = 'text/css';
         document.head.appendChild(style);
@@ -3724,10 +3842,12 @@ var UI;
                 var child = children[i];
                 if (child.classList.contains("window")) {
                     windowList[child.getAttribute("id")] = child;
+                    $windowList[child.getAttribute("id")] = $(child);
                 }
             }
         })();
         function callWindow(id) {
+            var animationTime = Application.Config.getConfig("animTime").getValue() * 2;
             if (windowList[id] === undefined) {
                 console.log("--- Error: Attempt to call inexistent window: " + id + ", ignoring.");
                 return;
@@ -3735,20 +3855,38 @@ var UI;
             if (id === currentWindow)
                 return;
             if (currentWindow === "") {
-                console.debug("Detaching all windows.");
-                for (var key in windowList) {
-                    document.body.removeChild(windowList[key]);
-                }
+                detachAllWindows();
             }
             else {
                 console.debug("Detaching current window: " + currentWindow);
-                document.body.removeChild(windowList[currentWindow]);
+                windowList[currentWindow].style.zIndex = "1";
+                windowList[currentWindow].style.opacity = "1";
             }
+            var oldid = currentWindow;
             currentWindow = id;
             console.debug("Appending window: " + id);
+            $windowList[currentWindow].finish().css("opacity", "0").animate({ opacity: 1 }, animationTime, (function () {
+                var ele = document.getElementById(this.oldid);
+                if (ele === null) {
+                    return;
+                }
+                if (ele.parentNode !== null) {
+                    ele.parentNode.removeChild(ele);
+                }
+            }).bind({ oldid: oldid }));
+            windowList[currentWindow].style.zIndex = "2";
             document.body.appendChild(windowList[currentWindow]);
+            UI.Language.updateScreen(windowList[currentWindow]);
         }
         WindowManager.callWindow = callWindow;
+        function detachAllWindows() {
+            for (var key in windowList) {
+                document.body.removeChild(windowList[key]);
+            }
+        }
+        function detachWindow(id) {
+            document.body.removeChild(windowList[id]);
+        }
         function updateWindowSizes() {
             var stylehtml = "";
             var totalWidth = window.innerWidth;
@@ -3893,9 +4031,10 @@ var UI;
                     return;
                 var offLeft = (UI.Handles.isAlwaysUp() ? 60 : 10) - UI.WindowManager.currentLeftSize;
                 closeLeftPage();
+                $page.finish();
                 mainWindow.appendChild($page[0]);
                 $page[0].style.left = offLeft + "px";
-                $page.finish().animate({
+                $page.animate({
                     left: (UI.Handles.isAlwaysUp() ? 60 : 10)
                 }, animationTime, function () {
                     this.style.left = "";
@@ -3907,9 +4046,10 @@ var UI;
                     return;
                 closeRightPage();
                 var offRight = (UI.Handles.isAlwaysUp() ? 60 : 10) - UI.WindowManager.currentRightSize;
+                $page.finish();
                 mainWindow.appendChild($page[0]);
                 $page[0].style.right = offRight + "px";
-                $page.finish().animate({
+                $page.animate({
                     right: (UI.Handles.isAlwaysUp() ? 60 : 10)
                 }, animationTime, function () {
                     this.style.right = "";
@@ -3923,7 +4063,7 @@ var UI;
             var offLeft = (UI.Handles.isAlwaysUp() ? 60 : 10) - UI.WindowManager.currentLeftSize;
             var animationTime = getAnimationTime();
             if ($currentLeft !== null) {
-                $currentLeft.animate({
+                $currentLeft.finish().animate({
                     left: offLeft
                 }, animationTime, function () {
                     this.style.left = "";
@@ -4163,6 +4303,23 @@ var UI;
     var Language;
     (function (Language) {
         var currentLanguage = null;
+        var flagContainer = document.getElementById("loginFlagContainer");
+        var list = LingoList.getLingos();
+        var a;
+        var clickF = function () {
+            localStorage.setItem("lastLanguage", this.ids[0]);
+            Application.Config.getConfig("language").storeValue(this.ids[0]);
+        };
+        for (var i = 0; i < list.length; i++) {
+            a = document.createElement("a");
+            a.classList.add("flagIcon");
+            a.classList.add("icons-flag" + list[i].flagIcon);
+            a.classList.add("buttonBehavior");
+            a.addEventListener("click", clickF.bind(list[i]));
+            a.setAttribute("title", list[i].name);
+            flagContainer.appendChild(a);
+        }
+        delete (list, i, a, clickF);
         Application.Config.registerChangeListener("language", {
             handleEvent: function () {
                 var oldLanguage = UI.Language.getLanguage();
@@ -4273,10 +4430,17 @@ var UI;
             element.dataset['titlelingo'] = value;
         }
         Language.addLanguageTitle = addLanguageTitle;
-        function markLanguage(element) {
-            element.classList.add("language");
-            processElement(element);
-            updateText(element);
+        function markLanguage() {
+            var elements = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                elements[_i - 0] = arguments[_i];
+            }
+            for (var i = 0; i < elements.length; i++) {
+                var element = elements[i];
+                element.classList.add("language");
+                processElement(element);
+                updateText(element);
+            }
         }
         Language.markLanguage = markLanguage;
     })(Language = UI.Language || (UI.Language = {}));
@@ -4308,27 +4472,167 @@ var UI;
             var games = DB.GameDB.getOrderedGameList();
             while (gameListTarget.lastChild !== null)
                 gameListTarget.removeChild(gameListTarget.lastChild);
-            for (var i = 0; i < games.length; i++) {
-                var div = document.createElement("div");
+            if (games.length === 0) {
                 var p = document.createElement("p");
                 p.classList.add("mainWindowParagraph");
-                p.classList.add("hoverable");
-                p.appendChild(document.createTextNode(games[i].name));
-                var roomList = games[i].getOrderedRoomList();
-                for (var k = 0; k < roomList.length; k++) {
-                    p.appendChild(document.createElement("br"));
-                    var a = document.createElement("a");
-                    a.classList.add("textLink");
-                    a.appendChild(document.createTextNode(roomList[k].name));
-                    a.addEventListener('click', {
-                        roomid: roomList[k].id,
+                p.appendChild(document.createTextNode("_GAMESNOGAMES_"));
+                gameListTarget.appendChild(p);
+                UI.Language.markLanguage(p);
+                return;
+            }
+            for (var i = 0; i < games.length; i++) {
+                var game = games[i];
+                var div = document.createElement("div");
+                div.classList.add("mainWindowParagraph");
+                div.classList.add("gamesMainDiv");
+                var b = document.createElement("b");
+                b.appendChild(document.createTextNode(games[i].name));
+                b.classList.add("gamesName");
+                div.appendChild(b);
+                if (games[i].isMyCreation()) {
+                    var perm = document.createElement("a");
+                    perm.classList.add("gamesOwnerButton");
+                    perm.classList.add("textLink");
+                    perm.appendChild(document.createTextNode("_GAMESPERMISSIONS_"));
+                    perm.addEventListener("click", {
+                        game: games[i],
                         handleEvent: function () {
-                            UI.Chat.callSelf(this.roomid);
+                            UI.Games.editGamePermissions(this.game);
                         }
                     });
-                    p.appendChild(a);
+                    var edit = document.createElement("a");
+                    edit.classList.add("gamesOwnerButton");
+                    edit.classList.add("textLink");
+                    edit.appendChild(document.createTextNode("_GAMESEDIT_"));
+                    edit.addEventListener("click", {
+                        game: games[i],
+                        handleEvent: function () {
+                            UI.Games.editGame(this.game);
+                        }
+                    });
+                    var deleteGame = document.createElement("a");
+                    deleteGame.classList.add("gamesOwnerButton");
+                    deleteGame.classList.add("textLink");
+                    deleteGame.appendChild(document.createTextNode("_GAMESDELETE_"));
+                    deleteGame.addEventListener("click", {
+                        game: games[i],
+                        handleEvent: function () {
+                            UI.Games.deleteGame(this.game);
+                        }
+                    });
+                    UI.Language.markLanguage(edit, deleteGame, perm);
+                    div.appendChild(deleteGame);
+                    div.appendChild(edit);
+                    div.appendChild(perm);
                 }
-                div.appendChild(p);
+                else {
+                    var leave = document.createElement("a");
+                    leave.classList.add("gamesOwnerButton");
+                    leave.classList.add("textLink");
+                    leave.appendChild(document.createTextNode("_GAMESLEAVE_"));
+                    leave.addEventListener("click", {
+                        game: games[i],
+                        handleEvent: function () {
+                            UI.Games.leaveGame(this.game);
+                        }
+                    });
+                    UI.Language.markLanguage(leave);
+                    div.appendChild(leave);
+                }
+                var creatorDiv = document.createElement("div");
+                creatorDiv.classList.add("gameCreatorDiv");
+                var creatorTitle = document.createElement("b");
+                creatorTitle.appendChild(document.createTextNode("_GAMECREATORTITLE_"));
+                creatorTitle.appendChild(document.createTextNode(": "));
+                UI.Language.markLanguage(creatorTitle);
+                creatorDiv.appendChild(creatorTitle);
+                creatorDiv.appendChild(document.createTextNode(games[i].getCreatorFullNickname()));
+                div.appendChild(creatorDiv);
+                var roomList = games[i].getOrderedRoomList();
+                if (roomList.length === 0) {
+                    var p = document.createElement("p");
+                    p.classList.add("gamesNoRooms");
+                    p.appendChild(document.createTextNode("_GAMESNOROOMS_"));
+                    UI.Language.markLanguage(p);
+                    div.appendChild(p);
+                }
+                else {
+                    for (var k = 0; k < roomList.length; k++) {
+                        var user = roomList[k].getMe();
+                        var room = roomList[k];
+                        var p = document.createElement("p");
+                        p.classList.add("gamesRoomP");
+                        var a = document.createElement("a");
+                        a.classList.add("textLink");
+                        a.classList.add("gameRoomLink");
+                        a.addEventListener('click', {
+                            roomid: roomList[k].id,
+                            handleEvent: function () {
+                                UI.Chat.callSelf(this.roomid);
+                            }
+                        });
+                        a.appendChild(document.createTextNode(roomList[k].name));
+                        p.appendChild(a);
+                        if (game.isMyCreation()) {
+                            var rDelete = document.createElement("a");
+                            rDelete.classList.add("textLink");
+                            rDelete.classList.add("roomExtraButton");
+                            rDelete.appendChild(document.createTextNode("_GAMESROOMDELETE_"));
+                            rDelete.addEventListener("click", {
+                                room: room,
+                                handleEvent: function () {
+                                    UI.Rooms.deleteRoom(this.room);
+                                }
+                            });
+                            p.appendChild(rDelete);
+                            var rPerm = document.createElement("a");
+                            rPerm.classList.add("textLink");
+                            rPerm.classList.add("roomExtraButton");
+                            rPerm.appendChild(document.createTextNode("_GAMESROOMPERMISSIONS_"));
+                            rPerm.addEventListener("click", {
+                                room: room,
+                                handleEvent: function () {
+                                    UI.Rooms.setPermissions(this.room);
+                                }
+                            });
+                            p.appendChild(rPerm);
+                            UI.Language.markLanguage(rPerm, rDelete);
+                        }
+                        div.appendChild(p);
+                    }
+                }
+                if (game.isMyCreation() || gameContext.invite) {
+                    var hr = document.createElement("hr");
+                    hr.classList.add("gamesHR");
+                    div.appendChild(hr);
+                }
+                if (game.isMyCreation()) {
+                    var p = document.createElement("p");
+                    p.className = "textLink gamesAdminButton";
+                    p.appendChild(document.createTextNode("_GAMESCREATEROOM_"));
+                    UI.Language.markLanguage(p);
+                    div.appendChild(p);
+                    p.addEventListener("click", {
+                        game: game,
+                        handleEvent: function () {
+                            UI.Games.createRoom(this.game);
+                        }
+                    });
+                }
+                var gameContext = game.getMe();
+                if (game.isMyCreation() || gameContext.invite) {
+                    var p = document.createElement("p");
+                    p.className = "textLink gamesAdminButton";
+                    p.appendChild(document.createTextNode("_GAMESSENDINVITES_"));
+                    UI.Language.markLanguage(p);
+                    div.appendChild(p);
+                    p.addEventListener("click", {
+                        game: game,
+                        handleEvent: function () {
+                            UI.Games.sendInvites(this.game);
+                        }
+                    });
+                }
                 gameListTarget.appendChild(div);
             }
         }
@@ -4345,6 +4649,161 @@ var UI;
         }
         Games.updateNick = updateNick;
         ;
+    })(Games = UI.Games || (UI.Games = {}));
+})(UI || (UI = {}));
+var UI;
+(function (UI) {
+    var Games;
+    (function (Games) {
+        var Invites;
+        (function (Invites) {
+            var target = document.getElementById("inviteTarget");
+            var $error = $(document.getElementById("gameInvitesError")).css("opacity", 0);
+            $error[0].appendChild(document.createTextNode("_GAMEINVITESERROR_"));
+            $error[0].appendChild(document.createTextNode(" "));
+            var a = document.createElement("a");
+            a.classList.add("textLink");
+            a.addEventListener("click", function () { UI.Games.Invites.callSelf(); });
+            a.appendChild(document.createTextNode("_GAMEINVITESERRORTRYAGAIN_"));
+            $error[0].appendChild(a);
+            UI.Language.markLanguage(a);
+            delete (a);
+            document.getElementById("gameInvitesButton").addEventListener("click", function () { UI.Games.Invites.callSelf(); });
+            Application.Login.addListener({
+                element: document.getElementById("gameInvitesNickTarget"),
+                handleEvent: function (isLogged) {
+                    if (isLogged) {
+                        UI.Language.addLanguageVariable(this.element, "a", Application.Login.getUser().getFullNickname());
+                        UI.Language.updateElement(this.element);
+                    }
+                }
+            });
+            function callSelf() {
+                UI.PageManager.callPage(UI.idGameInvites);
+                var cbs = {
+                    handleEvent: function (data) {
+                        UI.Games.Invites.printInfo(data);
+                    }
+                };
+                var cbe = {
+                    handleEvent: function () {
+                        UI.Games.Invites.printError();
+                    }
+                };
+                $error.finish().css("opacity", "0");
+                Server.Games.getInviteList(cbs, cbe);
+            }
+            Invites.callSelf = callSelf;
+            function empty() {
+                while (target.firstChild !== null) {
+                    target.removeChild(target.firstChild);
+                }
+            }
+            function printInfo(data) {
+                data = data;
+                empty();
+                if (data.length === 0) {
+                    var p = document.createElement("p");
+                    p.classList.add("gameInvitesEmptyP");
+                    p.appendChild(document.createTextNode("_GAMEINVITESEMPTY_"));
+                    var a = document.createElement("a");
+                    a.classList.add("textLink");
+                    a.appendChild(document.createTextNode("_GAMEINVITESREFRESH_"));
+                    UI.Language.markLanguage(a);
+                    a.addEventListener("click", function () { UI.Games.Invites.callSelf(); });
+                    p.appendChild(document.createTextNode(" "));
+                    p.appendChild(a);
+                    UI.Language.markLanguage(p);
+                    target.appendChild(p);
+                }
+                else {
+                    for (var i = 0; i < data.length; i++) {
+                        var row = data[i];
+                        var div = document.createElement("div");
+                        div.classList.add("gameInvitesContainer");
+                        var firstP = document.createElement("p");
+                        div.appendChild(firstP);
+                        var gameTitle = document.createElement("b");
+                        gameTitle.appendChild(document.createTextNode("_GAMEINVITESGAMETITLE_"));
+                        gameTitle.appendChild(document.createTextNode(": "));
+                        UI.Language.markLanguage(gameTitle);
+                        firstP.appendChild(gameTitle);
+                        firstP.appendChild(document.createTextNode(row["name"]));
+                        var sender = document.createElement("b");
+                        sender.appendChild(document.createTextNode("_GAMEINVITESSTORYTELLER_"));
+                        sender.appendChild(document.createTextNode(": "));
+                        sender.classList.add("gameInvitesStoryteller");
+                        UI.Language.markLanguage(sender);
+                        firstP.appendChild(sender);
+                        firstP.appendChild(document.createTextNode(row['creatornick'] + "#" + row['creatorsufix']));
+                        var secondP = document.createElement("p");
+                        div.appendChild(secondP);
+                        if (row['MensagemConvite'] === undefined) {
+                            secondP.appendChild(document.createTextNode("_GAMEINVITESNOMESSAGE_"));
+                            UI.Language.markLanguage(secondP);
+                        }
+                        else {
+                            var message = document.createElement("b");
+                            message.appendChild(document.createTextNode("_GAMEINVITESMESSAGE_"));
+                            message.appendChild(document.createTextNode(": "));
+                            message.classList.add("gameInvitesMessage");
+                            UI.Language.markLanguage(message);
+                            secondP.appendChild(message);
+                            secondP.appendChild(document.createTextNode(row['MensagemConvite']));
+                        }
+                        var thirdP = document.createElement("p");
+                        div.appendChild(thirdP);
+                        var accept = document.createElement("a");
+                        accept.classList.add("textLink");
+                        accept.appendChild(document.createTextNode("_GAMEINVITESACCEPT_"));
+                        UI.Language.markLanguage(accept);
+                        accept.addEventListener("click", {
+                            id: row['id'],
+                            handleEvent: function () {
+                                UI.Games.Invites.accept(this.id);
+                            }
+                        });
+                        var reject = document.createElement("a");
+                        reject.classList.add("textLink");
+                        reject.classList.add("gameInvitesReject");
+                        reject.appendChild(document.createTextNode("_GAMEINVITESREJECT_"));
+                        UI.Language.markLanguage(reject);
+                        reject.addEventListener("click", {
+                            id: row['id'],
+                            handleEvent: function () {
+                                UI.Games.Invites.reject(this.id);
+                            }
+                        });
+                        thirdP.appendChild(accept);
+                        thirdP.appendChild(reject);
+                        target.appendChild(div);
+                    }
+                }
+            }
+            Invites.printInfo = printInfo;
+            function accept(id) {
+                var onLoaded = {
+                    handleEvent: function () {
+                        UI.Games.Invites.callSelf();
+                    }
+                };
+                Server.Games.acceptInvite(id, onLoaded, onLoaded);
+            }
+            Invites.accept = accept;
+            function reject(id) {
+                var onLoaded = {
+                    handleEvent: function () {
+                        UI.Games.Invites.callSelf();
+                    }
+                };
+                Server.Games.rejectInvite(id, onLoaded, onLoaded);
+            }
+            Invites.reject = reject;
+            function printError() {
+                $error.finish().animate({ opacity: 1 }, Application.Config.getConfig("animTime").getValue() * 2);
+            }
+            Invites.printError = printError;
+        })(Invites = Games.Invites || (Games.Invites = {}));
     })(Games = UI.Games || (UI.Games = {}));
 })(UI || (UI = {}));
 var UI;
@@ -4700,7 +5159,7 @@ var UI;
         var lastPrintedId = 0;
         var scrolledDown = true;
         var currentRoom = null;
-        var roomListeners = [];
+        var roomTrigger = new Trigger();
         Chat.messageCounter = 0;
         function doAutomation() {
             return !printingMany;
@@ -4718,13 +5177,11 @@ var UI;
         }
         Chat.callSelf = callSelf;
         function addRoomChangedListener(listener) {
-            roomListeners.push(listener);
+            roomTrigger.addListener(listener);
         }
         Chat.addRoomChangedListener = addRoomChangedListener;
         function triggerRoomChanged() {
-            for (var i = 0; i < roomListeners.length; i++) {
-                roomListeners[i].handleEvent(currentRoom);
-            }
+            roomTrigger.trigger(currentRoom);
         }
         function getRoom() {
             return currentRoom;
@@ -4876,6 +5333,13 @@ var UI;
             return getAllForMeText.getElement();
         }
         Chat.getGetAllButton = getGetAllButton;
+        function leave() {
+            Server.Chat.end();
+            currentRoom = null;
+            triggerRoomChanged();
+            UI.Games.callSelf();
+        }
+        Chat.leave = leave;
         function printGetAllButtonAtStart() {
             if (chatTarget.firstChild !== null) {
                 var html = getGetAllButton();
@@ -4907,6 +5371,19 @@ var UI;
             DB.MessageDB.releaseAllLocalMessages();
         }
         delete (i);
+        var chatButton = document.getElementById("openChatButton");
+        chatButton.style.display = "none";
+        addRoomChangedListener({
+            button: chatButton,
+            handleEvent: function (room) {
+                if (room === null) {
+                    this.button.style.display = "none";
+                }
+                else {
+                    this.button.style.display = "";
+                }
+            }
+        });
     })(Chat = UI.Chat || (UI.Chat = {}));
 })(UI || (UI = {}));
 var UI;
@@ -5475,7 +5952,7 @@ var UI;
             var currentElement = null;
             var currentPersonaName = null;
             var currentPersonaAvatar = null;
-            var changeListeners = [];
+            var changeTrigger = new Trigger();
             var personaShortcuts = {};
             var personaShortcutLastUsage = [];
             var currentRoom = null;
@@ -5554,13 +6031,11 @@ var UI;
             }
             PersonaManager.createAndUsePersona = createAndUsePersona;
             function addListener(listener) {
-                changeListeners.push(listener);
+                changeTrigger.addListener(listener);
             }
             PersonaManager.addListener = addListener;
             function triggerListeners() {
-                for (var i = 0; i < changeListeners.length; i++) {
-                    changeListeners[i].handleEvent(currentPersonaName, currentPersonaAvatar);
-                }
+                changeTrigger.trigger(currentPersonaName, currentPersonaAvatar);
                 if (Server.Chat.isConnected()) {
                     Server.Chat.sendPersona({
                         persona: currentPersonaName,
@@ -5743,6 +6218,7 @@ var UI;
 // Language Files
 /// <reference path='Languages/Lingo.ts' />
 /// <reference path='Languages/LingoPTBR.ts' />
+/// <reference path='Languages/LingoEN.ts' />
 /// <reference path='UI.ts' />
 /// <reference path='Modules/WindowManager.ts' />
 /// <reference path='Modules/Config.ts' />
@@ -5751,7 +6227,9 @@ var UI;
 /// <reference path='Modules/Login.ts' />
 /// <reference path='Modules/Handles.ts' />
 /// <reference path='Modules/Language.ts' />
+/// <reference path='Modules/Rooms.ts' />
 /// <reference path='Modules/Games.ts' />
+/// <reference path='Modules/Games/Invites.ts' />
 /// <reference path='Modules/SoundController.ts' />
 /// <reference path='Modules/SoundController/MusicPlayer.ts' />
 /// <reference path='Modules/Chat.ts' />
@@ -5768,10 +6246,6 @@ var Server;
     Server.WEBSOCKET_SERVERURL = "ws://app.redpg.com.br";
     Server.WEBSOCKET_CONTEXT = "/service/";
     Server.WEBSOCKET_PORTS = [80, 8080, 8081];
-    Server.APPLICATION_URL = "http://localhost:8080/";
-    Server.WEBSOCKET_SERVERURL = "ws://localhost";
-    Server.WEBSOCKET_CONTEXT = "/";
-    Server.WEBSOCKET_PORTS = [8080];
     Application.Config.registerConfiguration("wsPort", new WsportConfiguration(Server.WEBSOCKET_PORTS[0]));
     function getWebsocketURL() {
         return Server.WEBSOCKET_SERVERURL + ":" + Application.Config.getConfig("wsPort").getValue() + Server.WEBSOCKET_CONTEXT;
@@ -5828,6 +6302,9 @@ var Server;
                     }
                     else {
                         console.error("[ERROR " + this.xhr.status + "]: AJAX (" + this.ajax.url + ")...", this.xhr);
+                        if (this.xhr.status === 401) {
+                            Server.Login.requestSession(false);
+                        }
                         if (typeof this.error === 'function') {
                             this.error(this.xhr.response, this.xhr);
                         }
@@ -5983,6 +6460,9 @@ var Server;
                 cbs: cbs,
                 handleEvent: function (response, xhr) {
                     Application.Login.receiveLogin(response.user, response.session);
+                    if (response.user !== undefined && response.user.config !== undefined) {
+                        Application.Config.updateFromObject(response.user.config);
+                    }
                     if (this.cbs !== undefined) {
                         this.cbs.handleEvent(response, xhr);
                     }
@@ -6056,6 +6536,7 @@ var Server;
     var Games;
     (function (Games) {
         var GAMES_URL = "Game";
+        var INVITE_URL = "Invite";
         var emptyCallback = { handleEvent: function () { } };
         function updateLists(cbs, cbe) {
             var success = {
@@ -6074,6 +6555,38 @@ var Server;
             Server.AJAX.requestPage(ajax, success, error);
         }
         Games.updateLists = updateLists;
+        function getInviteList(cbs, cbe) {
+            var success = cbs === undefined ? emptyCallback : cbs;
+            var error = cbe === undefined ? emptyCallback : cbe;
+            var ajax = new AJAXConfig(INVITE_URL);
+            ajax.setResponseTypeJSON();
+            ajax.data = { action: "list" };
+            ajax.setTargetLeftWindow();
+            Server.AJAX.requestPage(ajax, success, error);
+        }
+        Games.getInviteList = getInviteList;
+        function acceptInvite(gameid, cbs, cbe) {
+            var success = cbs === undefined ? emptyCallback : cbs;
+            var error = cbe === undefined ? emptyCallback : cbe;
+            var ajax = new AJAXConfig(INVITE_URL);
+            ajax.setResponseTypeJSON();
+            ajax.setData("action", "accept");
+            ajax.setData("gameid", gameid.toString());
+            ajax.setTargetLeftWindow();
+            Server.AJAX.requestPage(ajax, success, error);
+        }
+        Games.acceptInvite = acceptInvite;
+        function rejectInvite(gameid, cbs, cbe) {
+            var success = cbs === undefined ? emptyCallback : cbs;
+            var error = cbe === undefined ? emptyCallback : cbe;
+            var ajax = new AJAXConfig(INVITE_URL);
+            ajax.setResponseTypeJSON();
+            ajax.setData("action", "reject");
+            ajax.setData("gameid", gameid.toString());
+            ajax.setTargetLeftWindow();
+            Server.AJAX.requestPage(ajax, success, error);
+        }
+        Games.rejectInvite = rejectInvite;
     })(Games = Server.Games || (Server.Games = {}));
 })(Server || (Server = {}));
 var Server;
@@ -6109,9 +6622,10 @@ var Server;
         var currentRoom = null;
         var openListener = undefined;
         var errorListener = undefined;
-        var messageListeners = [];
-        var personaListeners = [];
-        var disconnectListeners = [];
+        var messageTrigger = new Trigger();
+        var personaTrigger = new Trigger();
+        var statusTrigger = new Trigger();
+        var disconnectTrigger = new Trigger();
         var personaInfo = {
             afk: false,
             focused: true,
@@ -6122,11 +6636,9 @@ var Server;
         var reconnecting = false;
         var reconnectAttempts = 0;
         var maxReconnectAttempts = 5;
-        Application.Login.addListener({
-            handleEvent: function (isLogged) {
-                if (!isLogged) {
-                    Server.Chat.end();
-                }
+        Application.Login.addListener(function (isLogged) {
+            if (!isLogged) {
+                Server.Chat.end();
             }
         });
         function isReconnecting() {
@@ -6263,6 +6775,30 @@ var Server;
             Chat.currentController.end();
         }
         Chat.end = end;
+        function addStatusListener(f) {
+            statusTrigger.addListener(f);
+        }
+        Chat.addStatusListener = addStatusListener;
+        function triggerStatus(info) {
+            statusTrigger.trigger(info);
+        }
+        Chat.triggerStatus = triggerStatus;
+        function addPersonaListener(f) {
+            personaTrigger.addListener(f);
+        }
+        Chat.addPersonaListener = addPersonaListener;
+        function triggerPersona(f) {
+            personaTrigger.trigger(f);
+        }
+        Chat.triggerPersona = triggerPersona;
+        function addMessageListener(f) {
+            messageTrigger.addListener(f);
+        }
+        Chat.addMessageListener = addMessageListener;
+        function triggerMessage(f) {
+            messageTrigger.trigger(f);
+        }
+        Chat.triggerMessage = triggerMessage;
         (function () {
             var getRoom = {
                 handleEvent: function (e) {
@@ -6295,6 +6831,7 @@ var Server;
                         focused: array[4] === 1
                     };
                     UI.Chat.Avatar.updateFromObject([info], false);
+                    Server.Chat.triggerStatus(info);
                 }
             };
             socketController.addMessageListener("status", status);
@@ -6306,6 +6843,7 @@ var Server;
                         avatar: array[2]['avatar'] === undefined ? null : array[2]['avatar'],
                     };
                     UI.Chat.Avatar.updateFromObject([info], false);
+                    Server.Chat.triggerPersona(info);
                 }
             };
             socketController.addMessageListener("persona", persona);
@@ -6334,6 +6872,7 @@ var Server;
                     if (message.localid === null) {
                         UI.Chat.printMessage(message);
                     }
+                    Server.Chat.triggerMessage(message);
                 }
             };
             socketController.addMessageListener("message", message);
@@ -6457,7 +6996,6 @@ var Server;
 /// <reference path='Server/References.ts' /> 
 /// <reference path='References.ts' />
 UI.Language.searchLanguage();
-UI.Language.updateScreen();
 UI.PageManager.readWindows();
 UI.WindowManager.updateWindowSizes();
 Application.Login.addListener({

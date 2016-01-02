@@ -50,9 +50,6 @@ class WebsocketController {
             controller : this,
             handleEvent: function (e : MessageEvent) {
                 this.controller.resetInterval();
-                if (e.data === "1") {
-                    console.warn("KEEPALIVE USED!");
-                }
                 if (e.data !== "1" && e.data.indexOf("[\"status") !== 0) console.debug("[WEBSOCKET] " + this.controller.url + ": Message: ", e);
                 this.controller.triggerMessage(e);
             }

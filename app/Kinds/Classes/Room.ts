@@ -52,6 +52,10 @@ class Room {
         return storytellers;
     }
 
+    public getMe () : UserRoomContext {
+        return this.getUser(Application.getMyId());
+    }
+
     public getUser (id : number) : UserRoomContext {
         if (this.users[id] === undefined) {
             return null;
@@ -70,10 +74,6 @@ class Room {
         return list;
     }
 
-    public getMe () {
-        return this.getUser(Application.Login.getUser().id);
-    }
-
     public getGame () {
         return DB.GameDB.getGame(this.gameid);
     }
@@ -82,6 +82,18 @@ class Room {
         for (var id in this) {
             if (room[id] === undefined || id === "users" || id === 'messages') continue;
             this[id] = room[id];
+        }
+
+        if (room["cleaner"] !== undefined) {
+            this.users[Application.getMyId()] = DB.UserDB.getUser(Application.getMyId());
+            var updateObj = {
+                roomid : this.id,
+                cleaner : room['cleaner'],
+                logger : room['logger'],
+                storyteller : room['storyteller']
+            };
+
+            this.users[Application.getMyId()].updateFromObject(updateObj);
         }
 
         if (room['users'] !== undefined) {

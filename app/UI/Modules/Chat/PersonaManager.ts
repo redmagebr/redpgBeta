@@ -7,7 +7,7 @@ module UI.Chat.PersonaManager {
     var currentPersonaName : String = null;
     var currentPersonaAvatar : String = null;
 
-    var changeListeners : Array<Listener> = [];
+    var changeTrigger = new Trigger();
 
     var personaShortcuts : { [id : string] : HTMLElement} = {};
     var personaShortcutLastUsage : Array<HTMLElement> = [];
@@ -102,13 +102,11 @@ module UI.Chat.PersonaManager {
     }
 
     export function addListener (listener : Listener) {
-        changeListeners.push(listener);
+        changeTrigger.addListener(listener);
     }
 
     function triggerListeners () {
-        for (var i = 0; i < changeListeners.length; i++) {
-            changeListeners[i].handleEvent(currentPersonaName, currentPersonaAvatar);
-        }
+        changeTrigger.trigger(currentPersonaName, currentPersonaAvatar);
 
         if (Server.Chat.isConnected()) {
             Server.Chat.sendPersona(<PersonaInfo> {

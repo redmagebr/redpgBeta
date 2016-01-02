@@ -5,10 +5,10 @@ module Server {
     export var WEBSOCKET_CONTEXT : string = "/service/";
     export var WEBSOCKET_PORTS : Array<number> = [80, 8080, 8081];
 
-    export var APPLICATION_URL : string = "http://localhost:8080/";
-    export var WEBSOCKET_SERVERURL : string = "ws://localhost";
-    export var WEBSOCKET_CONTEXT : string = "/";
-    export var WEBSOCKET_PORTS : Array<number> = [8080];
+    //export var APPLICATION_URL : string = "http://localhost:8080/";
+    //export var WEBSOCKET_SERVERURL : string = "ws://localhost";
+    //export var WEBSOCKET_CONTEXT : string = "/";
+    //export var WEBSOCKET_PORTS : Array<number> = [8080];
 
     Application.Config.registerConfiguration("wsPort", new WsportConfiguration(WEBSOCKET_PORTS[0]));
 

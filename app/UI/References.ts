@@ -1,6 +1,7 @@
 // Language Files
 /// <reference path='Languages/Lingo.ts' />
 /// <reference path='Languages/LingoPTBR.ts' />
+/// <reference path='Languages/LingoEN.ts' />
 
 /// <reference path='UI.ts' />
 /// <reference path='Modules/WindowManager.ts' />
@@ -10,7 +11,9 @@
 /// <reference path='Modules/Login.ts' />
 /// <reference path='Modules/Handles.ts' />
 /// <reference path='Modules/Language.ts' />
+/// <reference path='Modules/Rooms.ts' />
 /// <reference path='Modules/Games.ts' />
+/// <reference path='Modules/Games/Invites.ts' />
 /// <reference path='Modules/SoundController.ts' />
 /// <reference path='Modules/SoundController/MusicPlayer.ts' />
 /// <reference path='Modules/Chat.ts' />

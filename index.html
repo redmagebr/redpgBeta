@@ -14,10 +14,7 @@
     </div>
     <div class='window flexCentering' id='loginWindow'>
       <div id='loginBox'>
-        <div id='loginFlagContainer'>
-          <a class='flagIcon icons-flagPT_BR'></a>
-          <a class='flagIcon icons-flagEN'></a>
-        </div>
+        <div id='loginFlagContainer'></div>
         <form class='centeredContents' id='loginForm'>
           <input class='loginInput language' data-placeholderlingo='_LOGINEMAIL_' id='loginEmailInput'>
           <input class='loginInput language' data-placeholderlingo='_LOGINPASSWORD_' id='loginPasswordInput' type='password'>
@@ -42,6 +39,7 @@
       <div class='handleBar' id='leftHandleBar'>
         <div class='icons-handlerLTR' id='leftHandleIcon'></div>
         <a class='icons-handleLogout leftHandleButton language' id='logoutButton'>_MENULOGOUT_</a>
+        <a class='leftHandleButton language' id='openChatButton'>_MENUCHAT_</a>
         <a class='leftHandleButton language' id='gamesButton'>_MENUGAMES_</a>
         <a class='leftHandleButton language' id='configButton'>_MENUCONFIG_</a>
       </div>
@@ -179,6 +177,15 @@
           </label>
         </div>
       </div>
+      <div class='leftSideWindow' id='gameInvitesSideWindow'>
+        <div class='language mainWindowHeader'>_GAMEINVITESTITLE_</div>
+        <div class='mainWindowContent singleton'>
+          <p class='mainWindowParagraph language'>_GAMEINVITESEXP01_</p>
+          <p class='mainWindowParagraph language' id='gameInvitesNickTarget'>_GAMEINVITESEXP02_</p>
+          <p class='mainWindowParagraph language' id='gameInvitesError'></p>
+          <div id='inviteTarget'></div>
+        </div>
+      </div>
       <div class='leftSideWindow' id='gamesSideWindow'>
         <div class='language mainWindowHeader'>
           _GAMESTITLE_
@@ -189,22 +196,13 @@
           <p class='mainWindowParagraph language'>_GAMESEXP2_</p>
           <p class='mainWindowParagraph language'>_GAMESEXP3_</p>
           <p class='mainWindowParagraph language'>_GAMESEXP4_</p>
-          <p class='mainWindowParagraph language textLink hoverable'>_GAMESINVITES_</p>
-          <p class='mainWindowParagraph language textLink hoverable'>_GAMESNEWGAME_</p>
+          <p class='mainWindowParagraph language textLink hoverable' id='gameInvitesButton'>_GAMESINVITES_</p>
+          <p class='mainWindowParagraph language textLink hoverable' id='gameNewGameButton'>_GAMESNEWGAME_</p>
           <div id='gameListTarget'></div>
         </div>
       </div>
       <div class='leftSideWindow' id='chatSideWindow'>
-        <div id='avatarBox'>
-          <div class='avatarContainer'>
-            <img class='avatarImg'>
-            <div class='avatarAFK'></div>
-            <div class='avatarTyping'></div>
-            <div class='avatarName'>
-              Reddo#0001
-            </div>
-          </div>
-        </div>
+        <div id='avatarBox'></div>
         <div class='icons-chatUp' id='avatarUpButton'></div>
         <div class='icons-chatDown' id='avatarDownButton'></div>
         <div id='chatNotificationBar'></div>
@@ -226,8 +224,7 @@
         <div id='chatButtonsBox'>
           <a class='chatRightButton icons-chatFontPlus' onclick="Application.Config.getConfig('chatfontsize').storeValue(Application.Config.getConfig('chatfontsize').getValue() + 1);"></a>
           <a class='chatRightButton icons-chatFontMinus' onclick="Application.Config.getConfig('chatfontsize').storeValue(Application.Config.getConfig('chatfontsize').getValue() - 1);"></a>
-          <a class='chatRightButton'></a>
-          <a class='chatRightButton'></a>
+          <a class='chatRightButton icons-chatLeave' onclick='UI.Chat.leave();'></a>
         </div>
         <div id='chatMessageStateIcon'></div>
         <div id='chatMessageBox'>

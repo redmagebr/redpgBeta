@@ -9,6 +9,8 @@ class User {
     public gameContexts : {[id : number] : UserGameContext} = {};
     public roomContexts : {[id : number] : UserRoomContext} = {};
 
+    private changedTrigger = new Trigger();
+
     public isMe() {
         return this.id === Application.getMyId();
     }
@@ -66,9 +68,14 @@ class User {
 
         if (user['gameid'] !== undefined) {
             context = this.getGameContext(user['roomid']);
-            if (context === null) context = new UserGameContext(this);
+            if (context === null) {
+                context = new UserGameContext(this);
+                this.gameContexts[user['gameid']] = context;
+            }
 
             context.updateFromObject(user);
         }
+
+        this.changedTrigger.trigger(this);
     }
 }

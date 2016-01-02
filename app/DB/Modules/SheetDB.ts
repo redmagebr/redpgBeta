@@ -1,23 +1,17 @@
 module DB.SheetDB {
     var sheets : {[id : number] : SheetInstance} = {};
+    var changeTrigger = new Trigger();
 
-    var changeListeners : Array<Listener> = [];
-
-    export function addChangeListener (list : Listener) {
-        this.changeListeners.push(list);
+    export function addChangeListener (list : Listener | Function) {
+        changeTrigger.addListener(list);
     }
 
-    export function removeChangeListener (list : Listener) {
-        var i = changeListeners.indexOf(list);
-        if (i !== -1) {
-            changeListeners.splice(i, 1);
-        }
+    export function removeChangeListener (list : Listener | Function) {
+        changeTrigger.removeListener(list);
     }
 
     export function triggerChanged (sheet : SheetInstance) {
-        for (var i = 0; i < this.changeListeners.length; i++) {
-            this.changeListeners[i].handleEvent(sheet);
-        }
+        changeTrigger.trigger(sheet);
     }
 
     export function hasSheet (id : number) {

@@ -3,6 +3,7 @@ var ptbr = new Lingo();
 ptbr.ids = ["pt", "pt-br"]
 ptbr.name = "Português - Brasil";
 ptbr.shortname = "Português";
+ptbr.flagIcon = "PT_BR";
 
 
 // Login Screen
@@ -18,7 +19,7 @@ ptbr.setLingo("_CHANGELOGCURRENTVERSION_", "A sua versão é");
 ptbr.setLingo("_CHANGELOGMOSTRECENTVERSION_", "A versão mais recente é");
 ptbr.setLingo("_REDPGTITLE_", "RedPG");
 ptbr.setLingo("_REDPGEXP1_", "RedPG é um sistema para facilitar RPGs de Mesa através da internet. Funções do sistema incluem o compartilhamento de Imagens, Sons, Fichas de Personagens, uma sala para troca de mensagens com suporte a dados e muito mais, com novas funções sempre sendo adicionadas.");
-ptbr.setLingo("_REDPGEXP2_", "Todos os aspectos do sistema existem e estão presos às Mesas, que ele enxerga como um grupo de RPG. Então para criar qualquer coisa ou utilizar o sistema de qualquer maneira, você precisa criar ou ser convidado a uma Mesa. Isso é feito na seção \"Mesas\", no menu à esquerda.");
+ptbr.setLingo("_REDPGEXP2_", "Todos os aspectos do sistema existem e estão presos aos Grupos, um grupo de RPG. Então para criar qualquer coisa ou utilizar o sistema de qualquer maneira, você precisa criar ou ser convidado a um Grupo. Isso é feito na seção \"Grupos\", no menu à esquerda.");
 ptbr.setLingo("_REDPGFORUMTITLE_", "Últimos posts no Fórum");
 // TODO: Implementar mensagens do fórum.
 ptbr.setLingo("_REDPGFORUM1_", "Não Implementado");
@@ -32,9 +33,9 @@ ptbr.setLingo("_REDPGLINKFRONTEXP_", "Versão offline do cliente RedPG. Usuário
 
 // Menu
 ptbr.setLingo("_MENULOGOUT_", "Logout");
-ptbr.setLingo("_MENUGAMES_", "Mesas");
+ptbr.setLingo("_MENUGAMES_", "Grupos");
 ptbr.setLingo("_MENUCONFIG_", "Opções");
-ptbr.setLingo("", "");
+ptbr.setLingo("_MENUCHAT_", "Chat");
 ptbr.setLingo("", "");
 ptbr.setLingo("", "");
 ptbr.setLingo("", "");
@@ -42,13 +43,41 @@ ptbr.setLingo("", "");
 
 
 // Jogos
-ptbr.setLingo("_GAMESTITLE_", "Mesas");
+ptbr.setLingo("_GAMESTITLE_", "Grupos");
 ptbr.setLingo("_GAMESEXP1_", "Caso precise informar seu identificador para alguém, ele é \"%a\", sem as aspas.");
-ptbr.setLingo("_GAMESEXP2_", "Aqui você pode administrar as mesas das quais você participa. Para convidar jogadores à sua mesa, você irá precisar do identificador deles.");
-ptbr.setLingo("_GAMESEXP3_", "Uma mesa nesse sistema é o lugar no qual todas as outras partes do sistema se conectam. As salas, o ambiente no qual as partidas são jogadas, ficam anexadas à uma mesa. As fichas de personagens ficam anexadas à uma mesa.");
-ptbr.setLingo("_GAMESEXP4_", "No momento não é possível pedir uma lista de mesas de livre entrada (não implementados).");
+ptbr.setLingo("_GAMESEXP2_", "Aqui você pode administrar os grupos dos quais você participa. Para convidar jogadores ao seu grupo, você irá precisar do identificador deles.");
+ptbr.setLingo("_GAMESEXP3_", "Um grupo nesse sistema é o lugar no qual todas as outras partes do sistema se conectam. As salas, o ambiente no qual as partidas são jogadas, ficam anexadas a um grupo. As fichas de personagens ficam anexadas a um grupo.");
+ptbr.setLingo("_GAMESEXP4_", "No momento não é possível pedir uma lista de grupos de livre entrada (não implementados).");
 ptbr.setLingo("_GAMESINVITES_", "Meus convites");
-ptbr.setLingo("_GAMESNEWGAME_", "Criar novo jogo");
+ptbr.setLingo("_GAMESNEWGAME_", "Criar novo grupo");
+ptbr.setLingo("_GAMEINVITESERROR_", "Houve um erro no pedido.");
+ptbr.setLingo("_GAMEINVITESEMPTY_", "Você não recebeu nenhum convite.");
+ptbr.setLingo("_GAMEINVITESREFRESH_", "Clique aqui para atualizar essa página.");
+ptbr.setLingo("_GAMEINVITESERRORTRYAGAIN_", "Tente novamente.");
+ptbr.setLingo("_GAMEINVITESGAMETITLE_", "Grupo");
+ptbr.setLingo("_GAMEINVITESSTORYTELLER_", "Mestre");
+ptbr.setLingo("_GAMEINVITESNOMESSAGE_", "Nenhuma mensagem foi adicionada ao convite.");
+ptbr.setLingo("_GAMEINVITESMESSAGE_", "Convite");
+ptbr.setLingo("_GAMEINVITESACCEPT_", "Aceitar");
+ptbr.setLingo("_GAMEINVITESREJECT_", "Recusar");
+ptbr.setLingo("_GAMESEDIT_", "Editar");
+ptbr.setLingo("_GAMESDELETE_", "Deletar");
+ptbr.setLingo("_GAMESLEAVE_", "Sair");
+ptbr.setLingo("_GAMESNOROOMS_", "Nenhuma sala visível.");
+ptbr.setLingo("_GAMESNOGAMES_", "Você não faz parte de nenhum grupo. Você pode criar seu próprio grupo ou ser convidado a algum.");
+ptbr.setLingo("_GAMECREATORTITLE_", "Criador");
+ptbr.setLingo("_GAMESPERMISSIONS_", "Permissões");
+ptbr.setLingo("_GAMESSENDINVITES_", "Enviar convites");
+ptbr.setLingo("_GAMESCREATEROOM_", "Criar sala");
+ptbr.setLingo("_GAMESROOMPERMISSIONS_", "Permissões");
+ptbr.setLingo("_GAMESROOMDELETE_", "Deletar");
+ptbr.setLingo("", "");
+
+// Jogos Invites
+ptbr.setLingo("_GAMEINVITESTITLE_", "Meus Convites");
+ptbr.setLingo("_GAMEINVITESEXP01_", "Enquanto você não aceitar um dos convites, você não faz parte do grupo.");
+ptbr.setLingo("_GAMEINVITESEXP02_", "Caso precise informar seu identificador a alguém, ele é \"%a\".");
+ptbr.setLingo("", "");
 ptbr.setLingo("", "");
 ptbr.setLingo("", "");
 ptbr.setLingo("", "");

@@ -70,6 +70,10 @@ module Server.Login {
             handleEvent : function (response, xhr) {
                 Application.Login.receiveLogin(response.user, response.session);
 
+                if (response.user !== undefined && response.user.config !== undefined) {
+                    Application.Config.updateFromObject(response.user.config);
+                }
+
                 if (this.cbs !== undefined) {
                     this.cbs.handleEvent(response, xhr);
                 }

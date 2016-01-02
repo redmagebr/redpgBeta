@@ -17,6 +17,7 @@
 /// <reference path='Classes/Room.ts' />
 /// <reference path='Classes/Game.ts' />
 /// <reference path='Classes/SheetInstance.ts' />
+/// <reference path='Classes/Trigger.ts' />
 
 /// <reference path='Classes/AJAXConfig.ts' />
 /// <reference path='Classes/WebsocketController.ts' />

@@ -14,8 +14,6 @@
     #loginWindow.window.flexCentering
       #loginBox
         #loginFlagContainer
-          %a.flagIcon.icons-flagPT_BR
-          %a.flagIcon.icons-flagEN
         %form#loginForm.centeredContents
           %input#loginEmailInput.loginInput.language{:data => {:placeholderlingo => "_LOGINEMAIL_"}}
           %input#loginPasswordInput.loginInput.language{:type => "password", :data => {:placeholderlingo => "_LOGINPASSWORD_"}}
@@ -37,6 +35,7 @@
       #leftHandleBar.handleBar
         #leftHandleIcon.icons-handlerLTR
         %a.icons-handleLogout#logoutButton.leftHandleButton.language="_MENULOGOUT_"
+        %a#openChatButton.leftHandleButton.language="_MENUCHAT_"
         %a#gamesButton.leftHandleButton.language="_MENUGAMES_"
         %a#configButton.leftHandleButton.language="_MENUCONFIG_"
       -# Right Ear
@@ -49,6 +48,9 @@
       #rightLoading.rightSideWindow.flexCentering.dontDetach
         %a.loadingCircleWhite.centeredBlock
       -# Left Side Windows
+      -############################################
+      -############## CHANGELOG
+      -############################################
       #changelogSideWindow.leftSideWindow
         .language.mainWindowHeader
           _CHANGELOGTITLE_
@@ -59,6 +61,9 @@
           %p.mainWindowParagraph.language
             _CHANGELOGCURRENTVERSION_<b id="changelogCurrentVersion"> 0.0.0. </b>
             _CHANGELOGMOSTRECENTVERSION_<b id="changelogActualVersion"> 0.1.0.</b>
+      -############################################
+      -############## CONFIG
+      -############################################
       #configSideWindow.leftSideWindow
         .mainWindowHeader.language="_CONFIGTITLE_"
         .mainWindowContent.singleton
@@ -138,6 +143,18 @@
             %input.configInput#configSEVolume{:type => "range", :value => "0", :min => "0", :max => "100"}
             .configExplanation.language
               _CONFIGSEVOLUMEEXP_
+      -############################################
+      -############## GAMES
+      -############################################
+      -#### GAME INVITES WINDOW
+      #gameInvitesSideWindow.leftSideWindow
+        .language.mainWindowHeader="_GAMEINVITESTITLE_"
+        .mainWindowContent.singleton
+          %p.mainWindowParagraph.language="_GAMEINVITESEXP01_"
+          %p.mainWindowParagraph.language#gameInvitesNickTarget="_GAMEINVITESEXP02_"
+          %p.mainWindowParagraph.language#gameInvitesError
+          #inviteTarget
+      -#### MAIN GAMES WINDOW
       #gamesSideWindow.leftSideWindow
         .language.mainWindowHeader
           _GAMESTITLE_
@@ -147,17 +164,14 @@
           %p.mainWindowParagraph.language="_GAMESEXP2_"
           %p.mainWindowParagraph.language="_GAMESEXP3_"
           %p.mainWindowParagraph.language="_GAMESEXP4_"
-          %p.mainWindowParagraph.language.textLink.hoverable="_GAMESINVITES_"
-          %p.mainWindowParagraph.language.textLink.hoverable="_GAMESNEWGAME_"
+          %p.mainWindowParagraph.language.textLink.hoverable#gameInvitesButton="_GAMESINVITES_"
+          %p.mainWindowParagraph.language.textLink.hoverable#gameNewGameButton="_GAMESNEWGAME_"
           #gameListTarget
+      -############################################
+      -############## CHAT
+      -############################################
       #chatSideWindow.leftSideWindow
         #avatarBox
-          .avatarContainer
-            %img.avatarImg
-            .avatarAFK
-            .avatarTyping
-            .avatarName
-              Reddo#0001
         .icons-chatUp#avatarUpButton
         .icons-chatDown#avatarDownButton
         #chatNotificationBar
@@ -178,8 +192,7 @@
         #chatButtonsBox
           %a.chatRightButton.icons-chatFontPlus{:onclick => "Application.Config.getConfig('chatfontsize').storeValue(Application.Config.getConfig('chatfontsize').getValue() + 1);"}
           %a.chatRightButton.icons-chatFontMinus{:onclick => "Application.Config.getConfig('chatfontsize').storeValue(Application.Config.getConfig('chatfontsize').getValue() - 1);"}
-          %a.chatRightButton
-          %a.chatRightButton
+          %a.chatRightButton.icons-chatLeave{:onclick => "UI.Chat.leave();"}
         #chatMessageStateIcon
         #chatMessageBox
           %input.chatInput#chatMessageInput{:autocomplete => "off"}

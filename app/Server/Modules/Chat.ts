@@ -13,9 +13,10 @@ module Server.Chat {
     var openListener : Listener = undefined;
     var errorListener : Listener = undefined;
 
-    var messageListeners : Array<Listener> = [];
-    var personaListeners : Array<Listener> = [];
-    var disconnectListeners : Array<Listener> = [];
+    var messageTrigger = new Trigger();
+    var personaTrigger = new Trigger();
+    var statusTrigger = new Trigger();
+    var disconnectTrigger = new Trigger();
 
     var personaInfo : PersonaInfo = <PersonaInfo> {
         afk : false,
@@ -29,11 +30,9 @@ module Server.Chat {
     var reconnectAttempts : number = 0;
     var maxReconnectAttempts : number = 5;
 
-    Application.Login.addListener(<Listener> {
-        handleEvent : function (isLogged : boolean) {
-            if (!isLogged) {
-                Server.Chat.end();
-            }
+    Application.Login.addListener(function (isLogged : boolean) {
+        if (!isLogged) {
+            Server.Chat.end();
         }
     });
 
@@ -175,6 +174,30 @@ module Server.Chat {
         currentController.end();
     }
 
+    export function addStatusListener (f : Function | Listener) {
+        statusTrigger.addListener(f);
+    }
+
+    export function triggerStatus (info : Object) {
+        statusTrigger.trigger(info);
+    }
+
+    export function addPersonaListener (f : Function | Listener) {
+        personaTrigger.addListener(f);
+    }
+
+    export function triggerPersona (f : Object) {
+        personaTrigger.trigger(f);
+    }
+
+    export function addMessageListener (f : Function | Listener) {
+        messageTrigger.addListener(f);
+    }
+
+    export function triggerMessage (f : Message) {
+        messageTrigger.trigger(f);
+    }
+
     // Set up controllers
     (function () {
         var getRoom = <Listener> {
@@ -213,6 +236,7 @@ module Server.Chat {
                     focused : array[4] === 1
                 };
                 UI.Chat.Avatar.updateFromObject([info], false);
+                Server.Chat.triggerStatus(info);
             }
         };
         socketController.addMessageListener("status", status);
@@ -225,6 +249,7 @@ module Server.Chat {
                     avatar : array[2]['avatar'] === undefined ? null : array[2]['avatar'],
                 };
                 UI.Chat.Avatar.updateFromObject([info], false);
+                Server.Chat.triggerPersona(info);
             }
         };
         socketController.addMessageListener("persona", persona);
@@ -258,6 +283,7 @@ module Server.Chat {
                 if (message.localid === null) {
                     UI.Chat.printMessage(message);
                 }
+                Server.Chat.triggerMessage(message);
             }
         };
         socketController.addMessageListener("message", message);

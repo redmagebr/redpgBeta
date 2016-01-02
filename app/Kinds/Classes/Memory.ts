@@ -1,5 +1,5 @@
 class Memory {
-    private changeListeners : Array <Listener> = [];
+    private changeTrigger = new Trigger();
     protected value : any = null;
     public defValue : any = null;
 
@@ -19,8 +19,8 @@ class Memory {
         this.value = this.defValue;
     }
 
-    public addChangeListener (listener : Listener) {
-        this.changeListeners.push(listener);
+    public addChangeListener (listener : Listener | Function) {
+        this.changeTrigger.addListener(listener);
     }
 
     public storeValue (value : any) {
@@ -33,9 +33,7 @@ class Memory {
         var newValue = JSON.stringify(this.value);
 
         if (newValue !== oldValue) {
-            for (var i = 0; i < this.changeListeners.length; i++) {
-                this.changeListeners[i].handleEvent(this);
-            }
+            this.changeTrigger.trigger(this);
             return true;
         }
         return false;
