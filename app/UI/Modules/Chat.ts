@@ -311,6 +311,11 @@ module UI.Chat {
     var chatButton = document.getElementById("openChatButton");
     chatButton.style.display = "none";
 
+    chatButton.addEventListener("click", function () {
+        UI.PageManager.callPage(UI.idChat);
+        UI.Chat.updateScrollPosition(true);
+    });
+
     addRoomChangedListener(<Listener> {
         button : chatButton,
         handleEvent : function (room : Room) {

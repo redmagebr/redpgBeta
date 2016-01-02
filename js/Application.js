@@ -5373,6 +5373,10 @@ var UI;
         delete (i);
         var chatButton = document.getElementById("openChatButton");
         chatButton.style.display = "none";
+        chatButton.addEventListener("click", function () {
+            UI.PageManager.callPage(UI.idChat);
+            UI.Chat.updateScrollPosition(true);
+        });
         addRoomChangedListener({
             button: chatButton,
             handleEvent: function (room) {
