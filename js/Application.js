@@ -515,8 +515,6 @@ var SheetInstance = (function () {
         }
     };
     SheetInstance.prototype.setValues = function (values, local) {
-        // Local values = user changed them NOW.
-        // Not local = saved on server.
         var newJson = JSON.stringify(values);
         if (newJson !== this.lastValues) {
             this.values = values;
@@ -1491,41 +1489,6 @@ var ChatSystemMessage = (function () {
     };
     return ChatSystemMessage;
 })();
-/**
- * Created by Reddo on 14/09/2015.
- */
-/// <reference path='Interfaces/Listener.ts' />
-/// <reference path='Interfaces/PageManagerPage.ts' />
-/// <reference path='Interfaces/PersonaInfo.ts' />
-/// <reference path='Interfaces/PersonaLocalInfo.ts' />
-/// <reference path='Interfaces/ChatController.ts' />
-/// <reference path='Interfaces/ImageInt.ts' />
-/// <reference path='Classes/ImageRed.ts' />
-/// <reference path='Classes/ImageLink.ts' />
-/// <reference path='Classes/User.ts' />
-/// <reference path='Classes/UserGameContext.ts' />
-/// <reference path='Classes/UserRoomContext.ts' />
-/// <reference path='Classes/Room.ts' />
-/// <reference path='Classes/Game.ts' />
-/// <reference path='Classes/SheetInstance.ts' />
-/// <reference path='Classes/Trigger.ts' />
-/// <reference path='Classes/AJAXConfig.ts' />
-/// <reference path='Classes/WebsocketController.ts' />
-/// <reference path='Classes/ChatWsController.ts' />
-/// <reference path='Classes/Configuration.ts' />
-/// <reference path='Classes/Configuration/NumberConfiguration.ts' />
-/// <reference path='Classes/Configuration/WsportConfiguration.ts' />
-/// <reference path='Classes/Configuration/LanguageConfiguration.ts' />
-/// <reference path='Classes/Configuration/BooleanConfiguration.ts' />
-/// <reference path='Classes/Memory.ts' />
-/// <reference path='Classes/Memory/MemoryCombat.ts' />
-/// <reference path='Classes/Memory/Combat/Buff.ts' />
-/// <reference path='Elements/ChatInfo.ts' />
-/// <reference path='Elements/ChatAvatar.ts' />
-/// <reference path='Elements/ChatNotificationIcon.ts' />
-/// <reference path='Elements/ChatFormState.ts' />
-/// <reference path='Elements/ChatAvatarChoice.ts' />
-/// <reference path='Elements/ChatSystemMessage.ts' /> 
 var MessageFactory;
 (function (MessageFactory) {
     MessageFactory.messageClasses = {};
@@ -3042,30 +3005,6 @@ var MessageUnknown = (function (_super) {
     return MessageUnknown;
 })(Message);
 MessageFactory.registerMessage(MessageUnknown, "unkn", []);
-/// <reference path='MessageFactory.ts' />
-/// <reference path='Types/SlashCommand.ts' />
-/// <reference path='Types/SlashClear.ts' />
-/// <reference path='Types/SlashReply.ts' />
-/// <reference path='Types/Message.ts' />
-/// <reference path='Types/MessageSystem.ts' />
-/// <reference path='Types/MessageCountdown.ts' />
-/// <reference path='Types/MessageVote.ts' />
-/// <reference path='Types/MessageWebm.ts' />
-/// <reference path='Types/MessageVideo.ts' />
-/// <reference path='Types/MessageSE.ts' />
-/// <reference path='Types/MessageImage.ts' />
-/// <reference path='Types/MessageBGM.ts' />
-/// <reference path='Types/MessageStream.ts' />
-/// <reference path='Types/MessageSheetcommand.ts' />
-/// <reference path='Types/MessageWhisper.ts' />
-/// <reference path='Types/MessageSheetdamage.ts' />
-/// <reference path='Types/MessageSheetturn.ts' />
-/// <reference path='Types/MessageDice.ts' />
-/// <reference path='Types/MessageStory.ts' />
-/// <reference path='Types/MessageAction.ts' />
-/// <reference path='Types/MessageOff.ts' />
-/// <reference path='Types/MessageRoleplay.ts' />
-/// <reference path='Types/MessageUnknown.ts' /> 
 var DB;
 (function (DB) {
     var UserDB;
@@ -3300,13 +3239,6 @@ var DB;
         SheetDB.updateFromObject = updateFromObject;
     })(SheetDB = DB.SheetDB || (DB.SheetDB = {}));
 })(DB || (DB = {}));
-/// <reference path='DB.ts' />
-/// <reference path='Modules/UserDB.ts' />
-/// <reference path='Modules/GameDB.ts' />
-/// <reference path='Modules/RoomDB.ts' />
-/// <reference path='Modules/MessageDB.ts' />
-/// <reference path='Modules/UserDB.ts' />
-/// <reference path='Modules/SheetDB.ts' /> 
 var Application;
 (function (Application) {
     function getMe() {
@@ -3414,7 +3346,6 @@ var Application;
         LocalMemory.unsetMemory = unsetMemory;
     })(LocalMemory = Application.LocalMemory || (Application.LocalMemory = {}));
 })(Application || (Application = {}));
-/// <reference path='../Application.ts' />
 var Application;
 (function (Application) {
     var Login;
@@ -3551,10 +3482,6 @@ var Application;
         }
     })(Login = Application.Login || (Application.Login = {}));
 })(Application || (Application = {}));
-/// <reference path='Application.ts' />
-/// <reference path='Modules/Config.ts' />
-/// <reference path='Modules/LocalMemory.ts' />
-/// <reference path='Modules/Login.ts' /> 
 var Lingo = (function () {
     function Lingo() {
         this.ids = [];
@@ -4447,6 +4374,29 @@ var UI;
 })(UI || (UI = {}));
 var UI;
 (function (UI) {
+    var Rooms;
+    (function (Rooms) {
+        var Designer;
+        (function (Designer) {
+            function clear() {
+            }
+            function fromRoom(room) {
+                clear();
+                room = room === undefined ? null : room;
+                if (room !== null) {
+                }
+            }
+            Designer.fromRoom = fromRoom;
+            function toRoom() {
+                var room = new Room();
+                return room;
+            }
+            Designer.toRoom = toRoom;
+        })(Designer = Rooms.Designer || (Rooms.Designer = {}));
+    })(Rooms = UI.Rooms || (UI.Rooms = {}));
+})(UI || (UI = {}));
+var UI;
+(function (UI) {
     var Games;
     (function (Games) {
         var gameListTarget = document.getElementById("gameListTarget");
@@ -4804,6 +4754,29 @@ var UI;
             }
             Invites.printError = printError;
         })(Invites = Games.Invites || (Games.Invites = {}));
+    })(Games = UI.Games || (UI.Games = {}));
+})(UI || (UI = {}));
+var UI;
+(function (UI) {
+    var Games;
+    (function (Games) {
+        var Designer;
+        (function (Designer) {
+            function clear() {
+            }
+            function fromGame(game) {
+                clear();
+                game = game === undefined ? null : game;
+                if (game !== null) {
+                }
+            }
+            Designer.fromGame = fromGame;
+            function toGame() {
+                var game = new Game();
+                return game;
+            }
+            Designer.toGame = toGame;
+        })(Designer = Games.Designer || (Games.Designer = {}));
     })(Games = UI.Games || (UI.Games = {}));
 })(UI || (UI = {}));
 var UI;
@@ -6219,30 +6192,6 @@ var UI;
         })(PersonaDesigner = Chat.PersonaDesigner || (Chat.PersonaDesigner = {}));
     })(Chat = UI.Chat || (UI.Chat = {}));
 })(UI || (UI = {}));
-// Language Files
-/// <reference path='Languages/Lingo.ts' />
-/// <reference path='Languages/LingoPTBR.ts' />
-/// <reference path='Languages/LingoEN.ts' />
-/// <reference path='UI.ts' />
-/// <reference path='Modules/WindowManager.ts' />
-/// <reference path='Modules/Config.ts' />
-/// <reference path='Modules/PageManager.ts' />
-/// <reference path='Modules/Loading.ts' />
-/// <reference path='Modules/Login.ts' />
-/// <reference path='Modules/Handles.ts' />
-/// <reference path='Modules/Language.ts' />
-/// <reference path='Modules/Rooms.ts' />
-/// <reference path='Modules/Games.ts' />
-/// <reference path='Modules/Games/Invites.ts' />
-/// <reference path='Modules/SoundController.ts' />
-/// <reference path='Modules/SoundController/MusicPlayer.ts' />
-/// <reference path='Modules/Chat.ts' />
-/// <reference path='Modules/Chat/Avatar.ts' />
-/// <reference path='Modules/Chat/Forms.ts' />
-/// <reference path='Modules/Chat/Notification.ts' />
-/// <reference path='Modules/Chat/PersonaManager.ts' />
-/// <reference path='Modules/Chat/PersonaDesigner.ts' />
-/// <reference path='Message/References.ts' /> 
 var Server;
 (function (Server) {
     Server.APPLICATION_URL = "http://app.redpg.com.br/service/";
@@ -6977,28 +6926,6 @@ var Server;
         Storage.requestStorage = requestStorage;
     })(Storage = Server.Storage || (Server.Storage = {}));
 })(Server || (Server = {}));
-/// <reference path='Server.ts' />
-/// <reference path='Modules/AJAX.ts' />
-/// <reference path='Modules/Config.ts' />
-/// <reference path='Modules/Login.ts' />
-/// <reference path='Modules/Images.ts' />
-/// <reference path='Modules/Games.ts' />
-/// <reference path='Modules/URL.ts' />
-/// <reference path='Modules/Chat.ts' />
-/// <reference path='Modules/Chat/Memory.ts' />
-/// <reference path='Modules/Storage.ts' /> 
-/// <reference path='../typings/jquery/jquery.d.ts' />
-/// <reference path='../typings/jqueryui/jqueryui.d.ts' />
-/// <reference path='../typings/NonLatin.d.ts' />
-/// <reference path='Debug.ts' />
-/// <reference path='OnReady.ts' />
-/// <reference path='Kinds/References.ts' />
-/// <reference path='UI/Message/References.ts' />
-/// <reference path='DB/References.ts' />
-/// <reference path='Application/References.ts' />
-/// <reference path='UI/References.ts' />
-/// <reference path='Server/References.ts' /> 
-/// <reference path='References.ts' />
 UI.Language.searchLanguage();
 UI.PageManager.readWindows();
 UI.WindowManager.updateWindowSizes();

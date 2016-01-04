@@ -577,7 +577,7 @@ declare class MessageDice extends Message {
     module: string;
     constructor();
     findPersona(): void;
-    makeMockUp(): MessageDice[];
+    makeMockUp(): this[];
     createHTML(): HTMLElement;
     getInitialRoll(): string;
     getRolls(): Array<number>;
@@ -792,6 +792,10 @@ declare module UI.Language {
 }
 declare module UI.Rooms {
 }
+declare module UI.Rooms.Designer {
+    function fromRoom(room?: Room): void;
+    function toRoom(): Room;
+}
 declare module UI.Games {
     function callSelf(ready?: boolean): void;
     function updateNick(isLogged: boolean): void;
@@ -802,6 +806,10 @@ declare module UI.Games.Invites {
     function accept(id: any): void;
     function reject(id: any): void;
     function printError(): void;
+}
+declare module UI.Games.Designer {
+    function fromGame(game?: Game): void;
+    function toGame(): Game;
 }
 declare module UI.SoundController {
     function updateSEVolume(newVolume: number): void;
