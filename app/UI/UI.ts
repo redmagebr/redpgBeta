@@ -20,6 +20,15 @@ module UI {
     Application.Config.registerConfiguration("chatshowhelp", new BooleanConfiguration(true)); // Show help messages on top of chat
     Application.Config.registerConfiguration("chatfontsize", new NumberConfiguration(16, 12, 32)); // Chat Font Size
     Application.Config.registerConfiguration("chatfontfamily", new Configuration("caudex")); // Chat Font Family
+
+    Application.Config.getConfig("chatfontfamily").getFunction = function () {
+        if ($.browser.mobile) {
+            return "alegreya";
+        } else {
+            return this.value;
+        }
+    };
+
     Application.Config.registerConfiguration("animTime", new NumberConfiguration(150, 0, 300)); // Animation Time
     Application.Config.registerConfiguration("language", new LanguageConfiguration()); // Current Language
     Application.Config.registerConfiguration("fsmode", new BooleanConfiguration(false)); // Full Screen Mode (forced)

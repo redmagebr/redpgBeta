@@ -84,7 +84,7 @@ class MessageRoleplay extends Message {
             }
             if (special !== -1) {
                 currentSpecial = special;
-                if (lang !== "none") {
+                if (lang !== "none" && !$.browser.mobile) {
                     var ele = document.createElement("span");
                     ele.classList.add("chatRoleplayLang" + lang);
                     ele.appendChild(document.createTextNode(thisMsg));
@@ -101,7 +101,7 @@ class MessageRoleplay extends Message {
         }
 
         if (thisMsg !== "") {
-            if (lang === "none") {
+            if (lang === "none" || $.browser.mobile) {
                 messageNodes.push(document.createTextNode(thisMsg));
             } else {
                 var ele = document.createElement("span");

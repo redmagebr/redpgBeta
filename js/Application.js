@@ -2918,7 +2918,7 @@ var MessageRoleplay = (function (_super) {
             }
             if (special !== -1) {
                 currentSpecial = special;
-                if (lang !== "none") {
+                if (lang !== "none" && !$.browser.mobile) {
                     var ele = document.createElement("span");
                     ele.classList.add("chatRoleplayLang" + lang);
                     ele.appendChild(document.createTextNode(thisMsg));
@@ -2935,7 +2935,7 @@ var MessageRoleplay = (function (_super) {
             thisMsg += this.msg.charAt(i);
         }
         if (thisMsg !== "") {
-            if (lang === "none") {
+            if (lang === "none" || $.browser.mobile) {
                 messageNodes.push(document.createTextNode(thisMsg));
             }
             else {
@@ -3740,6 +3740,14 @@ var UI;
     Application.Config.registerConfiguration("chatshowhelp", new BooleanConfiguration(true));
     Application.Config.registerConfiguration("chatfontsize", new NumberConfiguration(16, 12, 32));
     Application.Config.registerConfiguration("chatfontfamily", new Configuration("caudex"));
+    Application.Config.getConfig("chatfontfamily").getFunction = function () {
+        if ($.browser.mobile) {
+            return "alegreya";
+        }
+        else {
+            return this.value;
+        }
+    };
     Application.Config.registerConfiguration("animTime", new NumberConfiguration(150, 0, 300));
     Application.Config.registerConfiguration("language", new LanguageConfiguration());
     Application.Config.registerConfiguration("fsmode", new BooleanConfiguration(false));
