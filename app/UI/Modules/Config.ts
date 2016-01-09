@@ -28,9 +28,8 @@ module UI.Config {
             input : input,
             handleEvent : function () {
                 var cfg = Application.Config.getConfig(this.configName);
-                alert ("Value was " + cfg.getValue());
                 cfg.storeValue(this.input.value);
-                alert ("Value is " + cfg.getValue() + ", but you tried to change it to " + this.input.value);
+                alert ("Value is " + cfg.getValue() + ", but you tried to change it to " + this.input.value + ", which had a type of " + (typeof this.input.value));
                 this.input.value = cfg.getValue().toString();
             }
         });
