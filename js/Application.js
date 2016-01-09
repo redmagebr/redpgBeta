@@ -7223,8 +7223,8 @@ Application.Login.addListener({
     handleEvent: function () {
         if (Application.Login.isLogged()) {
             UI.WindowManager.callWindow(('mainWindow'));
+            UI.PageManager.callPage(UI.idChangelog);
             UI.PageManager.callPage(UI.idHome);
-            UI.PageManager.callPage(UI.idChat);
         }
         else {
             UI.WindowManager.callWindow("loginWindow");
