@@ -406,6 +406,103 @@ declare class ChatSystemMessage {
     addElement(ele: HTMLElement): void;
     getElement(): HTMLElement;
 }
+declare class SheetStyle {
+    private css;
+    private visible;
+    private $visible;
+    protected styleInstance: StyleInstance;
+    protected sheet: Sheet;
+    protected sheetInstance: SheetInstance;
+    protected multipleChanges: boolean;
+    protected pendingChanges: Array<SheetVariable>;
+    protected changeCounter: number;
+    protected idCounter: number;
+    protected after: Function;
+    constructor();
+    getUniqueID(): string;
+    simplifyName(str: String): string;
+    addStyle(style: StyleInstance): void;
+    triggerVariableChange(variable: SheetVariable): void;
+    triggerAll(): void;
+    getStyle(): HTMLStyleElement;
+    getElement(): HTMLElement;
+    get$Element(): JQuery;
+}
+declare module StyleFactory {
+    function getCreator(): typeof SheetStyle;
+}
+declare class Sheet {
+    protected elements: Array<Node>;
+    style: SheetStyle;
+    protected variables: {
+        [id: string]: SheetVariable;
+    };
+    protected lists: {
+        [id: string]: SheetList;
+    };
+    protected variableShortcuts: {
+        [id: string]: SheetVariable | SheetList;
+    };
+    protected buttons: {
+        [id: string]: SheetButton;
+    };
+    constructor(style: SheetStyle, eles: NodeList);
+    protected processElement(element: HTMLElement): void;
+    getValueFor(id: string): any;
+    getValueForSimpleId(id: string): any;
+    getVariable(id: string): SheetList | SheetVariable;
+    getVariableBySimpleId(simpleid: string): SheetVariable | SheetList;
+    getButton(id: string): SheetButton;
+    protected createVariable(element: HTMLElement): void;
+    protected createButton(element: HTMLElement): void;
+    protected createList(element: HTMLElement): void;
+}
+declare class SheetList {
+    id: string;
+    protected sheet: Sheet;
+    protected style: SheetStyle;
+    protected visible: HTMLElement;
+    protected rows: Array<Sheet>;
+    protected detachedRows: Array<Sheet>;
+    protected rowElements: Array<Node>;
+    protected keyIndex: String;
+    protected keyValue: String;
+    constructor(sheet: Sheet, style: SheetStyle, element: HTMLElement);
+    getValueFor(id: string): any;
+    getValue(): any[];
+}
+declare class SheetVariable {
+    id: string;
+    parent: Sheet;
+    style: SheetStyle;
+    protected visible: HTMLElement;
+    protected value: any;
+    protected changeTrigger: Trigger;
+    constructor(parent: Sheet, style: SheetStyle, ele: HTMLElement);
+    storeValue(val: any): void;
+    triggerChange(counter: number): void;
+    getValue(): any;
+    exportObject(): any;
+    addOnChange(f: Function | Listener): void;
+}
+declare class SheetButton {
+    id: string;
+    protected visible: HTMLElement;
+    protected click: Function;
+    protected sheet: Sheet;
+    protected style: SheetStyle;
+    constructor(sheet: Sheet, style: SheetStyle, ele: HTMLElement);
+}
+declare class SheetButtonaddrow extends SheetButton {
+    click: () => void;
+}
+declare class StyleInstance {
+    mainCode: string;
+    publicCode: string;
+    name: string;
+    html: string;
+    css: string;
+}
 declare module MessageFactory {
     var messageClasses: {
         [id: string]: typeof Message;
@@ -577,7 +674,7 @@ declare class MessageDice extends Message {
     module: string;
     constructor();
     findPersona(): void;
-    makeMockUp(): this[];
+    makeMockUp(): MessageDice[];
     createHTML(): HTMLElement;
     getInitialRoll(): string;
     getRolls(): Array<number>;

@@ -47,6 +47,18 @@
         %a.loadingCircleWhite.centeredBlock
       #rightLoading.rightSideWindow.flexCentering.dontDetach
         %a.loadingCircleWhite.centeredBlock
+      -# Map
+      #pictureWindow.rightSideWindow.dontDetach
+        #pictureLoading.flexCentering{:style=>"display: none"}
+          %a.loadingCircleWhite.centeredBlock
+        #pictureContainer
+          %a#tokenExample.pictureToken
+          #pictureMouseCatcher
+          %canvas#markCanvas
+          %canvas#artCanvas
+          %canvas#gridCanvas
+          %canvas#fogCanvas
+          %img#mapBackground
       -# Left Side Windows
       -############################################
       -############## CHANGELOG

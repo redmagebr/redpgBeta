@@ -40,3 +40,13 @@
 /// <reference path='Elements/ChatFormState.ts' />
 /// <reference path='Elements/ChatAvatarChoice.ts' />
 /// <reference path='Elements/ChatSystemMessage.ts' />
+
+
+/// <reference path='Classes/Sheet/SheetStyle.ts' />
+/// <reference path='Classes/Sheet/StyleFactory.ts' />
+/// <reference path='Classes/Sheet/Sheet.ts' />
+/// <reference path='Classes/Sheet/SheetList.ts' />
+/// <reference path='Classes/Sheet/SheetVariable.ts' />
+/// <reference path='Classes/Sheet/SheetButton.ts' />
+/// <reference path='Classes/Sheet/Button/SheetButtonaddrow.ts' />
+/// <reference path='Classes/StyleInstance.ts' />

@@ -24,7 +24,7 @@ class MessageDice extends Message {
     }
 
     public makeMockUp () {
-        var messages = [this];
+        var messages : Array<MessageDice> = [this];
         this.addDice(2, 10);
         this.setSpecial("rolls", [5, 5]);
         this.msg = "Example Reason";

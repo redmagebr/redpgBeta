@@ -2327,6 +2327,27 @@ body {
   content: " ----";
 }
 
+/* line 1, ../sass/mainPicture.scss */
+#pictureWindow {
+  z-index: 3;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* line 6, ../sass/mainPicture.scss */
+#pictureLoading {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 2;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* line 14, ../sass/mainPicture.scss */
+#mapBackground {
+  position: absolute;
+  z-index: 1;
+}
+
 /* line 1, ../sass/buttons.scss */
 .xButton {
   display: block;

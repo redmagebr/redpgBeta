@@ -1489,6 +1489,287 @@ var ChatSystemMessage = (function () {
     };
     return ChatSystemMessage;
 })();
+var SheetStyle = (function () {
+    function SheetStyle() {
+        this.css = document.createElement("style");
+        this.visible = document.createElement("div");
+        this.$visible = $(this.visible);
+        this.multipleChanges = false;
+        this.pendingChanges = [];
+        this.changeCounter = 0;
+        this.idCounter = 0;
+        this.after = function () { };
+        this.visible.setAttribute("id", "sheetDiv");
+        this.css.type = "text/css";
+    }
+    SheetStyle.prototype.getUniqueID = function () {
+        return "undefined" + (this.idCounter++);
+    };
+    SheetStyle.prototype.simplifyName = function (str) {
+        return str.latinise().toLowerCase().replace(/ /g, '');
+    };
+    SheetStyle.prototype.addStyle = function (style) {
+        this.styleInstance = style;
+        this.visible.innerHTML = style.html;
+        this.css.innerHTML = style.css;
+        this.sheet = new Sheet(this, this.visible.childNodes);
+        this.after();
+    };
+    SheetStyle.prototype.triggerVariableChange = function (variable) {
+        if (this.multipleChanges) {
+            this.pendingChanges.push(variable);
+        }
+        else {
+            variable.triggerChange(this.changeCounter++);
+        }
+    };
+    SheetStyle.prototype.triggerAll = function () {
+        for (var i = 0; i < this.pendingChanges.length; i++) {
+            this.pendingChanges[i].triggerChange(this.changeCounter);
+        }
+        this.changeCounter += 1;
+        this.pendingChanges = [];
+    };
+    SheetStyle.prototype.getStyle = function () {
+        return this.css;
+    };
+    SheetStyle.prototype.getElement = function () {
+        return this.visible;
+    };
+    SheetStyle.prototype.get$Element = function () {
+        return this.$visible;
+    };
+    return SheetStyle;
+})();
+var StyleFactory;
+(function (StyleFactory) {
+    function getCreator() {
+        var creator = SheetStyle;
+        var a = "var DFS;(function (DFS) {    function sayHi() {        console.log('Hi');    }    DFS.sayHi = sayHi;})(DFS || (DFS = {}));var SomethingElse = (function () {    function SomethingElse() {        this.gluglu = 10;    }    return SomethingElse;})();var NewSheetStyle = (function (_super) {    __extends(NewSheetStyle, _super);    function NewSheetStyle() {        _super.call(this);        this.something = 0;        this.something = 1;    }    NewSheetStyle.prototype.createGl = function () {        return new SomethingElse();    };    NewSheetStyle.prototype.sayHi = function () {        DFS.sayHi();    };    return NewSheetStyle;})(SheetStyle);creator = NewSheetStyle;";
+        try {
+            eval(a);
+        }
+        catch (e) {
+            console.error("[SheetStyle] Error in style code.");
+            console.log(e);
+            creator = SheetStyle;
+        }
+        if (creator === SheetStyle) {
+            console.warn("[SheetStyle] No changes made to SheetStyle, utilizing common style.");
+        }
+        return creator;
+    }
+    StyleFactory.getCreator = getCreator;
+})(StyleFactory || (StyleFactory = {}));
+var Sheet = (function () {
+    function Sheet(style, eles) {
+        this.elements = [];
+        this.variables = {};
+        this.lists = {};
+        this.variableShortcuts = {};
+        this.buttons = {};
+        this.style = style;
+        for (var i = 0; i < eles.length; i++) {
+            this.elements.push(eles[i]);
+        }
+        for (var i = 0; i < this.elements.length; i++) {
+            if (this.elements[i].nodeType === Node.ELEMENT_NODE) {
+                this.processElement(this.elements[i]);
+            }
+        }
+    }
+    Sheet.prototype.processElement = function (element) {
+        if (element.classList.contains("sheetList")) {
+            this.createList(element);
+        }
+        else if (element.classList.contains("sheetVariable")) {
+            this.createVariable(element);
+        }
+        else if (element.classList.contains("sheetButton")) {
+            this.createButton(element);
+        }
+        else {
+            var lists = element.getElementsByClassName("sheetList");
+            for (var i = 0; i < lists.length; i++) {
+                this.createList(lists[i]);
+            }
+            var variables = element.getElementsByClassName("sheetVariable");
+            for (var i = 0; i < variables.length; i++) {
+                this.createVariable(variables[i]);
+            }
+            var buttons = element.getElementsByClassName("sheetButton");
+            for (var i = 0; i < buttons.length; i++) {
+                this.createButton(buttons[i]);
+            }
+        }
+    };
+    Sheet.prototype.getValueFor = function (id) {
+        id = this.style.simplifyName(id);
+        return this.getValueForSimpleId(id);
+    };
+    Sheet.prototype.getValueForSimpleId = function (id) {
+        if (this.variableShortcuts[id] !== undefined) {
+            return this.variableShortcuts[id].getValue();
+        }
+        return null;
+    };
+    Sheet.prototype.getVariable = function (id) {
+        if (this.variables[id] !== undefined) {
+            return this.variables[id];
+        }
+        return null;
+    };
+    Sheet.prototype.getVariableBySimpleId = function (simpleid) {
+        if (this.variableShortcuts[simpleid] !== undefined) {
+            return this.variableShortcuts[simpleid];
+        }
+        return null;
+    };
+    Sheet.prototype.getButton = function (id) {
+        if (this.buttons[id] !== undefined) {
+            return this.buttons[id];
+        }
+        return null;
+    };
+    Sheet.prototype.createVariable = function (element) {
+        var constructor;
+        var variable;
+        var type;
+        type = element.dataset['type'] === undefined ? "text" : element.dataset['type'].replace(/[^A-Za-z0-9]/g, "").toLowerCase();
+        if (eval("typeof SheetVariable" + type + " !== \"function\"")) {
+            type = "text";
+        }
+        constructor = eval("SheetVariable" + type);
+        variable = new constructor(this, this.style, element);
+        this.variables[variable.id] = variable;
+        this.variableShortcuts[this.style.simplifyName(variable.id)] = variable;
+    };
+    Sheet.prototype.createButton = function (element) {
+        var constructor;
+        var button;
+        var type;
+        type = element.dataset['type'] === undefined ? "" : element.dataset['type'].replace(/[^A-Za-z0-9]/g, "").toLowerCase();
+        if (eval("typeof SheetButton" + type + " !== \"function\"")) {
+            type = "";
+        }
+        constructor = eval("SheetButton" + type);
+        button = new constructor(this, this.style, element);
+        this.buttons[button.id] = button;
+    };
+    Sheet.prototype.createList = function (element) {
+        var list = new SheetList(this, this.style, element);
+        this.lists[list.id] = list;
+        this.variableShortcuts[this.style.simplifyName(list.id)] = list;
+    };
+    return Sheet;
+})();
+var SheetList = (function () {
+    function SheetList(sheet, style, element) {
+        this.rows = [];
+        this.detachedRows = [];
+        this.rowElements = [];
+        this.keyIndex = null;
+        this.keyValue = null;
+        this.sheet = sheet;
+        this.style = style;
+        while (element.firstChild !== null) {
+            this.rowElements.push(element.removeChild(element.firstChild));
+        }
+        this.visible = element;
+        this.id = element.dataset['id'] === undefined ? this.style.getUniqueID() : element.dataset['id'];
+    }
+    SheetList.prototype.getValueFor = function (id) {
+        id = this.style.simplifyName(id);
+        if (this.keyValue !== null && this.keyIndex !== null) {
+            for (var i = 0; i < this.rows.length; i++) {
+                var value = this.rows[i].getValueFor(this.keyIndex);
+                if (typeof value === "string") {
+                    var simpleValue = this.style.simplifyName(value);
+                    if (simpleValue === id) {
+                        return this.rows[i].getValueFor(this.keyValue);
+                    }
+                }
+                else {
+                    return null;
+                }
+            }
+        }
+        return null;
+    };
+    SheetList.prototype.getValue = function () {
+        if (this.keyValue !== null) {
+            var values = [];
+            for (var i = 0; i < this.rows.length; i++) {
+                values.push(this.rows[i].getValueFor(this.keyValue));
+            }
+            return values;
+        }
+        else {
+            return null;
+        }
+    };
+    return SheetList;
+})();
+var SheetVariable = (function () {
+    function SheetVariable(parent, style, ele) {
+        this.value = null;
+        this.changeTrigger = new Trigger();
+        this.parent = parent;
+        this.style = style;
+        this.visible = ele;
+        this.id = ele.dataset['id'] === undefined ? this.style.getUniqueID() : ele.dataset['id'];
+    }
+    SheetVariable.prototype.storeValue = function (val) {
+        if (val !== this.value) {
+            this.value = val;
+            this.style.triggerVariableChange(this);
+        }
+    };
+    SheetVariable.prototype.triggerChange = function (counter) {
+        this.changeTrigger.trigger(this, counter);
+    };
+    SheetVariable.prototype.getValue = function () {
+        return this.value;
+    };
+    SheetVariable.prototype.exportObject = function () {
+        return this.value;
+    };
+    SheetVariable.prototype.addOnChange = function (f) {
+        this.changeTrigger.addListener(f);
+    };
+    return SheetVariable;
+})();
+var SheetButton = (function () {
+    function SheetButton(sheet, style, ele) {
+        this.click = function () { };
+        this.sheet = sheet;
+        this.style = style;
+        this.visible = ele;
+        this.visible.addEventListener("click", {
+            button: this,
+            handleEvent: function (e) {
+                this.button.click(e);
+            }
+        });
+        this.id = ele.dataset['id'] === undefined ? this.style.getUniqueID() : ele.dataset['id'];
+    }
+    return SheetButton;
+})();
+var SheetButtonaddrow = (function (_super) {
+    __extends(SheetButtonaddrow, _super);
+    function SheetButtonaddrow() {
+        _super.apply(this, arguments);
+        this.click = function () {
+            alert("Add Row!");
+        };
+    }
+    return SheetButtonaddrow;
+})(SheetButton);
+var StyleInstance = (function () {
+    function StyleInstance() {
+    }
+    return StyleInstance;
+})();
 var MessageFactory;
 (function (MessageFactory) {
     MessageFactory.messageClasses = {};
@@ -6941,8 +7222,8 @@ Application.Login.addListener({
     handleEvent: function () {
         if (Application.Login.isLogged()) {
             UI.WindowManager.callWindow(('mainWindow'));
-            UI.PageManager.callPage(UI.idChangelog);
             UI.PageManager.callPage(UI.idHome);
+            UI.PageManager.callPage(UI.idChat);
         }
         else {
             UI.WindowManager.callWindow("loginWindow");
