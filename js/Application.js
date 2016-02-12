@@ -617,8 +617,43 @@ var AJAXConfig = (function () {
         this._timeout = 15000;
         this._responseType = "json";
         this._data = null;
+        this.loadingTimeout = null;
+        this.instantLoading = false;
         this._url = url;
     }
+    AJAXConfig.prototype.forceLoading = function () {
+        this.instantLoading = true;
+    };
+    AJAXConfig.prototype.startConditionalLoading = function () {
+        if (this.target != AJAXConfig.TARGET_NONE) {
+            if (this.target === AJAXConfig.TARGET_GLOBAL) {
+                UI.Loading.startLoading();
+            }
+            else if (this.target === AJAXConfig.TARGET_LEFT) {
+                UI.Loading.blockLeft();
+            }
+            else if (this.target === AJAXConfig.TARGET_RIGHT) {
+                UI.Loading.blockRight();
+            }
+        }
+    };
+    AJAXConfig.prototype.finishConditionalLoading = function () {
+        if (this.loadingTimeout !== null) {
+            window.clearTimeout(this.loadingTimeout);
+            this.loadingTimeout = null;
+        }
+        else if (this.target != AJAXConfig.TARGET_NONE) {
+            if (this.target === AJAXConfig.TARGET_GLOBAL) {
+                UI.Loading.stopLoading();
+            }
+            else if (this.target === AJAXConfig.TARGET_LEFT) {
+                UI.Loading.unblockLeft();
+            }
+            else if (this.target === AJAXConfig.TARGET_RIGHT) {
+                UI.Loading.unblockRight();
+            }
+        }
+    };
     Object.defineProperty(AJAXConfig.prototype, "target", {
         get: function () {
             return this._target;
@@ -697,6 +732,7 @@ var AJAXConfig = (function () {
     AJAXConfig.TARGET_GLOBAL = 1;
     AJAXConfig.TARGET_LEFT = 2;
     AJAXConfig.TARGET_RIGHT = 3;
+    AJAXConfig.CONDITIONAL_LOADING_TIMEOUT = 150;
     return AJAXConfig;
 })();
 var WebsocketController = (function () {
@@ -5519,7 +5555,7 @@ var UI;
                     Chat.messageCounter--;
                     chatTarget.removeChild(chatTarget.firstChild);
                 }
-                printGetAllButtonAtStart();
+                printNotallAtStart();
             }
         }
         Chat.printElement = printElement;
@@ -5547,12 +5583,15 @@ var UI;
         Chat.printMessage = printMessage;
         function printMessages(messages, ignoreLowIds) {
             printingMany = true;
-            var maxMessages = $.browser.mobile ? Application.Config.getConfig("chatMaxMessages").getDefault() : Application.Config.getConfig("chatMaxMessages").getValue();
+            var maxMessages = $.browser.mobile ?
+                Application.Config.getConfig("chatMaxMessages").getDefault()
+                :
+                    Application.Config.getConfig("chatMaxMessages").getValue();
             var i;
             var counting = 0;
             for (i = messages.length - 1; i >= 0; i--) {
                 if (messages[i].getHTML() !== null) {
-                    if (++counting > (maxMessages - 2)) {
+                    if (++counting > (maxMessages - 4)) {
                         break;
                     }
                 }
@@ -5653,6 +5692,17 @@ var UI;
             }
         }
         Chat.printGetAllButtonAtStart = printGetAllButtonAtStart;
+        function printNotallAtStart() {
+            var msg = new ChatSystemMessage(true);
+            msg.addText("_CHATNOTALLMESSAGES_");
+            if (chatTarget.firstChild !== null) {
+                chatTarget.insertBefore(msg.getElement(), chatTarget.firstChild);
+            }
+            else {
+                printElement(msg.getElement());
+            }
+        }
+        Chat.printNotallAtStart = printNotallAtStart;
         function printGetAllButton() {
             printElement(getGetAllButton());
         }
@@ -6555,17 +6605,7 @@ var Server;
                 ajax: ajax,
                 handleEvent: function (e) {
                     console.debug("AJAX request for " + this.ajax.url + " is complete.");
-                    if (this.ajax.target !== AJAXConfig.TARGET_NONE) {
-                        if (this.ajax.target === AJAXConfig.TARGET_GLOBAL) {
-                            UI.Loading.stopLoading();
-                        }
-                        else if (this.ajax.target === AJAXConfig.TARGET_LEFT) {
-                            UI.Loading.unblockLeft();
-                        }
-                        else if (this.ajax.target === AJAXConfig.TARGET_RIGHT) {
-                            UI.Loading.unblockRight();
-                        }
-                    }
+                    this.ajax.finishConditionalLoading();
                 }
             });
             xhr.addEventListener("load", {
@@ -6611,17 +6651,7 @@ var Server;
                     }
                 }
             });
-            if (ajax.target !== AJAXConfig.TARGET_NONE) {
-                if (ajax.target === AJAXConfig.TARGET_GLOBAL) {
-                    UI.Loading.startLoading();
-                }
-                else if (ajax.target === AJAXConfig.TARGET_LEFT) {
-                    UI.Loading.blockLeft();
-                }
-                else if (ajax.target === AJAXConfig.TARGET_RIGHT) {
-                    UI.Loading.blockRight();
-                }
-            }
+            ajax.startConditionalLoading();
             if (ajax.data !== null) {
                 var data = {};
                 for (var key in ajax.data) {

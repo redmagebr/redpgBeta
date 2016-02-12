@@ -194,7 +194,13 @@ declare class AJAXConfig {
     static TARGET_GLOBAL: number;
     static TARGET_LEFT: number;
     static TARGET_RIGHT: number;
+    static CONDITIONAL_LOADING_TIMEOUT: number;
+    private loadingTimeout;
+    private instantLoading;
     constructor(url: string);
+    forceLoading(): void;
+    startConditionalLoading(): void;
+    finishConditionalLoading(): void;
     target: number;
     url: string;
     timeout: number;
@@ -949,6 +955,7 @@ declare module UI.Chat {
     function getGetAllButton(): HTMLElement;
     function leave(): void;
     function printGetAllButtonAtStart(): void;
+    function printNotallAtStart(): void;
     function printGetAllButton(): void;
 }
 declare module UI.Chat.Avatar {

@@ -127,7 +127,9 @@ module UI.Chat {
                 messageCounter--;
                 chatTarget.removeChild(chatTarget.firstChild);
             }
-            printGetAllButtonAtStart();
+            //printGetAllButtonAtStart();
+            // this is about too many messages, not some missing
+            printNotallAtStart();
         }
     }
 
@@ -159,14 +161,19 @@ module UI.Chat {
         printingMany = true;
 
         // Maximum amount of messages allowed Config
-        var maxMessages = $.browser.mobile ? Application.Config.getConfig("chatMaxMessages").getDefault() : Application.Config.getConfig("chatMaxMessages").getValue();
+        var maxMessages =
+                    $.browser.mobile ?
+                    Application.Config.getConfig("chatMaxMessages").getDefault()
+                    :
+                    Application.Config.getConfig("chatMaxMessages").getValue();
 
         // Do we have more messages than allowed?
         var i : number;
         var counting = 0;
         for (i = messages.length -1; i >= 0; i--) {
             if (messages[i].getHTML() !== null) {
-                if (++counting > (maxMessages - 2)) {
+                // I don't why 4 works but it does and I'm not feeling like finding out
+                if (++counting > (maxMessages - 4)) {
                     break;
                 }
             }
@@ -278,6 +285,16 @@ module UI.Chat {
             chatTarget.insertBefore(html, chatTarget.firstChild);
         } else {
             printGetAllButton();
+        }
+    }
+
+    export function printNotallAtStart () {
+        var msg = new ChatSystemMessage(true);
+        msg.addText("_CHATNOTALLMESSAGES_");
+        if (chatTarget.firstChild !== null) {
+            chatTarget.insertBefore(msg.getElement(), chatTarget.firstChild);
+        } else {
+            printElement(msg.getElement());
         }
     }
 

@@ -257,9 +257,9 @@
                 %p.sheetListFolderName{:onclick=>"this.parentNode.classList.toggle('openSheetFolder');"}="Nome da pasta"
                 %p.sheetListSheet
                   %a.sheetNameLink="Nome da ficha"
-                  %a.textLink="Pasta"
-                  %a.textLink="Permissões"
-                  %a.textLink="Deletar"
+                  %a.sheetExtraButton.textLink="Pasta"
+                  %a.sheetExtraButton.textLink="Permissões"
+                  %a.sheetExtraButton.textLink="Deletar"
               .sheetListFolderContainer.lightHoverable
                 %p.sheetListFolderName{:onclick=>"this.parentNode.classList.toggle('openSheetFolder');"}="Nome da pasta fechada"
                 %p.sheetListSheet
