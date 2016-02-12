@@ -13,10 +13,15 @@
 
 .sheetListFolderName {
   font-size: 1em;
+  color: #8c8c8c;
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAABAQMAAADD8p2OAAAAA1BMVEUAAACnej3aAAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==");
   background-position: left center;
   background-repeat: no-repeat;
   padding-left: 6px;
+}
+
+.openSheetFolder > .sheetListFolderName {
+  color: #000000;
 }
 
 .openSheetGame > .sheetListFolderContainer {
@@ -47,6 +52,12 @@
 
 .sheetNameLink {
   @extend .textLink;
-  min-width: 80px;
+  min-width: 300px;
   display: inline-block;
+}
+
+.sheetExtraButton {
+  float: right;
+  padding-left: 20px;
+  padding-right: 20px;
 }
