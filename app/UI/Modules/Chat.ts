@@ -184,16 +184,16 @@ module UI.Chat {
             // i > 0 means that we reached the maxMessages Limit
             // i === 0 means that we have the exact amount of messages we are allowed to print.
             clearRoom();
+
+            // If we're not printing all of them, we need to say so
+            if (i > 0) {
+                var msg = new ChatSystemMessage(true);
+                msg.addText("_CHATNOTALLMESSAGES_");
+                printElement(msg.getElement());
+            }
         } else {
             // i < 0 means we can print them all.
             i = 0;
-        }
-
-        // If we're not printing all of them, we need to say so
-        if (i > 0) {
-            var msg = new ChatSystemMessage(true);
-            msg.addText("_CHATNOTALLMESSAGES_");
-            printElement(msg.getElement());
         }
 
         // Detach parent to speed up process

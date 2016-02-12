@@ -5598,14 +5598,14 @@ var UI;
             }
             if (i >= 0) {
                 clearRoom();
+                if (i > 0) {
+                    var msg = new ChatSystemMessage(true);
+                    msg.addText("_CHATNOTALLMESSAGES_");
+                    printElement(msg.getElement());
+                }
             }
             else {
                 i = 0;
-            }
-            if (i > 0) {
-                var msg = new ChatSystemMessage(true);
-                msg.addText("_CHATNOTALLMESSAGES_");
-                printElement(msg.getElement());
             }
             var parent = chatTarget.parentNode;
             parent.removeChild(chatTarget);
