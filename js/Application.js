@@ -4785,7 +4785,6 @@ var UI;
                     perm.addEventListener("click", {
                         game: games[i],
                         handleEvent: function () {
-                            UI.Games.editGamePermissions(this.game);
                         }
                     });
                     var edit = document.createElement("a");
@@ -4795,7 +4794,6 @@ var UI;
                     edit.addEventListener("click", {
                         game: games[i],
                         handleEvent: function () {
-                            UI.Games.editGame(this.game);
                         }
                     });
                     var deleteGame = document.createElement("a");
@@ -4805,7 +4803,6 @@ var UI;
                     deleteGame.addEventListener("click", {
                         game: games[i],
                         handleEvent: function () {
-                            UI.Games.deleteGame(this.game);
                         }
                     });
                     UI.Language.markLanguage(edit, deleteGame, perm);
@@ -4821,7 +4818,6 @@ var UI;
                     leave.addEventListener("click", {
                         game: games[i],
                         handleEvent: function () {
-                            UI.Games.leaveGame(this.game);
                         }
                     });
                     UI.Language.markLanguage(leave);
@@ -4869,7 +4865,6 @@ var UI;
                             rDelete.addEventListener("click", {
                                 room: room,
                                 handleEvent: function () {
-                                    UI.Rooms.deleteRoom(this.room);
                                 }
                             });
                             p.appendChild(rDelete);
@@ -4880,7 +4875,6 @@ var UI;
                             rPerm.addEventListener("click", {
                                 room: room,
                                 handleEvent: function () {
-                                    UI.Rooms.setPermissions(this.room);
                                 }
                             });
                             p.appendChild(rPerm);
@@ -4903,7 +4897,6 @@ var UI;
                     p.addEventListener("click", {
                         game: game,
                         handleEvent: function () {
-                            UI.Games.createRoom(this.game);
                         }
                     });
                 }
@@ -4917,7 +4910,6 @@ var UI;
                     p.addEventListener("click", {
                         game: game,
                         handleEvent: function () {
-                            UI.Games.sendInvites(this.game);
                         }
                     });
                 }
@@ -4928,10 +4920,10 @@ var UI;
         ;
         function updateNick(isLogged) {
             if (!isLogged) {
-                nickTarget.dataset['languagea'] = "Logged out";
+                UI.Language.addLanguageVariable(nickTarget, "a", "Logged out");
             }
             else {
-                nickTarget.dataset['languagea'] = Application.Login.getUser().getFullNickname();
+                UI.Language.addLanguageVariable(nickTarget, "a", Application.Login.getUser().getFullNickname());
             }
             UI.Language.updateText(nickTarget);
         }

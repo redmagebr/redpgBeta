@@ -58,7 +58,7 @@ module UI.Games {
                 perm.addEventListener("click", {
                     game : games[i],
                     handleEvent : function () {
-                        UI.Games.editGamePermissions(this.game);
+                        // TODO: UI.Games.editGamePermissions(this.game);
                     }
                 });
 
@@ -70,7 +70,7 @@ module UI.Games {
                 edit.addEventListener("click", {
                     game : games[i],
                     handleEvent : function () {
-                        UI.Games.editGame(this.game);
+                        // TODO: UI.Games.editGame(this.game);
                     }
                 });
 
@@ -82,7 +82,7 @@ module UI.Games {
                 deleteGame.addEventListener("click", {
                     game : games[i],
                     handleEvent : function () {
-                        UI.Games.deleteGame(this.game);
+                        // TODO: UI.Games.deleteGame(this.game);
                     }
                 });
 
@@ -100,7 +100,7 @@ module UI.Games {
                 leave.addEventListener("click", {
                     game : games[i],
                     handleEvent : function () {
-                        UI.Games.leaveGame(this.game);
+                        // TODO: UI.Games.leaveGame(this.game);
                     }
                 });
 
@@ -158,7 +158,7 @@ module UI.Games {
                         rDelete.addEventListener("click", {
                             room : room,
                             handleEvent : function () {
-                                UI.Rooms.deleteRoom(this.room);
+                                // TODO: UI.Rooms.deleteRoom(this.room);
                             }
                         });
                         p.appendChild(rDelete);
@@ -170,7 +170,7 @@ module UI.Games {
                         rPerm.addEventListener("click", {
                             room : room,
                             handleEvent : function () {
-                                UI.Rooms.setPermissions(this.room);
+                                // TODO: UI.Rooms.setPermissions(this.room);
                             }
                         });
                         p.appendChild(rPerm);
@@ -199,7 +199,7 @@ module UI.Games {
                 p.addEventListener("click", {
                     game : game,
                     handleEvent : function () {
-                        UI.Games.createRoom(this.game);
+                        // TODO: UI.Games.createRoom(this.game);
                     }
                 });
             }
@@ -215,7 +215,7 @@ module UI.Games {
                 p.addEventListener("click", {
                     game : game,
                     handleEvent : function () {
-                        UI.Games.sendInvites(this.game);
+                        // TODO: UI.Games.sendInvites(this.game);
                     }
                 });
             }
@@ -226,9 +226,9 @@ module UI.Games {
 
     export function updateNick (isLogged : boolean) {
         if (!isLogged) {
-            nickTarget.dataset['languagea'] = "Logged out";
+            UI.Language.addLanguageVariable(nickTarget, "a", "Logged out");
         } else {
-            nickTarget.dataset['languagea'] = Application.Login.getUser().getFullNickname();
+            UI.Language.addLanguageVariable(nickTarget, "a", Application.Login.getUser().getFullNickname());
         }
         UI.Language.updateText(nickTarget);
     };
