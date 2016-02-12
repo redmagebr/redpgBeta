@@ -23,15 +23,7 @@ module Server.AJAX {
             ajax : ajax,
             handleEvent : function (e : Event) {
                 console.debug("AJAX request for " + this.ajax.url + " is complete.");
-                if (this.ajax.target !== AJAXConfig.TARGET_NONE) {
-                    if (this.ajax.target === AJAXConfig.TARGET_GLOBAL) {
-                        UI.Loading.stopLoading();
-                    } else if (this.ajax.target === AJAXConfig.TARGET_LEFT) {
-                        UI.Loading.unblockLeft();
-                    } else if (this.ajax.target === AJAXConfig.TARGET_RIGHT) {
-                        UI.Loading.unblockRight();
-                    }
-                }
+                this.ajax.finishConditionalLoading();
             }
         });
 
@@ -78,15 +70,7 @@ module Server.AJAX {
             }
         });
 
-        if (ajax.target !== AJAXConfig.TARGET_NONE) {
-            if (ajax.target === AJAXConfig.TARGET_GLOBAL) {
-                UI.Loading.startLoading();
-            } else if (ajax.target === AJAXConfig.TARGET_LEFT) {
-                UI.Loading.blockLeft();
-            } else if (ajax.target === AJAXConfig.TARGET_RIGHT) {
-                UI.Loading.blockRight();
-            }
-        }
+        ajax.startConditionalLoading();
 
         if (ajax.data !== null) {
             var data = {};
