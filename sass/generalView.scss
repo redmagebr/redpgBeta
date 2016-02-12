@@ -151,6 +151,10 @@ body {
   overflow-y: auto;
 }
 
+.blackDotBackground {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==");
+}
+
 /* UNselectable */
 .unselectable {
   -webkit-user-select: none;

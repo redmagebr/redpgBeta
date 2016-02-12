@@ -17,8 +17,9 @@ Application.Login.addListener({
 
             // Set up initial pages of main window
             UI.PageManager.callPage(UI.idChangelog);
-            UI.PageManager.callPage(UI.idHome);
             //UI.PageManager.callPage(UI.idChat);
+            //UI.PageManager.callPage(UI.idHome);
+            UI.PageManager.callPage(UI.idSheets);
         } else {
             UI.WindowManager.callWindow("loginWindow");
             UI.Login.resetState();

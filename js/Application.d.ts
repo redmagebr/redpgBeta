@@ -477,8 +477,13 @@ declare class SheetVariable {
     style: SheetStyle;
     protected visible: HTMLElement;
     protected value: any;
+    protected editable: boolean;
     protected changeTrigger: Trigger;
     constructor(parent: Sheet, style: SheetStyle, ele: HTMLElement);
+    protected cleanChildren(): void;
+    updateVisible(): void;
+    triggerInput(e: Event): void;
+    triggerBlur(): void;
     storeValue(val: any): void;
     triggerChange(counter: number): void;
     getValue(): any;
@@ -830,6 +835,7 @@ declare module UI {
     var idConfig: string;
     var idGameInvites: string;
     var idHome: string;
+    var idSheets: string;
 }
 declare module UI.WindowManager {
     var currentLeftSize: number;

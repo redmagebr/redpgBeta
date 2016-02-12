@@ -10,6 +10,11 @@ module Server {
     //export var WEBSOCKET_CONTEXT : string = "/";
     //export var WEBSOCKET_PORTS : Array<number> = [8080];
 
+    //export var APPLICATION_URL : string = "http://93.188.167.121/service/";
+    //export var WEBSOCKET_SERVERURL : string = "ws://93.188.167.121";
+    //export var WEBSOCKET_CONTEXT : string = "/service/";
+    //export var WEBSOCKET_PORTS : Array<number> = [80, 8080, 8081];
+
     Application.Config.registerConfiguration("wsPort", new WsportConfiguration(WEBSOCKET_PORTS[0]));
 
     export function getWebsocketURL () : string {

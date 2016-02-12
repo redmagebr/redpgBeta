@@ -3,6 +3,11 @@ $secondaryFont: caudex;
 $chatFont: caudex;
 $blueBG : #b2b9cf;
 
+/*
+** Individual font licenses can be found in /stylesheets/fontface
+** and /stylesheets/fontface/Lingo.
+*/
+
 @import "allFonts";
 
 @import "compass/utilities/sprites";
@@ -14,13 +19,13 @@ $icons-layout:smart;
 @import "compass/reset";
 
 b { font-weight: bold; }
-
 @import "generalView";
 @import "login";
 @import "windows";
 @import "mainWindow";
 @import "mainWindowSounds";
 @import "mainWindowGames";
+@import "mainWindowSheets";
 @import "mainConfig";
 @import "mainWindowSimple";
 @import "mainChat";

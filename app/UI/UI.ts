@@ -12,6 +12,7 @@ module UI {
 
     // Right side windows
     export var idHome = "homeSideWindow";
+    export var idSheets = "sheetsSideWindow";
 
     /**
      * Registered UI Configurations

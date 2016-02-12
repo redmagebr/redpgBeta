@@ -1713,16 +1713,51 @@ var SheetList = (function () {
 var SheetVariable = (function () {
     function SheetVariable(parent, style, ele) {
         this.value = null;
+        this.editable = true;
         this.changeTrigger = new Trigger();
         this.parent = parent;
         this.style = style;
         this.visible = ele;
         this.id = ele.dataset['id'] === undefined ? this.style.getUniqueID() : ele.dataset['id'];
+        this.editable = ele.dataset['editable'] === undefined ? true : (ele.dataset['editable'].toLowerCase() === "true" || ele.dataset['editable'] === "1");
+        if (this.editable) {
+            ele.contentEditable = "true";
+            ele.addEventListener("input", {
+                variable: this,
+                handleEvent: function (e) {
+                    this.variable.triggerInput(e);
+                }
+            });
+            ele.addEventListener("blur", {
+                variable: this,
+                handleEvent: function (e) {
+                    this.variable.triggerBlur();
+                }
+            });
+        }
+        else {
+            ele.contentEditable = "false";
+        }
     }
+    SheetVariable.prototype.cleanChildren = function () {
+        while (this.visible.lastChild !== null) {
+            this.visible.removeChild(this.visible.lastChild);
+        }
+    };
+    SheetVariable.prototype.updateVisible = function () {
+        this.cleanChildren();
+        this.visible.appendChild(document.createTextNode(this.value));
+    };
+    SheetVariable.prototype.triggerInput = function (e) {
+    };
+    SheetVariable.prototype.triggerBlur = function () {
+        this.storeValue(this.visible.innerText);
+    };
     SheetVariable.prototype.storeValue = function (val) {
         if (val !== this.value) {
             this.value = val;
             this.style.triggerVariableChange(this);
+            this.updateVisible();
         }
     };
     SheetVariable.prototype.triggerChange = function (counter) {
@@ -3860,6 +3895,18 @@ ptbr.setLingo("", "");
 ptbr.setLingo("", "");
 ptbr.setLingo("", "");
 ptbr.setLingo("", "");
+ptbr.setLingo("_SHEETSTITLE_", "Fichas");
+ptbr.setLingo("_SHEETSEXP01_", "Fichas são algo que mestres e seus jogadores podem guardar no sistema, garantindo que todos estejam vendo a mesma versão desse recurso.");
+ptbr.setLingo("_SHEETSEXP02_", "Normalmente são usadas para guardar as informações de personagens, mas têm o potencial para guardar qualquer tipo de informação.");
+ptbr.setLingo("_SHEETSEXP03_", "Cada ficha utiliza um \"Estilo\", que define a aparência dela e os valores que ela precisa guardar. Como alguns estilos não são criados por um administrador, tome cuidado ao abrir fichas que utilizem estilos criados por alguém em quem você não confia. Apenas os estilos criados por um administrador são considerados seguros.");
+ptbr.setLingo("_SHEETSOPENSTYLEEDITOR_", "Abrir gerenciador de estilos de ficha");
+ptbr.setLingo("", "");
+ptbr.setLingo("", "");
+ptbr.setLingo("", "");
+ptbr.setLingo("", "");
+ptbr.setLingo("", "");
+ptbr.setLingo("", "");
+ptbr.setLingo("", "");
 ptbr.setLingo("_GAMESTITLE_", "Grupos");
 ptbr.setLingo("_GAMESEXP1_", "Caso precise informar seu identificador para alguém, ele é \"%a\", sem as aspas.");
 ptbr.setLingo("_GAMESEXP2_", "Aqui você pode administrar os grupos dos quais você participa. Para convidar jogadores ao seu grupo, você irá precisar do identificador deles.");
@@ -4017,6 +4064,7 @@ var UI;
     UI.idConfig = "configSideWindow";
     UI.idGameInvites = "gameInvitesSideWindow";
     UI.idHome = "homeSideWindow";
+    UI.idSheets = "sheetsSideWindow";
     Application.Config.registerConfiguration("chatMaxMessages", new NumberConfiguration(120, 60, 10000));
     Application.Config.registerConfiguration("chatshowhelp", new BooleanConfiguration(true));
     Application.Config.registerConfiguration("chatfontsize", new NumberConfiguration(16, 12, 32));
@@ -4841,7 +4889,7 @@ var UI;
                         div.appendChild(p);
                     }
                 }
-                if (game.isMyCreation() || gameContext.invite) {
+                if (game.isMyCreation() || game.getMe().invite) {
                     var hr = document.createElement("hr");
                     hr.classList.add("gamesHR");
                     div.appendChild(hr);
@@ -7224,7 +7272,7 @@ Application.Login.addListener({
         if (Application.Login.isLogged()) {
             UI.WindowManager.callWindow(('mainWindow'));
             UI.PageManager.callPage(UI.idChangelog);
-            UI.PageManager.callPage(UI.idHome);
+            UI.PageManager.callPage(UI.idSheets);
         }
         else {
             UI.WindowManager.callWindow("loginWindow");

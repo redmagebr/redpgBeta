@@ -1,4 +1,8 @@
 /*
+** Individual font licenses can be found in /stylesheets/fontface
+** and /stylesheets/fontface/Lingo.
+*/
+/*
 ** Designed by:	Nyek! Pinoy Komik Fonts
 **
 **
@@ -30,14 +34,14 @@
 }
 @font-face {
   font-family: 'alegreya';
-  src: url("fontface/file/Alegreya-Bold.otf") format("opentype");
-  font-weight: bold;
+  src: url("fontface/file/Alegreya-Regular.otf") format("opentype");
+  font-weight: normal;
   font-style: normal;
 }
 @font-face {
   font-family: 'alegreya';
-  src: url("fontface/file/Alegreya-Regular.otf") format("opentype");
-  font-weight: normal;
+  src: url("fontface/file/Alegreya-Bold.otf") format("opentype");
+  font-weight: bold;
   font-style: normal;
 }
 /* Caudex Font-Face */
@@ -211,7 +215,7 @@
 }
 /** Use fonts in chat */
 /** Elvish */
-/* line 259, ../sass/allFonts.scss */
+/* line 258, ../sass/allFonts.scss */
 .chatRoleplayLangElvish {
   font-family: tangerine;
   font-size: 1.5em;
@@ -220,21 +224,21 @@
 }
 
 /** Aquon */
-/* line 267, ../sass/allFonts.scss */
+/* line 266, ../sass/allFonts.scss */
 .chatRoleplayLangAquon {
   font-family: Gabrielle;
   font-size: 1.4em;
 }
 
 /** El'zel */
-/* line 273, ../sass/allFonts.scss */
+/* line 272, ../sass/allFonts.scss */
 .chatRoleplayLangEllum {
   font-family: BiedermeierKursiv;
   font-size: 1.2em;
 }
 
 /** Natrum */
-/* line 279, ../sass/allFonts.scss */
+/* line 278, ../sass/allFonts.scss */
 .chatRoleplayLangNatrum {
   font-family: Lycanthrope;
   font-size: 1.05em;
@@ -242,56 +246,56 @@
 }
 
 /** Magraki */
-/* line 286, ../sass/allFonts.scss */
+/* line 285, ../sass/allFonts.scss */
 .chatRoleplayLangMagraki {
   font-family: rocksalt;
   font-size: 0.85em;
 }
 
 /** Celestan */
-/* line 292, ../sass/allFonts.scss */
+/* line 291, ../sass/allFonts.scss */
 .chatRoleplayLangCelestan {
   font-family: carolingia;
   font-size: 1.2em;
 }
 
 /** Abyssal */
-/* line 298, ../sass/allFonts.scss */
+/* line 297, ../sass/allFonts.scss */
 .chatRoleplayLangAbyssal {
   font-family: AonCariCeltic;
   font-size: 1.1em;
 }
 
 /** Draconic */
-/* line 304, ../sass/allFonts.scss */
+/* line 303, ../sass/allFonts.scss */
 .chatRoleplayLangDraconic {
   font-family: Savage;
   font-size: 1.2em;
 }
 
 /** Auran */
-/* line 310, ../sass/allFonts.scss */
+/* line 309, ../sass/allFonts.scss */
 .chatRoleplayLangAuran {
   font-family: Argmansc;
   font-size: 0.9em;
 }
 
 /** Ancient */
-/* line 316, ../sass/allFonts.scss */
+/* line 315, ../sass/allFonts.scss */
 .chatRoleplayLangAncient {
   font-family: Oxford;
   font-size: 1.65em;
 }
 
 /** Technum */
-/* line 323, ../sass/allFonts.scss */
+/* line 322, ../sass/allFonts.scss */
 .chatRoleplayLangTechnum {
   font-family: Calligraffitti;
   font-size: 1.1em;
 }
 
 /** Arcana */
-/* line 329, ../sass/allFonts.scss */
+/* line 328, ../sass/allFonts.scss */
 .chatRoleplayLangArcana {
   font-family: MysticProphet;
   font-size: 0.9em;
@@ -299,21 +303,21 @@
 }
 
 /** Davek */
-/* line 337, ../sass/allFonts.scss */
+/* line 336, ../sass/allFonts.scss */
 .chatRoleplayLangDavek {
   font-family: Tulisan;
   font-size: 1.1em;
 }
 
 /** Animal */
-/* line 343, ../sass/allFonts.scss */
+/* line 342, ../sass/allFonts.scss */
 .chatRoleplayLangAnimal {
   font-family: Achafexp;
   font-size: 1.7em;
 }
 
 /** Glamour */
-/* line 349, ../sass/allFonts.scss */
+/* line 348, ../sass/allFonts.scss */
 .chatRoleplayLangArkadium {
   font-family: AnalSatisfaction;
   font-size: 0.85em;
@@ -814,7 +818,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   display: block;
 }
 
-/* line 16, ../sass/screen.scss */
+/* line 21, ../sass/screen.scss */
 b {
   font-weight: bold;
 }
@@ -902,7 +906,7 @@ body {
 }
 
 /* line 71, ../sass/generalView.scss */
-.buttonBehavior:hover, .simpleButton:hover, .textLink:hover, .handleButton:hover, .leftHandleButton:hover, .rightHandleButton:hover, .musicPlayerButton:hover, #avatarUpButton:hover, #avatarDownButton:hover, #chatScrollDown:hover, .chatRightButton:hover, #chatMessageSendButton:hover, #personaAddButton:hover, .personaButton:hover, .diceButton:hover, #chatDiceTower:hover, #chatDiceSubmit:hover, .chatAvatarChoiceBoxUse:hover, .chatAvatarChoiceBoxDelete:hover, .chatWhisperLink:hover, .chatMessageVoteAmount:hover, .xButton:hover {
+.buttonBehavior:hover, .simpleButton:hover, .textLink:hover, .sheetNameLink:hover, .handleButton:hover, .leftHandleButton:hover, .rightHandleButton:hover, .musicPlayerButton:hover, .sheetListGameName:hover, .sheetListFolderName:hover, #avatarUpButton:hover, #avatarDownButton:hover, #chatScrollDown:hover, .chatRightButton:hover, #chatMessageSendButton:hover, #personaAddButton:hover, .personaButton:hover, .diceButton:hover, #chatDiceTower:hover, #chatDiceSubmit:hover, .chatAvatarChoiceBoxUse:hover, .chatAvatarChoiceBoxDelete:hover, .chatWhisperLink:hover, .chatMessageVoteAmount:hover, .xButton:hover {
   cursor: pointer;
 }
 
@@ -941,22 +945,22 @@ body {
 }
 
 /* line 109, ../sass/generalView.scss */
-.buttonBehavior:hover, .simpleButton:hover, .textLink:hover, .handleButton:hover, .leftHandleButton:hover, .rightHandleButton:hover, .musicPlayerButton:hover, #avatarUpButton:hover, #avatarDownButton:hover, #chatScrollDown:hover, .chatRightButton:hover, #chatMessageSendButton:hover, #personaAddButton:hover, .personaButton:hover, .diceButton:hover, #chatDiceTower:hover, #chatDiceSubmit:hover, .chatAvatarChoiceBoxUse:hover, .chatAvatarChoiceBoxDelete:hover, .chatWhisperLink:hover, .chatMessageVoteAmount:hover, .xButton:hover {
+.buttonBehavior:hover, .simpleButton:hover, .textLink:hover, .sheetNameLink:hover, .handleButton:hover, .leftHandleButton:hover, .rightHandleButton:hover, .musicPlayerButton:hover, .sheetListGameName:hover, .sheetListFolderName:hover, #avatarUpButton:hover, #avatarDownButton:hover, #chatScrollDown:hover, .chatRightButton:hover, #chatMessageSendButton:hover, #personaAddButton:hover, .personaButton:hover, .diceButton:hover, #chatDiceTower:hover, #chatDiceSubmit:hover, .chatAvatarChoiceBoxUse:hover, .chatAvatarChoiceBoxDelete:hover, .chatWhisperLink:hover, .chatMessageVoteAmount:hover, .xButton:hover {
   cursor: pointer;
 }
 
 /* line 114, ../sass/generalView.scss */
-.textLink {
+.textLink, .sheetNameLink {
   text-decoration: none;
   font-weight: bold;
   color: #000bab;
 }
 /* line 118, ../sass/generalView.scss */
-.textLink:hover {
+.textLink:hover, .sheetNameLink:hover {
   color: #4f5aff;
 }
 /* line 121, ../sass/generalView.scss */
-.textLink:active {
+.textLink:active, .sheetNameLink:active {
   color: #000cc8;
 }
 
@@ -990,9 +994,14 @@ body {
   overflow-y: auto;
 }
 
+/* line 154, ../sass/generalView.scss */
+.blackDotBackground, .sheetListFolderContainer {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==");
+}
+
 /* UNselectable */
-/* line 155, ../sass/generalView.scss */
-.unselectable, .buttonBehavior, .simpleButton, .textLink, .handleButton, .leftHandleButton, .rightHandleButton, .musicPlayerButton, #avatarUpButton, #avatarDownButton, #chatScrollDown, .chatRightButton, #chatMessageSendButton, #personaAddButton, .personaButton, .diceButton, #chatDiceTower, #chatDiceSubmit, .chatAvatarChoiceBoxUse, .chatAvatarChoiceBoxDelete, .chatWhisperLink, .chatMessageVoteAmount, .xButton {
+/* line 159, ../sass/generalView.scss */
+.unselectable, .buttonBehavior, .simpleButton, .textLink, .sheetNameLink, .handleButton, .leftHandleButton, .rightHandleButton, .musicPlayerButton, .sheetListGameName, .sheetListFolderName, #avatarUpButton, #avatarDownButton, #chatScrollDown, .chatRightButton, #chatMessageSendButton, #personaAddButton, .personaButton, .diceButton, #chatDiceTower, #chatDiceSubmit, .chatAvatarChoiceBoxUse, .chatAvatarChoiceBoxDelete, .chatWhisperLink, .chatMessageVoteAmount, .xButton {
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
@@ -1313,6 +1322,63 @@ body {
   margin: 0px;
 }
 
+/* line 1, ../sass/mainWindowSheets.scss */
+.sheetListGameContainer {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 6px;
+}
+
+/* line 7, ../sass/mainWindowSheets.scss */
+.sheetListGameName, .sheetListFolderName {
+  font-weight: bold;
+  font-size: 1.2em;
+  line-height: 1.3em;
+}
+
+/* line 14, ../sass/mainWindowSheets.scss */
+.sheetListFolderName {
+  font-size: 1em;
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAABAQMAAADD8p2OAAAAA1BMVEUAAACnej3aAAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==");
+  background-position: left center;
+  background-repeat: no-repeat;
+  padding-left: 6px;
+}
+
+/* line 22, ../sass/mainWindowSheets.scss */
+.openSheetGame > .sheetListFolderContainer {
+  display: block;
+}
+
+/* line 26, ../sass/mainWindowSheets.scss */
+.sheetListFolderContainer {
+  display: none;
+  padding-left: 1px;
+  margin-left: 4px;
+  background-repeat: repeat-y;
+  background-position: top left;
+}
+
+/* line 35, ../sass/mainWindowSheets.scss */
+.openSheetFolder > .sheetListSheet {
+  display: block;
+}
+
+/* line 39, ../sass/mainWindowSheets.scss */
+.sheetListSheet {
+  display: none;
+  font-size: 0.9em;
+  padding: 4px;
+  padding-left: 12px;
+  padding-right: 0px;
+}
+
+/* line 48, ../sass/mainWindowSheets.scss */
+.sheetNameLink {
+  min-width: 80px;
+  display: inline-block;
+}
+
 /* line 1, ../sass/mainConfig.scss */
 #configError {
   color: #d7003b;
@@ -1430,6 +1496,11 @@ body {
 /* line 41, ../sass/mainWindowSimple.scss */
 .hoverable:hover, .gameInvitesEmptyP:hover, .gameInvitesContainer:hover, .configLabel:hover {
   background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* line 45, ../sass/mainWindowSimple.scss */
+.lightHoverable:hover, .sheetListSheet:hover {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 /* line 1, ../sass/mainChat.scss */

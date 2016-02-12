@@ -183,7 +183,7 @@ module UI.Games {
                 }
             }
 
-            if (game.isMyCreation() || gameContext.invite) {
+            if (game.isMyCreation() || game.getMe().invite) {
                 var hr = document.createElement("hr");
                 hr.classList.add("gamesHR");
                 div.appendChild(hr);

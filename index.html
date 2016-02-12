@@ -287,8 +287,47 @@
           <div class='diceButton icons-d100' id='chatDiceD100' title='d100'></div>
         </div>
       </div>
+      <div class='rightSideWindow' id='sheetsSideWindow'>
+        <div class='mainWindowHeader language'>
+          _SHEETSTITLE_
+          <a class='xButton' onclick='UI.PageManager.closeRightPage();'></a>
+        </div>
+        <div class='mainWindowContent singleton'>
+          <p class='mainWindowParagraph language'>_SHEETSEXP01_</p>
+          <p class='mainWindowParagraph language'>_SHEETSEXP02_</p>
+          <p class='mainWindowParagraph language'>_SHEETSEXP03_</p>
+          <p class='mainWindowParagraph textLink language hoverable'>_SHEETSOPENSTYLEEDITOR_</p>
+          <div id='sheetWindowSheetList'>
+            <div class='sheetListGameContainer lightHoverable openSheetGame'>
+              <p class='sheetListGameName' onclick="this.parentNode.classList.toggle('openSheetGame');">Nome da Mesa</p>
+              <div class='sheetListFolderContainer lightHoverable openSheetFolder'>
+                <p class='sheetListFolderName' onclick="this.parentNode.classList.toggle('openSheetFolder');">Nome da pasta</p>
+                <p class='sheetListSheet'>
+                  <a class='sheetNameLink'>Nome da ficha</a>
+                  <a class='textLink'>Pasta</a>
+                  <a class='textLink'>Permissões</a>
+                  <a class='textLink'>Deletar</a>
+                </p>
+              </div>
+              <div class='sheetListFolderContainer lightHoverable'>
+                <p class='sheetListFolderName' onclick="this.parentNode.classList.toggle('openSheetFolder');">Nome da pasta fechada</p>
+                <p class='sheetListSheet'>
+                  Sem fichas para imprimir.
+                </p>
+                <p class='sheetListSheet textLink lightHoverable'>> Criar Ficha</p>
+              </div>
+            </div>
+            <div class='sheetListGameContainer lightHoverable'>
+              <p class='sheetListGameName'>Nome de mesa Fechada</p>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class='rightSideWindow' id='homeSideWindow'>
-        <div class='mainWindowHeader language'>_REDPGTITLE_</div>
+        <div class='mainWindowHeader language'>
+          _REDPGTITLE_
+          <a class='xButton' onclick='UI.PageManager.closeRightPage();'></a>
+        </div>
         <div class='mainWindowContent'>
           <p class='mainWindowParagraph language'>_REDPGEXP1_</p>
           <p class='mainWindowParagraph language'>_REDPGEXP2_</p>
@@ -312,7 +351,6 @@
           <p class='mainWindowParagraph language'>_REDPGFORUM1_</p>
         </div>
       </div>
-      <div class='rightSideWindow' id='sheetsSideWindow'></div>
       <div class='rightSideWindow' id='picturesSideWindow'></div>
       <div class='rightSideWindow' id='soundsSideWindow'></div>
       <div class='rightSideWindow' id='hitboxSideWindow'>

@@ -3,7 +3,6 @@
 /// <reference path='Languages/LingoPTBR.ts' />
 /// <reference path='Languages/LingoEN.ts' />
 
-
 /// <reference path='UI.ts' />
 /// <reference path='Modules/WindowManager.ts' />
 /// <reference path='Modules/Config.ts' />
