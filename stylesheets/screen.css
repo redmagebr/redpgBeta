@@ -1339,24 +1339,18 @@ body {
 /* line 14, ../sass/mainWindowSheets.scss */
 .sheetListFolderName {
   font-size: 1em;
-  color: #8c8c8c;
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAABAQMAAADD8p2OAAAAA1BMVEUAAACnej3aAAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==");
   background-position: left center;
   background-repeat: no-repeat;
   padding-left: 6px;
 }
 
-/* line 23, ../sass/mainWindowSheets.scss */
-.openSheetFolder > .sheetListFolderName {
-  color: #000000;
-}
-
-/* line 27, ../sass/mainWindowSheets.scss */
+/* line 22, ../sass/mainWindowSheets.scss */
 .openSheetGame > .sheetListFolderContainer {
   display: block;
 }
 
-/* line 31, ../sass/mainWindowSheets.scss */
+/* line 26, ../sass/mainWindowSheets.scss */
 .sheetListFolderContainer {
   display: none;
   padding-left: 1px;
@@ -1365,12 +1359,12 @@ body {
   background-position: top left;
 }
 
-/* line 40, ../sass/mainWindowSheets.scss */
+/* line 35, ../sass/mainWindowSheets.scss */
 .openSheetFolder > .sheetListSheet {
   display: block;
 }
 
-/* line 44, ../sass/mainWindowSheets.scss */
+/* line 39, ../sass/mainWindowSheets.scss */
 .sheetListSheet {
   display: none;
   font-size: 0.9em;
@@ -1379,13 +1373,13 @@ body {
   padding-right: 0px;
 }
 
-/* line 53, ../sass/mainWindowSheets.scss */
+/* line 48, ../sass/mainWindowSheets.scss */
 .sheetNameLink {
   min-width: 300px;
   display: inline-block;
 }
 
-/* line 59, ../sass/mainWindowSheets.scss */
+/* line 54, ../sass/mainWindowSheets.scss */
 .sheetExtraButton {
   float: right;
   padding-left: 20px;
