@@ -291,45 +291,16 @@ declare class BooleanConfiguration extends Configuration {
     setFunction: (value: string) => void;
     getFunction: () => boolean;
 }
-declare class Memory {
+declare class TrackerMemory {
     private changeTrigger;
-    protected value: any;
-    defValue: any;
-    setFunction: Function;
-    getFunction: Function;
-    constructor(defV: any);
-    getDefault(): any;
     reset(): void;
-    addChangeListener(listener: Listener | Function): void;
-    storeValue(value: any): boolean;
+    storeValue(value: any): any;
     getValue(): any;
+    exportAsObject(): any;
+    addChangeListener(listener: Listener | Function): void;
+    protected triggerChange(): void;
 }
-declare class MemoryCombat extends Memory {
-    private roundCounter;
-    private currentParticipant;
-    private buffs;
-    constructor();
-    getBuffs(): any[];
-    getFunction: () => any[];
-    setFunction: (value: any[]) => void;
-}
-declare class Buff {
-    target: number;
-    applier: number;
-    appliedRound: number;
-    duration: number;
-    name: string;
-    beginning: number;
-    setTarget(id: number): void;
-    setApplier(id: number): void;
-    setAppliedRound(round: number): void;
-    setName(name: string): void;
-    setBeginning(begins: boolean | number): void;
-    setDuration(dur: number): void;
-    isActive(partId: number, round: number, beginning: boolean): boolean;
-    exportId(): string;
-    updateFromObject(obj: Array<any>): void;
-    exportAsObject(): (number | string)[];
+declare class MemoryCombat extends TrackerMemory {
 }
 declare class ChatInfo {
     private floater;
@@ -899,6 +870,8 @@ declare module UI.Language {
     function addLanguageTitle(element: HTMLElement, value: string): void;
     function markLanguage(...elements: HTMLElement[]): void;
 }
+declare module UI.Sheets {
+}
 declare module UI.Rooms {
 }
 declare module UI.Rooms.Designer {
@@ -1066,15 +1039,17 @@ declare module Server.Chat {
     function triggerMessage(f: Message): void;
 }
 declare module Server.Chat.Memory {
-    function getConfig(id: string): Memory;
+    function addChangeListener(f: Function | Listener): void;
+    function getConfig(id: string): TrackerMemory;
     function registerChangeListener(id: string, listener: Listener): void;
-    function registerConfiguration(id: string, config: Memory): void;
+    function registerConfiguration(id: string, config: TrackerMemory): void;
     function exportAsObject(): {
         [id: string]: any;
     };
     function updateFromObject(obj: {
         [id: string]: any;
     }): void;
+    function saveMemory(): void;
 }
 declare module Server.Storage {
     function requestSounds(ajaxTarget: number, cbs?: Listener, cbe?: Listener): void;

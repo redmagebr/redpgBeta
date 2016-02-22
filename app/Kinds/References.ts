@@ -30,9 +30,8 @@
 /// <reference path='Classes/Configuration/LanguageConfiguration.ts' />
 /// <reference path='Classes/Configuration/BooleanConfiguration.ts' />
 
-/// <reference path='Classes/Memory.ts' />
+/// <reference path='Classes/TrackerMemory.ts' />
 /// <reference path='Classes/Memory/MemoryCombat.ts' />
-/// <reference path='Classes/Memory/Combat/Buff.ts' />
 
 /// <reference path='Elements/ChatInfo.ts' />
 /// <reference path='Elements/ChatAvatar.ts' />

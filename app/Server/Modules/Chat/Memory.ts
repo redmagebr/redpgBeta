@@ -1,7 +1,12 @@
 module Server.Chat.Memory {
-    var configList : { [id : string] : Memory } = {};
+    var configList : { [id : string] : TrackerMemory } = {};
+    var changeTrigger = new Trigger();
 
-    export function getConfig (id : string) : Memory {
+    export function addChangeListener (f : Function | Listener) {
+        changeTrigger.addListener(f);
+    }
+
+    export function getConfig (id : string) : TrackerMemory {
         return configList[id];
     }
 
@@ -13,13 +18,21 @@ module Server.Chat.Memory {
         configList[id].addChangeListener(listener);
     }
 
-    export function registerConfiguration (id : string, config : Memory) {
+    export function registerConfiguration (id : string, config : TrackerMemory) {
         if (configList[id] !== undefined) {
             console.warn("[ROOMMEMORY] Attempt to overwrite registered Configuration at " + id + ". Offending configuration:", config);
             return;
         }
 
         configList[id] = config;
+        config.addChangeListener(<Listener> {
+            trigger : changeTrigger,
+            id : id,
+            handleEvent : function (memo : TrackerMemory) {
+                this.trigger.trigger(memo, id);
+                console.debug("[ROOMMEMORY] Global change triggered by " + id + ".");
+            }
+        });
     }
 
     export function exportAsObject () : { [id : string] : any } {
@@ -41,5 +54,16 @@ module Server.Chat.Memory {
             }
         }
         console.debug("[ROOMMEMORY] Updated values from:", obj);
+    }
+
+    export function saveMemory () {
+        var room = Server.Chat.getRoom();
+        if (room !== null) {
+            var user = room.getMe();
+            if (user.isStoryteller()) {
+                var memoryString : string = JSON.stringify(exportAsObject());
+                console.warn(memoryString);
+            }
+        }
     }
 }

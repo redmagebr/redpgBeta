@@ -1,0 +1,1 @@
+Server.Chat.Memory.registerConfiguration("c", new MemoryCombat());

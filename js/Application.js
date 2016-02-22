@@ -1049,132 +1049,37 @@ var BooleanConfiguration = (function (_super) {
     }
     return BooleanConfiguration;
 })(Configuration);
-var Memory = (function () {
-    function Memory(defV) {
+var TrackerMemory = (function () {
+    function TrackerMemory() {
         this.changeTrigger = new Trigger();
-        this.value = null;
-        this.defValue = null;
-        this.setFunction = null;
-        this.getFunction = null;
-        this.defValue = defV;
-        this.value = defV;
     }
-    Memory.prototype.getDefault = function () {
-        return this.defValue;
+    TrackerMemory.prototype.reset = function () {
+        console.error("[TrackerMemory] Reset is abstract. Offending class: ", this.constructor['name'], this);
     };
-    Memory.prototype.reset = function () {
-        this.value = this.defValue;
+    TrackerMemory.prototype.storeValue = function (value) {
+        console.error("[TrackerMemory] StoreValue is abstract. Offending class: ", this.constructor['name'], this);
     };
-    Memory.prototype.addChangeListener = function (listener) {
+    TrackerMemory.prototype.getValue = function () {
+        console.error("[TrackerMemory] StoreValue is abstract. Offending class: ", this.constructor['name'], this);
+    };
+    TrackerMemory.prototype.exportAsObject = function () {
+        console.error("[TrackerMemory] ExportAsObject is abstract. Offending class: ", this.constructor['name'], this);
+    };
+    TrackerMemory.prototype.addChangeListener = function (listener) {
         this.changeTrigger.addListener(listener);
     };
-    Memory.prototype.storeValue = function (value) {
-        var oldValue = JSON.stringify(this.value);
-        if (this.setFunction !== null) {
-            this.setFunction(value);
-        }
-        else {
-            this.value = value;
-        }
-        var newValue = JSON.stringify(this.value);
-        if (newValue !== oldValue) {
-            this.changeTrigger.trigger(this);
-            return true;
-        }
-        return false;
+    TrackerMemory.prototype.triggerChange = function () {
+        this.changeTrigger.trigger(this);
     };
-    Memory.prototype.getValue = function () {
-        if (this.getFunction !== null) {
-            return this.getFunction();
-        }
-        return this.value;
-    };
-    return Memory;
+    return TrackerMemory;
 })();
 var MemoryCombat = (function (_super) {
     __extends(MemoryCombat, _super);
     function MemoryCombat() {
-        _super.call(this, [0]);
-        this.roundCounter = 0;
-        this.currentParticipant = 0;
-        this.buffs = {};
-        this.getFunction = function () {
-            return [
-                this.roundCounter,
-                this.currentParticipant,
-                this.getBuffs()
-            ];
-        };
-        this.setFunction = function (value) {
-            this.roundCounter = value[0];
-            this.currentParticipant = value[1];
-        };
+        _super.apply(this, arguments);
     }
-    MemoryCombat.prototype.getBuffs = function () {
-        var buffs = [];
-        for (var id in this.buffs) {
-            buffs.push(this.buffs[id].exportAsObject());
-        }
-        return buffs;
-    };
     return MemoryCombat;
-})(Memory);
-var Buff = (function () {
-    function Buff() {
-        this.target = 0;
-        this.applier = 0;
-        this.appliedRound = 0;
-        this.duration = 0;
-        this.name = "";
-        this.beginning = 0;
-    }
-    Buff.prototype.setTarget = function (id) {
-        this.target = id;
-    };
-    Buff.prototype.setApplier = function (id) {
-        this.applier = id;
-    };
-    Buff.prototype.setAppliedRound = function (round) {
-        this.appliedRound = round;
-    };
-    Buff.prototype.setName = function (name) {
-        this.name = name;
-    };
-    Buff.prototype.setBeginning = function (begins) {
-        if (begins === true || begins === 1) {
-            this.beginning = 1;
-        }
-        else {
-            this.beginning = 0;
-        }
-    };
-    Buff.prototype.setDuration = function (dur) {
-        this.duration = dur;
-    };
-    Buff.prototype.isActive = function (partId, round, beginning) {
-        var begins = beginning ? 1 : 0;
-        var lastRound = (this.appliedRound + this.duration);
-        if (round > lastRound || (round === lastRound && this.beginning === begins)) {
-            return false;
-        }
-        return true;
-    };
-    Buff.prototype.exportId = function () {
-        return JSON.stringify(this.exportAsObject());
-    };
-    Buff.prototype.updateFromObject = function (obj) {
-        this.setTarget(obj[0]);
-        this.setApplier(obj[1]);
-        this.setAppliedRound(obj[2]);
-        this.setDuration(obj[3]);
-        this.setBeginning(obj[4]);
-        this.setName(obj[5]);
-    };
-    Buff.prototype.exportAsObject = function () {
-        return [this.target, this.applier, this.appliedRound, this.duration, this.beginning, this.name];
-    };
-    return Buff;
-})();
+})(TrackerMemory);
 var ChatInfo = (function () {
     function ChatInfo(floater) {
         this.textNode = document.createTextNode("null");
@@ -4023,7 +3928,7 @@ ptbr.setLingo("_CHATMESSAGEVOTECREATEDVOTE_", "criou uma votação");
 ptbr.setLingo("_CHATDICEROLLEDWAITING_", "Esperando resposta do servidor...");
 ptbr.setLingo("_CHATDICEAMOUNT_", "#");
 ptbr.setLingo("_CHATDICEFACES_", "d#");
-ptbr.setLingo("_CHATDICEMOD_", "mod");
+ptbr.setLingo("_CHATDICEMOD_", "+#");
 ptbr.setLingo("_CHATDICEREASON_", "Razão");
 ptbr.setLingo("_CHATWHISPERNOTARGETSFOUND_", "Nenhum jogador encontrado para \"%a\".");
 ptbr.setLingo("_CHATMULTIPLETARGETSFOUND_", "Múltiplos jogadores encontrados");
@@ -7210,6 +7115,11 @@ var Server;
         var Memory;
         (function (Memory) {
             var configList = {};
+            var changeTrigger = new Trigger();
+            function addChangeListener(f) {
+                changeTrigger.addListener(f);
+            }
+            Memory.addChangeListener = addChangeListener;
             function getConfig(id) {
                 return configList[id];
             }
@@ -7228,6 +7138,14 @@ var Server;
                     return;
                 }
                 configList[id] = config;
+                config.addChangeListener({
+                    trigger: changeTrigger,
+                    id: id,
+                    handleEvent: function (memo) {
+                        this.trigger.trigger(memo, id);
+                        console.debug("[ROOMMEMORY] Global change triggered by " + id + ".");
+                    }
+                });
             }
             Memory.registerConfiguration = registerConfiguration;
             function exportAsObject() {
@@ -7250,6 +7168,17 @@ var Server;
                 console.debug("[ROOMMEMORY] Updated values from:", obj);
             }
             Memory.updateFromObject = updateFromObject;
+            function saveMemory() {
+                var room = Server.Chat.getRoom();
+                if (room !== null) {
+                    var user = room.getMe();
+                    if (user.isStoryteller()) {
+                        var memoryString = JSON.stringify(exportAsObject());
+                        console.warn(memoryString);
+                    }
+                }
+            }
+            Memory.saveMemory = saveMemory;
         })(Memory = Chat.Memory || (Chat.Memory = {}));
     })(Chat = Server.Chat || (Server.Chat = {}));
 })(Server || (Server = {}));

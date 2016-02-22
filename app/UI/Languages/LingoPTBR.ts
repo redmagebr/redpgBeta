@@ -140,7 +140,7 @@ ptbr.setLingo("_CHATMESSAGEVOTECREATEDVOTE_", "criou uma votação");
 ptbr.setLingo("_CHATDICEROLLEDWAITING_", "Esperando resposta do servidor...");
 ptbr.setLingo("_CHATDICEAMOUNT_", "#");
 ptbr.setLingo("_CHATDICEFACES_", "d#");
-ptbr.setLingo("_CHATDICEMOD_", "mod");
+ptbr.setLingo("_CHATDICEMOD_", "+#");
 ptbr.setLingo("_CHATDICEREASON_", "Razão");
 ptbr.setLingo("_CHATWHISPERNOTARGETSFOUND_", "Nenhum jogador encontrado para \"%a\".");
 ptbr.setLingo("_CHATMULTIPLETARGETSFOUND_", "Múltiplos jogadores encontrados");

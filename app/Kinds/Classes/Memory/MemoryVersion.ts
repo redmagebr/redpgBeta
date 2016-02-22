@@ -1,0 +1,3 @@
+class MemoryVersion extends TrackerMemory {
+
+}
