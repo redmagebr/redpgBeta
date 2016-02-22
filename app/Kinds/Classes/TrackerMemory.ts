@@ -1,21 +1,13 @@
-class TrackerMemory {
+abstract class TrackerMemory {
     private changeTrigger = new Trigger();
 
-    public reset () {
-        console.error("[TrackerMemory] Reset is abstract. Offending class: ",  this.constructor['name'], this);
-    }
+    public abstract reset () : void;
 
-    public storeValue (value : any) : any {
-        console.error("[TrackerMemory] StoreValue is abstract. Offending class: ",  this.constructor['name'], this);
-    }
+    public abstract storeValue (value : any) : any;
 
-    public getValue () : any {
-        console.error("[TrackerMemory] StoreValue is abstract. Offending class: ",  this.constructor['name'], this);
-    }
+    public abstract getValue () : any ;
 
-    public exportAsObject () : any {
-        console.error("[TrackerMemory] ExportAsObject is abstract. Offending class: ",  this.constructor['name'], this);
-    }
+    public abstract exportAsObject () : any ;
 
     public addChangeListener (listener : Listener | Function) {
         this.changeTrigger.addListener(listener);

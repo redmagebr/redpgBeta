@@ -291,12 +291,12 @@ declare class BooleanConfiguration extends Configuration {
     setFunction: (value: string) => void;
     getFunction: () => boolean;
 }
-declare class TrackerMemory {
+declare abstract class TrackerMemory {
     private changeTrigger;
-    reset(): void;
-    storeValue(value: any): any;
-    getValue(): any;
-    exportAsObject(): any;
+    abstract reset(): void;
+    abstract storeValue(value: any): any;
+    abstract getValue(): any;
+    abstract exportAsObject(): any;
     addChangeListener(listener: Listener | Function): void;
     protected triggerChange(): void;
 }
@@ -304,6 +304,7 @@ declare class MemoryCombat extends TrackerMemory {
 }
 declare class MemoryVersion extends TrackerMemory {
     private importVersion;
+    reset(): void;
     storeValue(v: number): void;
     getValue(): number;
     exportAsObject(): number;

@@ -1053,18 +1053,6 @@ var TrackerMemory = (function () {
     function TrackerMemory() {
         this.changeTrigger = new Trigger();
     }
-    TrackerMemory.prototype.reset = function () {
-        console.error("[TrackerMemory] Reset is abstract. Offending class: ", this.constructor['name'], this);
-    };
-    TrackerMemory.prototype.storeValue = function (value) {
-        console.error("[TrackerMemory] StoreValue is abstract. Offending class: ", this.constructor['name'], this);
-    };
-    TrackerMemory.prototype.getValue = function () {
-        console.error("[TrackerMemory] StoreValue is abstract. Offending class: ", this.constructor['name'], this);
-    };
-    TrackerMemory.prototype.exportAsObject = function () {
-        console.error("[TrackerMemory] ExportAsObject is abstract. Offending class: ", this.constructor['name'], this);
-    };
     TrackerMemory.prototype.addChangeListener = function (listener) {
         this.changeTrigger.addListener(listener);
     };
@@ -1084,7 +1072,11 @@ var MemoryVersion = (function (_super) {
     __extends(MemoryVersion, _super);
     function MemoryVersion() {
         _super.apply(this, arguments);
+        this.importVersion = Server.Chat.Memory.version;
     }
+    MemoryVersion.prototype.reset = function () {
+        this.importVersion = Server.Chat.Memory.version;
+    };
     MemoryVersion.prototype.storeValue = function (v) {
         this.importVersion = v;
     };
