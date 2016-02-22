@@ -1080,6 +1080,23 @@ var MemoryCombat = (function (_super) {
     }
     return MemoryCombat;
 })(TrackerMemory);
+var MemoryVersion = (function (_super) {
+    __extends(MemoryVersion, _super);
+    function MemoryVersion() {
+        _super.apply(this, arguments);
+    }
+    MemoryVersion.prototype.storeValue = function (v) {
+        this.importVersion = v;
+    };
+    MemoryVersion.prototype.getValue = function () {
+        return this.importVersion;
+    };
+    MemoryVersion.prototype.exportAsObject = function () {
+        return Server.Chat.Memory.version;
+        ;
+    };
+    return MemoryVersion;
+})(TrackerMemory);
 var ChatInfo = (function () {
     function ChatInfo(floater) {
         this.textNode = document.createTextNode("null");
@@ -7116,6 +7133,7 @@ var Server;
         (function (Memory) {
             var configList = {};
             var changeTrigger = new Trigger();
+            Memory.version = 2;
             function addChangeListener(f) {
                 changeTrigger.addListener(f);
             }
@@ -7182,6 +7200,8 @@ var Server;
         })(Memory = Chat.Memory || (Chat.Memory = {}));
     })(Chat = Server.Chat || (Server.Chat = {}));
 })(Server || (Server = {}));
+Server.Chat.Memory.registerConfiguration("c", new MemoryCombat());
+Server.Chat.Memory.registerConfiguration("v", new MemoryVersion());
 var Server;
 (function (Server) {
     var Storage;

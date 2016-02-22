@@ -302,6 +302,12 @@ declare class TrackerMemory {
 }
 declare class MemoryCombat extends TrackerMemory {
 }
+declare class MemoryVersion extends TrackerMemory {
+    private importVersion;
+    storeValue(v: number): void;
+    getValue(): number;
+    exportAsObject(): number;
+}
 declare class ChatInfo {
     private floater;
     private textNode;
@@ -1039,6 +1045,7 @@ declare module Server.Chat {
     function triggerMessage(f: Message): void;
 }
 declare module Server.Chat.Memory {
+    var version: number;
     function addChangeListener(f: Function | Listener): void;
     function getConfig(id: string): TrackerMemory;
     function registerChangeListener(id: string, listener: Listener): void;

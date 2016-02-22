@@ -2,6 +2,8 @@ module Server.Chat.Memory {
     var configList : { [id : string] : TrackerMemory } = {};
     var changeTrigger = new Trigger();
 
+    export var version : number = 2;
+
     export function addChangeListener (f : Function | Listener) {
         changeTrigger.addListener(f);
     }
@@ -67,3 +69,6 @@ module Server.Chat.Memory {
         }
     }
 }
+
+Server.Chat.Memory.registerConfiguration("c", new MemoryCombat());
+Server.Chat.Memory.registerConfiguration("v", new MemoryVersion());
