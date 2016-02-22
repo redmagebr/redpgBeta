@@ -1,5 +1,9 @@
 class MemoryVersion extends TrackerMemory {
-    private importVersion : number;
+    private importVersion : number = Server.Chat.Memory.version;
+
+    public reset () {
+        this.importVersion = Server.Chat.Memory.version;
+    }
 
     public storeValue (v : number) {
         this.importVersion = v;
