@@ -139,6 +139,7 @@ module UI.SoundController.MusicPlayer {
     }
 
     export function stopPlaying () {
+        hideContainer();
         hideButton();
         bgm.pause();
         bgm.currentTime = 0;

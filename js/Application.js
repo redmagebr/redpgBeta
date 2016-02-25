@@ -5456,6 +5456,7 @@ var UI;
             }
             MusicPlayer.updateSeeker = updateSeeker;
             function stopPlaying() {
+                hideContainer();
                 hideButton();
                 bgm.pause();
                 bgm.currentTime = 0;
