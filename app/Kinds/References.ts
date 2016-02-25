@@ -33,6 +33,8 @@
 /// <reference path='Classes/TrackerMemory.ts' />
 /// <reference path='Classes/Memory/MemoryCombat.ts' />
 /// <reference path='Classes/Memory/MemoryVersion.ts' />
+/// <reference path='Classes/Memory/Combat/CombatEffect.ts' />
+/// <reference path='Classes/Memory/Combat/CombatParticipant.ts' />
 
 /// <reference path='Elements/ChatInfo.ts' />
 /// <reference path='Elements/ChatAvatar.ts' />

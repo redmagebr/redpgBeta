@@ -15,13 +15,18 @@ class Lingo {
         this.langValues[id] = value;
     }
 
-    public getLingo (id : string, dataset : {[id : string] : string}) {
+    public getLingo (id : string, dataset? : {[id : string] : string}) {
         if (this.langValues[id] === undefined) {
             console.warn("[LANGUAGE] No string for \"" + id + "\" in " + this.name + ".");
             return this.unknownLingo;
         }
 
         var result : string = this.langValues[id];
+
+        if (dataset === undefined) {
+            return result;
+        }
+
         var number = "a".charCodeAt(0);
         while (dataset["language" + String.fromCharCode(number)] !== undefined) {
             result = result.replace(new RegExp("%" + String.fromCharCode(number), 'g'), dataset["language" + String.fromCharCode(number)]);

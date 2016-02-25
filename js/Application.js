@@ -1065,7 +1065,23 @@ var MemoryCombat = (function (_super) {
     __extends(MemoryCombat, _super);
     function MemoryCombat() {
         _super.apply(this, arguments);
+        this.combatants = [];
+        this.round = 0;
+        this.turn = 0;
     }
+    MemoryCombat.prototype.reset = function () {
+        this.combatants = [];
+        this.round = 0;
+        this.turn = 0;
+        this.triggerChange();
+    };
+    MemoryCombat.prototype.exportAsObject = function () {
+    };
+    MemoryCombat.prototype.storeValue = function (obj) {
+    };
+    MemoryCombat.prototype.getValue = function () {
+        return null;
+    };
     return MemoryCombat;
 })(TrackerMemory);
 var MemoryVersion = (function (_super) {
@@ -1089,6 +1105,59 @@ var MemoryVersion = (function (_super) {
     };
     return MemoryVersion;
 })(TrackerMemory);
+var CombatEffect = (function () {
+    function CombatEffect() {
+        this.name = "";
+        this.origin = 0;
+        this.customString = null;
+    }
+    CombatEffect.prototype.reset = function () {
+        this.name = UI.Language.getLanguage().getLingo("_TRACKERUNKNOWNEFFECT_");
+    };
+    CombatEffect.prototype.exportAsObject = function () {
+        var arr = [this.name, this.origin];
+        if (this.customString !== null) {
+            arr.push(this.customString);
+        }
+        return arr;
+    };
+    CombatEffect.prototype.storeValue = function (array) {
+        if (!Array.isArray(array) || typeof array[0] !== "string" || typeof array[1] !== "number") {
+            this.reset();
+        }
+        else {
+            this.name = array[0];
+            this.origin = array[1];
+            if (typeof array[2] === "string") {
+                this.customString = array[2];
+            }
+        }
+    };
+    return CombatEffect;
+})();
+var CombatParticipant = (function () {
+    function CombatParticipant(memo) {
+        this.id = 0;
+        this.name = "";
+        this.initiative = 0;
+        this.effects = [];
+        this.combatMemory = memo;
+    }
+    CombatParticipant.prototype.setSheet = function (sheet) {
+        this.id = sheet.id;
+        this.name = sheet.name;
+    };
+    CombatParticipant.prototype.exportAsObject = function () {
+        var participant = [this.id, this.name, this.initiative];
+        var effects = [];
+        for (var i = 0; i < this.effects.length; i++) {
+            effects.push(this.effects[i].exportAsObject());
+        }
+        participant.push(effects);
+        return participant;
+    };
+    return CombatParticipant;
+})();
 var ChatInfo = (function () {
     function ChatInfo(floater) {
         this.textNode = document.createTextNode("null");
@@ -3763,6 +3832,9 @@ var Lingo = (function () {
             return this.unknownLingo;
         }
         var result = this.langValues[id];
+        if (dataset === undefined) {
+            return result;
+        }
         var number = "a".charCodeAt(0);
         while (dataset["language" + String.fromCharCode(number)] !== undefined) {
             result = result.replace(new RegExp("%" + String.fromCharCode(number), 'g'), dataset["language" + String.fromCharCode(number)]);

@@ -301,6 +301,13 @@ declare abstract class TrackerMemory {
     protected triggerChange(): void;
 }
 declare class MemoryCombat extends TrackerMemory {
+    private combatants;
+    private round;
+    private turn;
+    reset(): void;
+    exportAsObject(): void;
+    storeValue(obj: Object): void;
+    getValue(): any;
 }
 declare class MemoryVersion extends TrackerMemory {
     private importVersion;
@@ -308,6 +315,24 @@ declare class MemoryVersion extends TrackerMemory {
     storeValue(v: number): void;
     getValue(): number;
     exportAsObject(): number;
+}
+declare class CombatEffect {
+    name: string;
+    origin: number;
+    customString: String;
+    reset(): void;
+    exportAsObject(): (string | number)[];
+    storeValue(array: Array<any>): void;
+}
+declare class CombatParticipant {
+    id: number;
+    name: string;
+    initiative: number;
+    effects: Array<CombatEffect>;
+    private combatMemory;
+    constructor(memo: MemoryCombat);
+    setSheet(sheet: SheetInstance): void;
+    exportAsObject(): any[];
 }
 declare class ChatInfo {
     private floater;
@@ -801,7 +826,7 @@ declare class Lingo {
         [id: string]: string;
     };
     setLingo(id: string, value: string): void;
-    getLingo(id: string, dataset: {
+    getLingo(id: string, dataset?: {
         [id: string]: string;
     }): string;
 }
