@@ -8,3 +8,4 @@
 /// <reference path='Modules/Chat.ts' />
 /// <reference path='Modules/Chat/Memory.ts' />
 /// <reference path='Modules/Storage.ts' />
+/// <reference path='Modules/Sheets.ts' />

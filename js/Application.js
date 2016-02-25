@@ -380,6 +380,12 @@ var Game = (function () {
             list.push(this.sheets[id]);
         }
         list.sort(function (a, b) {
+            var fa = a.folder.toLowerCase();
+            var fb = b.folder.toLowerCase();
+            if (fa < fb)
+                return -1;
+            if (fb < fa)
+                return 1;
             var na = a.name.toLowerCase();
             var nb = b.name.toLowerCase();
             if (na < nb)
@@ -392,7 +398,7 @@ var Game = (function () {
     };
     Game.prototype.updateFromObject = function (game, cleanup) {
         for (var id in this) {
-            if (game[id] === undefined || id === "users" || id === "rooms")
+            if (game[id] === undefined || id === "users" || id === "rooms" || id === "sheets")
                 continue;
             this[id] = game[id];
         }
@@ -450,7 +456,7 @@ var Game = (function () {
         }
         if (game['sheets'] !== undefined) {
             var cleanedup = [];
-            for (var i = 0; i < game['rooms'].length; i++) {
+            for (var i = 0; i < game['sheets'].length; i++) {
                 game['sheets'][i]['gameid'] = this.id;
             }
             DB.SheetDB.updateFromObject(game['sheets']);
@@ -3531,7 +3537,7 @@ var DB;
 (function (DB) {
     var SheetDB;
     (function (SheetDB) {
-        var sheets = {};
+        SheetDB.sheets = {};
         var changeTrigger = new Trigger();
         function addChangeListener(list) {
             changeTrigger.addListener(list);
@@ -3546,28 +3552,28 @@ var DB;
         }
         SheetDB.triggerChanged = triggerChanged;
         function hasSheet(id) {
-            return sheets[id] !== undefined;
+            return SheetDB.sheets[id] !== undefined;
         }
         SheetDB.hasSheet = hasSheet;
         function getSheet(id) {
             if (hasSheet(id)) {
-                return sheets[id];
+                return SheetDB.sheets[id];
             }
             return null;
         }
         SheetDB.getSheet = getSheet;
         function releaseSheet(id) {
             if (hasSheet(id)) {
-                delete (sheets[id]);
+                delete (SheetDB.sheets[id]);
             }
         }
         SheetDB.releaseSheet = releaseSheet;
         function updateFromObject(obj) {
             for (var i = 0; i < obj.length; i++) {
-                if (sheets[obj[i]['id']] === undefined) {
-                    sheets[obj[i]['id']] = new SheetInstance();
+                if (SheetDB.sheets[obj[i]['id']] === undefined) {
+                    SheetDB.sheets[obj[i]['id']] = new SheetInstance();
                 }
-                sheets[obj[i]['id']].updateFromObject(obj[i]);
+                SheetDB.sheets[obj[i]['id']].updateFromObject(obj[i]);
             }
             triggerChanged(null);
         }
@@ -3913,7 +3919,7 @@ ptbr.setLingo("_MENULOGOUT_", "Logout");
 ptbr.setLingo("_MENUGAMES_", "Grupos");
 ptbr.setLingo("_MENUCONFIG_", "Opções");
 ptbr.setLingo("_MENUCHAT_", "Chat");
-ptbr.setLingo("", "");
+ptbr.setLingo("_MENUSHEETS_", "Fichas");
 ptbr.setLingo("", "");
 ptbr.setLingo("", "");
 ptbr.setLingo("", "");
@@ -4730,6 +4736,29 @@ var UI;
         }
         Language.markLanguage = markLanguage;
     })(Language = UI.Language || (UI.Language = {}));
+})(UI || (UI = {}));
+var UI;
+(function (UI) {
+    var Sheets;
+    (function (Sheets) {
+        document.getElementById("sheetsButton").addEventListener("click", function () { UI.Sheets.callSelf(); });
+        var sheetList = document.getElementById("sheetWindowSheetList");
+        function callSelf(ready) {
+            UI.PageManager.callPage(UI.idSheets);
+            if (ready !== true) {
+                Server.Sheets.updateLists({
+                    handleEvent: function () {
+                        UI.Sheets.callSelf(true);
+                    }
+                });
+                return;
+            }
+            while (sheetList.lastChild) {
+                sheetList.removeChild(sheetList.lastChild);
+            }
+        }
+        Sheets.callSelf = callSelf;
+    })(Sheets = UI.Sheets || (UI.Sheets = {}));
 })(UI || (UI = {}));
 var UI;
 (function (UI) {
@@ -7298,6 +7327,31 @@ var Server;
         Storage.requestStorage = requestStorage;
     })(Storage = Server.Storage || (Server.Storage = {}));
 })(Server || (Server = {}));
+var Server;
+(function (Server) {
+    var Sheets;
+    (function (Sheets) {
+        var SHEET_URL = "Sheet";
+        var emptyCallback = { handleEvent: function () { } };
+        function updateLists(cbs, cbe) {
+            var success = {
+                cbs: cbs,
+                handleEvent: function (response, xhr) {
+                    DB.GameDB.updateFromObject(response, true);
+                    if (this.cbs !== undefined)
+                        this.cbs.handleEvent(response, xhr);
+                }
+            };
+            var error = cbe === undefined ? emptyCallback : cbe;
+            var ajax = new AJAXConfig(SHEET_URL);
+            ajax.setResponseTypeJSON();
+            ajax.data = { action: "list" };
+            ajax.setTargetRightWindow();
+            Server.AJAX.requestPage(ajax, success, error);
+        }
+        Sheets.updateLists = updateLists;
+    })(Sheets = Server.Sheets || (Server.Sheets = {}));
+})(Server || (Server = {}));
 UI.Language.searchLanguage();
 UI.PageManager.readWindows();
 UI.WindowManager.updateWindowSizes();
@@ -7306,7 +7360,7 @@ Application.Login.addListener({
         if (Application.Login.isLogged()) {
             UI.WindowManager.callWindow(('mainWindow'));
             UI.PageManager.callPage(UI.idChangelog);
-            UI.PageManager.callPage(UI.idSheets);
+            UI.PageManager.callPage(UI.idHome);
         }
         else {
             UI.WindowManager.callWindow("loginWindow");

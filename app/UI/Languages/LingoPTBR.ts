@@ -36,7 +36,7 @@ ptbr.setLingo("_MENULOGOUT_", "Logout");
 ptbr.setLingo("_MENUGAMES_", "Grupos");
 ptbr.setLingo("_MENUCONFIG_", "Opções");
 ptbr.setLingo("_MENUCHAT_", "Chat");
-ptbr.setLingo("", "");
+ptbr.setLingo("_MENUSHEETS_", "Fichas");
 ptbr.setLingo("", "");
 ptbr.setLingo("", "");
 ptbr.setLingo("", "");

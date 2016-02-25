@@ -65,6 +65,11 @@ class Game {
             list.push(this.sheets[id]);
         }
         list.sort(function (a : SheetInstance, b : SheetInstance) {
+            var fa = a.folder.toLowerCase();
+            var fb = b.folder.toLowerCase();
+            if (fa < fb) return -1;
+            if (fb < fa) return 1;
+
             var na = a.name.toLowerCase();
             var nb = b.name.toLowerCase();
             if (na < nb) return -1;
@@ -76,7 +81,7 @@ class Game {
 
     public updateFromObject (game : Object, cleanup : boolean) {
         for (var id in this) {
-            if (game[id] === undefined || id === "users" || id === "rooms") continue;
+            if (game[id] === undefined || id === "users" || id === "rooms" || id === "sheets") continue;
             this[id] = game[id];
         }
 
@@ -140,7 +145,7 @@ class Game {
 
         if (game['sheets'] !== undefined) {
             var cleanedup:Array<number> = [];
-            for (var i = 0; i < game['rooms'].length; i++) {
+            for (var i = 0; i < game['sheets'].length; i++) {
                 game['sheets'][i]['gameid'] = this.id;
             }
             DB.SheetDB.updateFromObject(game['sheets']);

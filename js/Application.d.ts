@@ -768,6 +768,9 @@ declare module DB.MessageDB {
     function updateFromObject(obj: Array<Object>): void;
 }
 declare module DB.SheetDB {
+    var sheets: {
+        [id: number]: SheetInstance;
+    };
     function addChangeListener(list: Listener | Function): void;
     function removeChangeListener(list: Listener | Function): void;
     function triggerChanged(sheet: SheetInstance): void;
@@ -903,6 +906,7 @@ declare module UI.Language {
     function markLanguage(...elements: HTMLElement[]): void;
 }
 declare module UI.Sheets {
+    function callSelf(ready?: boolean): void;
 }
 declare module UI.Rooms {
 }
@@ -1088,4 +1092,7 @@ declare module Server.Storage {
     function requestSounds(ajaxTarget: number, cbs?: Listener, cbe?: Listener): void;
     function requestImages(ajaxTarget: number, cbs?: Listener, cbe?: Listener): void;
     function requestStorage(id: string, ajaxTarget: number, cbs?: Listener, cbe?: Listener): void;
+}
+declare module Server.Sheets {
+    function updateLists(cbs?: Listener, cbe?: Listener): void;
 }
