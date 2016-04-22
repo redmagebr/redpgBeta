@@ -1020,8 +1020,8 @@ declare module UI.Chat.PersonaDesigner {
     function usePersona(name: string, avatar: String): void;
 }
 declare module Server {
-    var APPLICATION_URL: string;
     var IMAGE_URL: string;
+    var APPLICATION_URL: string;
     var WEBSOCKET_SERVERURL: string;
     var WEBSOCKET_CONTEXT: string;
     var WEBSOCKET_PORTS: Array<number>;

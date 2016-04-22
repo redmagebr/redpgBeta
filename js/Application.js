@@ -6590,8 +6590,8 @@ var UI;
 })(UI || (UI = {}));
 var Server;
 (function (Server) {
-    Server.APPLICATION_URL = "http://app.redpg.com.br/service/";
     Server.IMAGE_URL = "http://img.redpg.com.br/";
+    Server.APPLICATION_URL = "http://app.redpg.com.br/service/";
     Server.WEBSOCKET_SERVERURL = "ws://app.redpg.com.br";
     Server.WEBSOCKET_CONTEXT = "/service/";
     Server.WEBSOCKET_PORTS = [80, 8080, 8081];
