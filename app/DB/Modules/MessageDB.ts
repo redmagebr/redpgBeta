@@ -11,7 +11,7 @@ module DB.MessageDB {
         return false;
     }
 
-    export function releaseLocalMessage (id : number) : boolean {
+    export function releaseLocalMessage (id : number | string) : boolean {
         if (hasLocalMessage(id)) {
             messageByLocalId[id].localid = null;
             delete (messageByLocalId[id]);
@@ -30,7 +30,7 @@ module DB.MessageDB {
         return messageById[id] !== undefined;
     }
 
-    export function hasLocalMessage (id : number) {
+    export function hasLocalMessage (id : number | string) {
         return messageByLocalId[id] !== undefined;
     }
 

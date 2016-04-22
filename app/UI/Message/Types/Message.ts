@@ -15,7 +15,7 @@ class Message extends SlashCommand {
     public date : string = null;
     public module : string = "";
     public msg : string = "";
-    public special : { [id : string] : any } = {};
+    public special : { [id : string] : any } | string = {};
     private sending : Number = null;
 
     public origin : number = 0;
