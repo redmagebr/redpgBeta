@@ -1,6 +1,7 @@
 module UI.SoundController.MusicPlayer {
     var bgm = UI.SoundController.getBGM();
 
+    
     var button = document.getElementById("musicPlayerButton");
     var parent = button.parentNode;
     var container = document.getElementById("musicPlayerContainer");
@@ -123,7 +124,7 @@ module UI.SoundController.MusicPlayer {
     }
 
     export function hideContainer() {
-        button.removeChild(container);
+        if (container.parentNode !== null) button.removeChild(container);
     }
 
     export function showButton () {

@@ -546,7 +546,7 @@ declare class Message extends SlashCommand {
     msg: string;
     special: {
         [id: string]: any;
-    };
+    } | string;
     private sending;
     origin: number;
     destination: Number | Array<number>;
@@ -758,10 +758,10 @@ declare module DB.MessageDB {
         [id: number]: Message;
     };
     function releaseMessage(id: number): boolean;
-    function releaseLocalMessage(id: number): boolean;
+    function releaseLocalMessage(id: number | string): boolean;
     function releaseAllLocalMessages(): void;
     function hasMessage(id: number): boolean;
-    function hasLocalMessage(id: number): boolean;
+    function hasLocalMessage(id: number | string): boolean;
     function getMessage(id: number): Message;
     function getLocalMessage(id: number): Message;
     function registerLocally(msg: Message): void;

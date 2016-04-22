@@ -1,3 +1,8 @@
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 function startDebugging() {
     console.debug = console.log;
 }
@@ -35,7 +40,7 @@ var ImageRed = (function () {
         return this.uuid;
     };
     return ImageRed;
-})();
+}());
 var ImageLink = (function () {
     function ImageLink() {
     }
@@ -49,7 +54,7 @@ var ImageLink = (function () {
         return this.name;
     };
     return ImageLink;
-})();
+}());
 var User = (function () {
     function User() {
         this.nickname = "Undefined";
@@ -116,7 +121,7 @@ var User = (function () {
         this.changedTrigger.trigger(this);
     };
     return User;
-})();
+}());
 var UserGameContext = (function () {
     function UserGameContext(user) {
         this.gameid = 0;
@@ -140,7 +145,7 @@ var UserGameContext = (function () {
         }
     };
     return UserGameContext;
-})();
+}());
 var UserRoomContext = (function () {
     function UserRoomContext(user) {
         this.logger = false;
@@ -181,7 +186,7 @@ var UserRoomContext = (function () {
         return this.user.getShortNickname();
     };
     return UserRoomContext;
-})();
+}());
 var Room = (function () {
     function Room() {
         this.gameid = null;
@@ -317,7 +322,7 @@ var Room = (function () {
         }
     };
     return Room;
-})();
+}());
 var Game = (function () {
     function Game() {
         this.users = {};
@@ -475,7 +480,7 @@ var Game = (function () {
         }
     };
     return Game;
-})();
+}());
 var SheetInstance = (function () {
     function SheetInstance() {
         this.id = 0;
@@ -574,7 +579,7 @@ var SheetInstance = (function () {
             this.setValues(obj['values'], false);
     };
     return SheetInstance;
-})();
+}());
 var Trigger = (function () {
     function Trigger() {
         this.functions = [];
@@ -615,7 +620,7 @@ var Trigger = (function () {
         }
     };
     return Trigger;
-})();
+}());
 var AJAXConfig = (function () {
     function AJAXConfig(url) {
         this._target = 0;
@@ -740,7 +745,7 @@ var AJAXConfig = (function () {
     AJAXConfig.TARGET_RIGHT = 3;
     AJAXConfig.CONDITIONAL_LOADING_TIMEOUT = 150;
     return AJAXConfig;
-})();
+}());
 var WebsocketController = (function () {
     function WebsocketController(url) {
         this.socket = null;
@@ -874,7 +879,7 @@ var WebsocketController = (function () {
     WebsocketController.READYSTATE_CLOSING = 2;
     WebsocketController.READYSTATE_CLOSED = 3;
     return WebsocketController;
-})();
+}());
 var ChatWsController = (function () {
     function ChatWsController() {
         this.socket = new WebsocketController(Server.Chat.CHAT_URL);
@@ -931,7 +936,7 @@ var ChatWsController = (function () {
         this.socket.addMessageListener(type, obj);
     };
     return ChatWsController;
-})();
+}());
 var Configuration = (function () {
     function Configuration(defV) {
         this.changeTrigger = new Trigger();
@@ -973,12 +978,7 @@ var Configuration = (function () {
         return this.value;
     };
     return Configuration;
-})();
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+}());
 var NumberConfiguration = (function (_super) {
     __extends(NumberConfiguration, _super);
     function NumberConfiguration(defValue, min, max) {
@@ -1007,7 +1007,7 @@ var NumberConfiguration = (function (_super) {
         this.max = max;
     }
     return NumberConfiguration;
-})(Configuration);
+}(Configuration));
 var WsportConfiguration = (function (_super) {
     __extends(WsportConfiguration, _super);
     function WsportConfiguration() {
@@ -1022,7 +1022,7 @@ var WsportConfiguration = (function (_super) {
         };
     }
     return WsportConfiguration;
-})(Configuration);
+}(Configuration));
 var LanguageConfiguration = (function (_super) {
     __extends(LanguageConfiguration, _super);
     function LanguageConfiguration() {
@@ -1035,7 +1035,7 @@ var LanguageConfiguration = (function (_super) {
         };
     }
     return LanguageConfiguration;
-})(Configuration);
+}(Configuration));
 var BooleanConfiguration = (function (_super) {
     __extends(BooleanConfiguration, _super);
     function BooleanConfiguration(bool) {
@@ -1054,7 +1054,7 @@ var BooleanConfiguration = (function (_super) {
         };
     }
     return BooleanConfiguration;
-})(Configuration);
+}(Configuration));
 var TrackerMemory = (function () {
     function TrackerMemory() {
         this.changeTrigger = new Trigger();
@@ -1066,7 +1066,7 @@ var TrackerMemory = (function () {
         this.changeTrigger.trigger(this);
     };
     return TrackerMemory;
-})();
+}());
 var MemoryCombat = (function (_super) {
     __extends(MemoryCombat, _super);
     function MemoryCombat() {
@@ -1089,7 +1089,7 @@ var MemoryCombat = (function (_super) {
         return null;
     };
     return MemoryCombat;
-})(TrackerMemory);
+}(TrackerMemory));
 var MemoryVersion = (function (_super) {
     __extends(MemoryVersion, _super);
     function MemoryVersion() {
@@ -1110,7 +1110,7 @@ var MemoryVersion = (function (_super) {
         ;
     };
     return MemoryVersion;
-})(TrackerMemory);
+}(TrackerMemory));
 var CombatEffect = (function () {
     function CombatEffect() {
         this.name = "";
@@ -1140,7 +1140,7 @@ var CombatEffect = (function () {
         }
     };
     return CombatEffect;
-})();
+}());
 var CombatParticipant = (function () {
     function CombatParticipant(memo) {
         this.id = 0;
@@ -1163,7 +1163,7 @@ var CombatParticipant = (function () {
         return participant;
     };
     return CombatParticipant;
-})();
+}());
 var ChatInfo = (function () {
     function ChatInfo(floater) {
         this.textNode = document.createTextNode("null");
@@ -1225,7 +1225,7 @@ var ChatInfo = (function () {
         });
     };
     return ChatInfo;
-})();
+}());
 var ChatAvatar = (function () {
     function ChatAvatar() {
         this.element = document.createElement("div");
@@ -1364,7 +1364,7 @@ var ChatAvatar = (function () {
         this.updateName();
     };
     return ChatAvatar;
-})();
+}());
 var ChatNotificationIcon = (function () {
     function ChatNotificationIcon(icon, hasLanguage) {
         this.element = document.createElement("div");
@@ -1402,7 +1402,7 @@ var ChatNotificationIcon = (function () {
         return true;
     };
     return ChatNotificationIcon;
-})();
+}());
 var ChatFormState = (function () {
     function ChatFormState(element) {
         this.state = -1;
@@ -1438,7 +1438,7 @@ var ChatFormState = (function () {
     ChatFormState.STATE_STORY = 2;
     ChatFormState.STATE_OFF = 3;
     return ChatFormState;
-})();
+}());
 var ChatAvatarChoice = (function () {
     function ChatAvatarChoice(name, avatar) {
         this.avatar = new ChatAvatar();
@@ -1480,7 +1480,7 @@ var ChatAvatarChoice = (function () {
         return this.box;
     };
     return ChatAvatarChoice;
-})();
+}());
 var ChatSystemMessage = (function () {
     function ChatSystemMessage(hasLanguage) {
         this.element = document.createElement("p");
@@ -1513,7 +1513,7 @@ var ChatSystemMessage = (function () {
         return this.element;
     };
     return ChatSystemMessage;
-})();
+}());
 var SheetStyle = (function () {
     function SheetStyle() {
         this.css = document.createElement("style");
@@ -1565,7 +1565,7 @@ var SheetStyle = (function () {
         return this.$visible;
     };
     return SheetStyle;
-})();
+}());
 var StyleFactory;
 (function (StyleFactory) {
     function getCreator() {
@@ -1687,7 +1687,7 @@ var Sheet = (function () {
         this.variableShortcuts[this.style.simplifyName(list.id)] = list;
     };
     return Sheet;
-})();
+}());
 var SheetList = (function () {
     function SheetList(sheet, style, element) {
         this.rows = [];
@@ -1734,7 +1734,7 @@ var SheetList = (function () {
         }
     };
     return SheetList;
-})();
+}());
 var SheetVariable = (function () {
     function SheetVariable(parent, style, ele) {
         this.value = null;
@@ -1798,7 +1798,7 @@ var SheetVariable = (function () {
         this.changeTrigger.addListener(f);
     };
     return SheetVariable;
-})();
+}());
 var SheetButton = (function () {
     function SheetButton(sheet, style, ele) {
         this.click = function () { };
@@ -1814,7 +1814,7 @@ var SheetButton = (function () {
         this.id = ele.dataset['id'] === undefined ? this.style.getUniqueID() : ele.dataset['id'];
     }
     return SheetButton;
-})();
+}());
 var SheetButtonaddrow = (function (_super) {
     __extends(SheetButtonaddrow, _super);
     function SheetButtonaddrow() {
@@ -1824,12 +1824,12 @@ var SheetButtonaddrow = (function (_super) {
         };
     }
     return SheetButtonaddrow;
-})(SheetButton);
+}(SheetButton));
 var StyleInstance = (function () {
     function StyleInstance() {
     }
     return StyleInstance;
-})();
+}());
 var MessageFactory;
 (function (MessageFactory) {
     MessageFactory.messageClasses = {};
@@ -1936,14 +1936,14 @@ var SlashCommand = (function () {
         return null;
     };
     return SlashCommand;
-})();
+}());
 var SlashClear = (function (_super) {
     __extends(SlashClear, _super);
     function SlashClear() {
         _super.apply(this, arguments);
     }
     return SlashClear;
-})(SlashCommand);
+}(SlashCommand));
 MessageFactory.registerSlashCommand(SlashClear, ["/clear", "/clr", "/cls"]);
 var SlashReply = (function (_super) {
     __extends(SlashReply, _super);
@@ -1951,7 +1951,7 @@ var SlashReply = (function (_super) {
         _super.apply(this, arguments);
     }
     return SlashReply;
-})(SlashCommand);
+}(SlashCommand));
 MessageFactory.registerSlashCommand(SlashReply, ["/r", "/reply", "/responder", "/resposta"]);
 var Message = (function (_super) {
     __extends(Message, _super);
@@ -2186,7 +2186,7 @@ var Message = (function (_super) {
         return false;
     };
     return Message;
-})(SlashCommand);
+}(SlashCommand));
 var MessageSystem = (function (_super) {
     __extends(MessageSystem, _super);
     function MessageSystem() {
@@ -2204,7 +2204,7 @@ var MessageSystem = (function (_super) {
         return p;
     };
     return MessageSystem;
-})(Message);
+}(Message));
 MessageFactory.registerMessage(MessageSystem, "system", []);
 var MessageCountdown = (function (_super) {
     __extends(MessageCountdown, _super);
@@ -2312,7 +2312,7 @@ var MessageCountdown = (function (_super) {
     };
     MessageCountdown.timeout = null;
     return MessageCountdown;
-})(Message);
+}(Message));
 MessageFactory.registerMessage(MessageCountdown, "countdown", ["/countdown", "/count"]);
 var MessageVote = (function (_super) {
     __extends(MessageVote, _super);
@@ -2401,7 +2401,7 @@ var MessageVote = (function (_super) {
         }
     };
     return MessageVote;
-})(Message);
+}(Message));
 MessageFactory.registerMessage(MessageVote, "vote", ["/vote", "/voto", "/votar", "/vota"]);
 var MessageWebm = (function (_super) {
     __extends(MessageWebm, _super);
@@ -2437,7 +2437,7 @@ var MessageWebm = (function (_super) {
         this.setSpecial("name", name);
     };
     return MessageWebm;
-})(Message);
+}(Message));
 MessageFactory.registerMessage(MessageWebm, "webm", ["/webm"]);
 var MessageVideo = (function (_super) {
     __extends(MessageVideo, _super);
@@ -2473,7 +2473,7 @@ var MessageVideo = (function (_super) {
         this.setSpecial("name", name);
     };
     return MessageVideo;
-})(Message);
+}(Message));
 MessageFactory.registerMessage(MessageVideo, "youtube", ["/video", "/youtube"]);
 var MessageSE = (function (_super) {
     __extends(MessageSE, _super);
@@ -2528,7 +2528,7 @@ var MessageSE = (function (_super) {
         this.setSpecial("name", name);
     };
     return MessageSE;
-})(Message);
+}(Message));
 MessageFactory.registerMessage(MessageSE, "seplay", ["/se", "/seplay", "/soundeffect", "/sound"]);
 var MessageImage = (function (_super) {
     __extends(MessageImage, _super);
@@ -2564,7 +2564,7 @@ var MessageImage = (function (_super) {
         this.setSpecial("name", name);
     };
     return MessageImage;
-})(Message);
+}(Message));
 MessageFactory.registerMessage(MessageImage, "image", ["/image", "/imagem", "/picture", "/figura", "/pic"]);
 var MessageBGM = (function (_super) {
     __extends(MessageBGM, _super);
@@ -2619,7 +2619,7 @@ var MessageBGM = (function (_super) {
         this.setSpecial("name", name);
     };
     return MessageBGM;
-})(Message);
+}(Message));
 MessageFactory.registerMessage(MessageBGM, "bgmplay", ["/bgm", "/splay", "/bgmplay", "/musica"]);
 var MessageStream = (function (_super) {
     __extends(MessageStream, _super);
@@ -2631,7 +2631,7 @@ var MessageStream = (function (_super) {
         return null;
     };
     return MessageStream;
-})(Message);
+}(Message));
 MessageFactory.registerMessage(MessageStream, "stream", []);
 var MessageSheetcommand = (function (_super) {
     __extends(MessageSheetcommand, _super);
@@ -2643,7 +2643,7 @@ var MessageSheetcommand = (function (_super) {
         return null;
     };
     return MessageSheetcommand;
-})(Message);
+}(Message));
 MessageFactory.registerMessage(MessageSheetcommand, "sheetcmd", []);
 var MessageWhisper = (function (_super) {
     __extends(MessageWhisper, _super);
@@ -2745,7 +2745,7 @@ var MessageWhisper = (function (_super) {
         return error.getElement();
     };
     return MessageWhisper;
-})(Message);
+}(Message));
 MessageFactory.registerMessage(MessageWhisper, "whisper", ["/whisper", "/whisp", "/private", "/pm", "/privado", "/pessoal", "/w"]);
 var MessageSheetdamage = (function (_super) {
     __extends(MessageSheetdamage, _super);
@@ -2818,7 +2818,7 @@ var MessageSheetdamage = (function (_super) {
         return "- " + (amount * -1).toString();
     };
     return MessageSheetdamage;
-})(Message);
+}(Message));
 MessageFactory.registerMessage(MessageSheetdamage, "sheetdm", []);
 var MessageSheetturn = (function (_super) {
     __extends(MessageSheetturn, _super);
@@ -2853,7 +2853,7 @@ var MessageSheetturn = (function (_super) {
         return this.getSpecial('player', 0);
     };
     return MessageSheetturn;
-})(Message);
+}(Message));
 MessageFactory.registerMessage(MessageSheetturn, "sheettr", []);
 var MessageDice = (function (_super) {
     __extends(MessageDice, _super);
@@ -3063,7 +3063,7 @@ var MessageDice = (function (_super) {
         return result;
     };
     return MessageDice;
-})(Message);
+}(Message));
 MessageFactory.registerMessage(MessageDice, "dice", []);
 var MessageStory = (function (_super) {
     __extends(MessageStory, _super);
@@ -3143,7 +3143,7 @@ var MessageStory = (function (_super) {
         return p;
     };
     return MessageStory;
-})(Message);
+}(Message));
 MessageFactory.registerMessage(MessageStory, "story", ["/story", "/history", "/historia", "/história", "/histo", "/sto"]);
 var MessageAction = (function (_super) {
     __extends(MessageAction, _super);
@@ -3165,7 +3165,7 @@ var MessageAction = (function (_super) {
         return p;
     };
     return MessageAction;
-})(Message);
+}(Message));
 MessageFactory.registerMessage(MessageAction, "action", ["/act", "/me", "/eu", "/açao", "/ação", "/agir"]);
 var MessageOff = (function (_super) {
     __extends(MessageOff, _super);
@@ -3183,7 +3183,7 @@ var MessageOff = (function (_super) {
         return p;
     };
     return MessageOff;
-})(Message);
+}(Message));
 MessageFactory.registerMessage(MessageOff, "offgame", ["/off", "/ooc"]);
 var MessageRoleplay = (function (_super) {
     __extends(MessageRoleplay, _super);
@@ -3326,7 +3326,7 @@ var MessageRoleplay = (function (_super) {
         return this.getSpecial('translation', null);
     };
     return MessageRoleplay;
-})(Message);
+}(Message));
 MessageFactory.registerMessage(MessageRoleplay, "roleplay", []);
 var MessageUnknown = (function (_super) {
     __extends(MessageUnknown, _super);
@@ -3344,7 +3344,7 @@ var MessageUnknown = (function (_super) {
         return p;
     };
     return MessageUnknown;
-})(Message);
+}(Message));
 MessageFactory.registerMessage(MessageUnknown, "unkn", []);
 var DB;
 (function (DB) {
@@ -3849,7 +3849,7 @@ var Lingo = (function () {
         return result;
     };
     return Lingo;
-})();
+}());
 var LingoList;
 (function (LingoList) {
     var lingos = {};
@@ -5439,7 +5439,8 @@ var UI;
             }
             MusicPlayer.showContainer = showContainer;
             function hideContainer() {
-                button.removeChild(container);
+                if (container.parentNode !== null)
+                    button.removeChild(container);
             }
             MusicPlayer.hideContainer = hideContainer;
             function showButton() {

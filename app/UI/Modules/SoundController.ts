@@ -8,6 +8,7 @@ module UI.SoundController {
     var lastSEURL : String = null;
 
     var startedPlaying = false;
+    
 
     diceSound.parentNode.removeChild(diceSound);
     alertSound.parentNode.removeChild(alertSound);
