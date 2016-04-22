@@ -7,6 +7,7 @@
 /// <reference path='Modules/WindowManager.ts' />
 /// <reference path='Modules/Config.ts' />
 /// <reference path='Modules/PageManager.ts' />
+/// <reference path='Modules/Images.ts' />
 /// <reference path='Modules/Loading.ts' />
 /// <reference path='Modules/Login.ts' />
 /// <reference path='Modules/Handles.ts' />

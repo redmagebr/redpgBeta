@@ -18,11 +18,13 @@ $icons-layout:smart;
 
 @import "compass/reset";
 
+
 b { font-weight: bold; }
 @import "generalView";
 @import "login";
 @import "windows";
 @import "mainWindow";
+@import "mainWindowImages";
 @import "mainWindowSounds";
 @import "mainWindowGames";
 @import "mainWindowSheets";

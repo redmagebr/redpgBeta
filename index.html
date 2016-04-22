@@ -46,6 +46,8 @@
       <div class='handleBar' id='rightHandleBar'>
         <div class='icons-handlerRTL' id='rightHandleIcon'></div>
         <a class='rightHandleButton language' id='sheetsButton'>_MENUSHEETS_</a>
+        <a class='rightHandleButton language' id='imagesButton'>_MENUIMAGES_</a>
+        <a class='rightHandleButton language' id='soundsButton'>_MENUSOUNDS_</a>
       </div>
       <div class='leftSideWindow flexCentering dontDetach' id='leftLoading'>
         <a class='loadingCircleWhite centeredBlock'></a>
@@ -285,6 +287,30 @@
           <div class='diceButton icons-d12' id='chatDiceD12' title='d12'></div>
           <div class='diceButton icons-d20' id='chatDiceD20' title='d20'></div>
           <div class='diceButton icons-d100' id='chatDiceD100' title='d100'></div>
+        </div>
+      </div>
+      <div class='rightSideWindow' id='imagesSideWindow'>
+        <div class='mainWindowHeader language'>
+          _IMAGESTITLE_
+          <a class='xButton' onclick='UI.PageManager.closeRightPage();'></a>
+        </div>
+        <div class='mainWindowContent singleton'>
+          <p class='mainWindowParagraph language'>_IMAGESEXP01_</p>
+          <p class='mainWindowParagraph language'>_IMAGESEXP02_</p>
+          <p class='mainWindowParagraph language'>_IMAGESEXP03_</p>
+          <div id='imagesTarget'></div>
+          <div id='imagesUpload'>
+            <div id='imagesUploadLeft'>
+              <div id='linkImagesTitle'>
+                <div class='icons-link' id='linkImagesIcon'></div>
+                <div class='language' id='linkImagesTitleText'>_IMAGESLINKTITLE_</div>
+              </div>
+            </div>
+            <div id='imagesUploadRight'>
+              <div class='icons-dropboxLogo' id='dropboxImagesLogo'></div>
+              <div class='language' id='dropboxImagesButton'>_IMAGESDROPBOXCHOOSER_</div>
+            </div>
+          </div>
         </div>
       </div>
       <div class='rightSideWindow' id='sheetsSideWindow'>

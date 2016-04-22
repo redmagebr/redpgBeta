@@ -3580,6 +3580,41 @@ var DB;
         SheetDB.updateFromObject = updateFromObject;
     })(SheetDB = DB.SheetDB || (DB.SheetDB = {}));
 })(DB || (DB = {}));
+var DB;
+(function (DB) {
+    var ImageDB;
+    (function (ImageDB) {
+        var images = [];
+        var changeTrigger = new Trigger();
+        function getImageByName(name) {
+            name = name.toLowerCase();
+            for (var i = 0; i < images.length; i++) {
+                if (images[i].getName().toLowerCase() === name) {
+                    return images[i];
+                }
+            }
+            return null;
+        }
+        ImageDB.getImageByName = getImageByName;
+        function hasImageByName(name) {
+            return (getImageByName(name) !== null);
+        }
+        ImageDB.hasImageByName = hasImageByName;
+        function getImageByLink(url) {
+            for (var i = 0; i < images.length; i++) {
+                if (images[i].getLink() === url) {
+                    return images[i];
+                }
+            }
+            return null;
+        }
+        ImageDB.getImageByLink = getImageByLink;
+        function hasImageByLink(url) {
+            return (getImageByLink(url) !== null);
+        }
+        ImageDB.hasImageByLink = hasImageByLink;
+    })(ImageDB = DB.ImageDB || (DB.ImageDB = {}));
+})(DB || (DB = {}));
 var Application;
 (function (Application) {
     function getMe() {
@@ -3920,7 +3955,15 @@ ptbr.setLingo("_MENUGAMES_", "Grupos");
 ptbr.setLingo("_MENUCONFIG_", "Opções");
 ptbr.setLingo("_MENUCHAT_", "Chat");
 ptbr.setLingo("_MENUSHEETS_", "Fichas");
+ptbr.setLingo("_MENUIMAGES_", "Fotos");
+ptbr.setLingo("_MENUSOUNDS_", "Sons");
 ptbr.setLingo("", "");
+ptbr.setLingo("_IMAGESTITLE_", "Fotos");
+ptbr.setLingo("_IMAGESEXP01_", "Imagens ficam anexadas à sua conta e podem ser utilizadas em qualquer seção do RedPG.");
+ptbr.setLingo("_IMAGESEXP02_", "Você deve adicionar imagens como um Link direto ou através de uma conta Dropbox. É possível utilizar o botão Dropbox abaixo para começar a guardar as imagens na sua conta RedPG.");
+ptbr.setLingo("_IMAGESEXP03_", "O sistema tentará organizar as imagens adicionadas através do Dropbox em pastas automaticamente, porém você pode alterar essas pastas mais tarde. Imagens com um \"-\" no nome do arquivo terão tudo que estiver antes do traço como sendo o nome da pasta, e o que vier depois sendo considerado o nome da imagem. O sistema não vai permitir imagens repetidas (tanto como Link, quanto como Pasta/Nome).");
+ptbr.setLingo("_IMAGESDROPBOXCHOOSER_", "Escolher do Dropbox");
+ptbr.setLingo("_IMAGESLINKTITLE_", "Link Direto");
 ptbr.setLingo("", "");
 ptbr.setLingo("", "");
 ptbr.setLingo("_SHEETSTITLE_", "Fichas");
@@ -4093,6 +4136,7 @@ var UI;
     UI.idGameInvites = "gameInvitesSideWindow";
     UI.idHome = "homeSideWindow";
     UI.idSheets = "sheetsSideWindow";
+    UI.idImages = "imagesSideWindow";
     Application.Config.registerConfiguration("chatMaxMessages", new NumberConfiguration(120, 60, 10000));
     Application.Config.registerConfiguration("chatshowhelp", new BooleanConfiguration(true));
     Application.Config.registerConfiguration("chatfontsize", new NumberConfiguration(16, 12, 32));
@@ -4402,6 +4446,17 @@ var UI;
         }
         PageManager.getCurrentLeft = getCurrentLeft;
     })(PageManager = UI.PageManager || (UI.PageManager = {}));
+})(UI || (UI = {}));
+var UI;
+(function (UI) {
+    var Images;
+    (function (Images) {
+        document.getElementById("imagesButton").addEventListener("click", function () { UI.Images.callSelf(); });
+        function callSelf() {
+            UI.PageManager.callPage(UI.idImages);
+        }
+        Images.callSelf = callSelf;
+    })(Images = UI.Images || (UI.Images = {}));
 })(UI || (UI = {}));
 var UI;
 (function (UI) {
@@ -7304,29 +7359,22 @@ var Server;
         var STORAGE_URL = "Storage";
         var validStorage = ["sounds", "images", "custom1", "custom2"];
         var emptyCallback = { handleEvent: function () { } };
-        function requestSounds(ajaxTarget, cbs, cbe) {
-            requestStorage("sounds", ajaxTarget, cbs, cbe);
-        }
-        Storage.requestSounds = requestSounds;
-        function requestImages(ajaxTarget, cbs, cbe) {
-            requestStorage("images", ajaxTarget, cbs, cbe);
-        }
-        Storage.requestImages = requestImages;
-        function requestStorage(id, ajaxTarget, cbs, cbe) {
-            if (validStorage.indexOf(id) === -1) {
-                console.error("[STORAGE] Attempt to access invalid storage at " + id + ".");
-                cbe.handleEvent();
-                return;
-            }
+        function requestImages(cbs, cbe) {
             var success = cbs === undefined ? emptyCallback : cbs;
             var error = cbe === undefined ? emptyCallback : cbe;
+            success = {
+                success: success,
+                handleEvent: function (data) {
+                    this.success.handleEvent(data);
+                }
+            };
             var ajax = new AJAXConfig(STORAGE_URL);
-            ajax.target = ajaxTarget;
+            ajax.setTargetLeftWindow();
             ajax.setResponseTypeJSON();
-            ajax.data = { action: "restore", id: id };
+            ajax.data = { action: "restore", id: "images" };
             Server.AJAX.requestPage(ajax, success, error);
         }
-        Storage.requestStorage = requestStorage;
+        Storage.requestImages = requestImages;
     })(Storage = Server.Storage || (Server.Storage = {}));
 })(Server || (Server = {}));
 var Server;

@@ -779,6 +779,12 @@ declare module DB.SheetDB {
     function releaseSheet(id: number): void;
     function updateFromObject(obj: Array<Object>): void;
 }
+declare module DB.ImageDB {
+    function getImageByName(name: string): ImageLink;
+    function hasImageByName(name: string): boolean;
+    function getImageByLink(url: string): ImageLink;
+    function hasImageByLink(url: string): boolean;
+}
 declare module Application {
     function getMe(): User;
     function isMe(id: number): boolean;
@@ -848,6 +854,7 @@ declare module UI {
     var idGameInvites: string;
     var idHome: string;
     var idSheets: string;
+    var idImages: string;
 }
 declare module UI.WindowManager {
     var currentLeftSize: number;
@@ -870,6 +877,9 @@ declare module UI.PageManager {
     function closeRightPage(): void;
     function readWindows(): void;
     function getCurrentLeft(): String;
+}
+declare module UI.Images {
+    function callSelf(): void;
 }
 declare module UI.Loading {
     var $leftLoader: JQuery;
@@ -1089,9 +1099,7 @@ declare module Server.Chat.Memory {
     function saveMemory(): void;
 }
 declare module Server.Storage {
-    function requestSounds(ajaxTarget: number, cbs?: Listener, cbe?: Listener): void;
-    function requestImages(ajaxTarget: number, cbs?: Listener, cbe?: Listener): void;
-    function requestStorage(id: string, ajaxTarget: number, cbs?: Listener, cbe?: Listener): void;
+    function requestImages(cbs?: Listener, cbe?: Listener): void;
 }
 declare module Server.Sheets {
     function updateLists(cbs?: Listener, cbe?: Listener): void;

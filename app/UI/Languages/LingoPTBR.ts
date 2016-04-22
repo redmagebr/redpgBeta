@@ -37,7 +37,17 @@ ptbr.setLingo("_MENUGAMES_", "Grupos");
 ptbr.setLingo("_MENUCONFIG_", "Opções");
 ptbr.setLingo("_MENUCHAT_", "Chat");
 ptbr.setLingo("_MENUSHEETS_", "Fichas");
+ptbr.setLingo("_MENUIMAGES_", "Fotos");
+ptbr.setLingo("_MENUSOUNDS_", "Sons");
 ptbr.setLingo("", "");
+
+// Imagens
+ptbr.setLingo("_IMAGESTITLE_", "Fotos");
+ptbr.setLingo("_IMAGESEXP01_", "Imagens ficam anexadas à sua conta e podem ser utilizadas em qualquer seção do RedPG.");
+ptbr.setLingo("_IMAGESEXP02_", "Você deve adicionar imagens como um Link direto ou através de uma conta Dropbox. É possível utilizar o botão Dropbox abaixo para começar a guardar as imagens na sua conta RedPG.");
+ptbr.setLingo("_IMAGESEXP03_", "O sistema tentará organizar as imagens adicionadas através do Dropbox em pastas automaticamente, porém você pode alterar essas pastas mais tarde. Imagens com um \"-\" no nome do arquivo terão tudo que estiver antes do traço como sendo o nome da pasta, e o que vier depois sendo considerado o nome da imagem. O sistema não vai permitir imagens repetidas (tanto como Link, quanto como Pasta/Nome).");
+ptbr.setLingo("_IMAGESDROPBOXCHOOSER_", "Escolher do Dropbox");
+ptbr.setLingo("_IMAGESLINKTITLE_", "Link Direto");
 ptbr.setLingo("", "");
 ptbr.setLingo("", "");
 
