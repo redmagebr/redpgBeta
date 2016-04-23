@@ -252,6 +252,13 @@
           %p.mainWindowParagraph.language="_IMAGESEXP02_"
           %p.mainWindowParagraph.language="_IMAGESEXP03_"
           #imagesTarget
+            #imagesLoadError.language="_IMAGESERROR_"
+            #imagesSaveError.language="_IMAGESSAVEERROR_"
+            %div
+              .imagesFolder
+                %a.imagesFolderIcon
+                %span.imagesFolderTitle{:onclick => "this.parentNode.classList.toggle('folderOpen');"}="Nome da Pasta"
+                .imagesRow
           #imagesUpload
             #imagesUploadLeft
               #linkImagesTitle

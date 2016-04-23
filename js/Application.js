@@ -42,13 +42,16 @@ var ImageRed = (function () {
     return ImageRed;
 }());
 var ImageLink = (function () {
-    function ImageLink() {
+    function ImageLink(name, url, folder) {
+        this.name = name;
+        this.url = url;
+        this.folder = folder;
     }
-    ImageLink.prototype.getLink = function () {
-        return this.url;
+    ImageLink.prototype.getFolder = function () {
+        return this.folder;
     };
-    ImageLink.prototype.getId = function () {
-        return this.id.toString();
+    ImageLink.prototype.getLink = function () {
+        return Server.URL.fixURL(this.url);
     };
     ImageLink.prototype.getName = function () {
         return this.name;
@@ -3586,6 +3589,10 @@ var DB;
     (function (ImageDB) {
         var images = [];
         var changeTrigger = new Trigger();
+        function getImages() {
+            return images;
+        }
+        ImageDB.getImages = getImages;
         function getImageByName(name) {
             name = name.toLowerCase();
             for (var i = 0; i < images.length; i++) {
@@ -3596,10 +3603,6 @@ var DB;
             return null;
         }
         ImageDB.getImageByName = getImageByName;
-        function hasImageByName(name) {
-            return (getImageByName(name) !== null);
-        }
-        ImageDB.hasImageByName = hasImageByName;
         function getImageByLink(url) {
             for (var i = 0; i < images.length; i++) {
                 if (images[i].getLink() === url) {
@@ -3609,10 +3612,92 @@ var DB;
             return null;
         }
         ImageDB.getImageByLink = getImageByLink;
+        function hasImageByName(name) {
+            return (getImageByName(name) !== null);
+        }
+        ImageDB.hasImageByName = hasImageByName;
         function hasImageByLink(url) {
             return (getImageByLink(url) !== null);
         }
         ImageDB.hasImageByLink = hasImageByLink;
+        function getImagesByFolder() {
+            var folders = {};
+            var result = [];
+            for (var i = 0; i < images.length; i++) {
+                if (folders[images[i].getFolder()] === undefined) {
+                    folders[images[i].getFolder()] = [images[i]];
+                    result.push(folders[images[i].getFolder()]);
+                }
+                else {
+                    folders[images[i].getFolder()].push(images[i]);
+                }
+            }
+            result.sort(function (a, b) {
+                if (a[0].getFolder() < b[0].getFolder())
+                    return -1;
+                if (a[0].getFolder() > b[0].getFolder())
+                    return 1;
+                return 0;
+            });
+            return result;
+        }
+        ImageDB.getImagesByFolder = getImagesByFolder;
+        function updateFromObject(obj) {
+            images = [];
+            var line;
+            for (var i = 0; i < obj.length; i++) {
+                line = obj[i];
+                images.push(new ImageLink(line['name'], line['url'], line['folder']));
+            }
+            images.sort(function (a, b) {
+                if (a.getFolder() < b.getFolder())
+                    return -1;
+                if (a.getFolder() > b.getFolder())
+                    return 1;
+                var na = a.getName().toLowerCase();
+                var nb = b.getName().toLowerCase();
+                if (na < nb)
+                    return -1;
+                if (na > nb)
+                    return 1;
+                if (a.getLink() < b.getLink())
+                    return -1;
+                if (a.getLink() > b.getLink())
+                    return 1;
+                return 0;
+            });
+            changeTrigger.trigger(images);
+        }
+        ImageDB.updateFromObject = updateFromObject;
+        function addImage(img) {
+            images.push(img);
+            changeTrigger.trigger(images);
+        }
+        ImageDB.addImage = addImage;
+        function addImages(imgs) {
+            for (var i = 0; i < imgs.length; i++) {
+                images.push(imgs[i]);
+            }
+            changeTrigger.trigger(images);
+        }
+        ImageDB.addImages = addImages;
+        function triggerChange(image) {
+            if (image === null) {
+                changeTrigger.trigger(images);
+            }
+            else {
+                changeTrigger.trigger(image);
+            }
+        }
+        ImageDB.triggerChange = triggerChange;
+        function addChangeListener(f) {
+            changeTrigger.addListener(f);
+        }
+        ImageDB.addChangeListener = addChangeListener;
+        function removeChangeListener(f) {
+            changeTrigger.removeListener(f);
+        }
+        ImageDB.removeChangeListener = removeChangeListener;
     })(ImageDB = DB.ImageDB || (DB.ImageDB = {}));
 })(DB || (DB = {}));
 var Application;
@@ -3964,6 +4049,12 @@ ptbr.setLingo("_IMAGESEXP02_", "Você deve adicionar imagens como um Link direto
 ptbr.setLingo("_IMAGESEXP03_", "O sistema tentará organizar as imagens adicionadas através do Dropbox em pastas automaticamente, porém você pode alterar essas pastas mais tarde. Imagens com um \"-\" no nome do arquivo terão tudo que estiver antes do traço como sendo o nome da pasta, e o que vier depois sendo considerado o nome da imagem. O sistema não vai permitir imagens repetidas (tanto como Link, quanto como Pasta/Nome).");
 ptbr.setLingo("_IMAGESDROPBOXCHOOSER_", "Escolher do Dropbox");
 ptbr.setLingo("_IMAGESLINKTITLE_", "Link Direto");
+ptbr.setLingo("_IMAGESERROR_", "Erro carregando a lista de imagens. Tente novamente.");
+ptbr.setLingo("_IMAGESSAVEERROR_", "Houve um erro salvando a lista de imagens.");
+ptbr.setLingo("", "");
+ptbr.setLingo("", "");
+ptbr.setLingo("", "");
+ptbr.setLingo("", "");
 ptbr.setLingo("", "");
 ptbr.setLingo("", "");
 ptbr.setLingo("_SHEETSTITLE_", "Fichas");
@@ -4452,10 +4543,59 @@ var UI;
     var Images;
     (function (Images) {
         document.getElementById("imagesButton").addEventListener("click", function () { UI.Images.callSelf(); });
+        document.getElementById("dropboxImagesButton").addEventListener("click", function () { UI.Images.callDropbox(); });
+        var target = document.getElementById("imagesTarget");
+        var loadError = document.getElementById("imagesLoadError");
+        var saveError = document.getElementById("imagesSaveError");
+        target.removeChild(saveError);
+        target.removeChild(loadError);
+        function emptyTarget() {
+            while (target.firstChild !== null) {
+                target.removeChild(target.lastChild);
+            }
+        }
         function callSelf() {
             UI.PageManager.callPage(UI.idImages);
+            return;
+            var cbs = { handleEvent: function () {
+                    UI.Images.printImages();
+                } };
+            var cbe = { handleEvent: function (data) {
+                    UI.Images.printError(data, true);
+                } };
+            Server.Storage.requestImages(cbs, cbe);
         }
         Images.callSelf = callSelf;
+        function printImages() {
+            emptyTarget();
+        }
+        Images.printImages = printImages;
+        function printError(data, onLoad) {
+            emptyTarget();
+            if (onLoad) {
+                target.appendChild(loadError);
+            }
+            else {
+                target.appendChild(saveError);
+            }
+        }
+        Images.printError = printError;
+        function callDropbox() {
+            var options = {
+                success: function (files) {
+                    UI.Images.addDropbox(files);
+                },
+                linkType: "preview",
+                multiselect: true,
+                extensions: ['images'],
+            };
+            Dropbox.choose(options);
+        }
+        Images.callDropbox = callDropbox;
+        function addDropbox(files) {
+            console.log(files);
+        }
+        Images.addDropbox = addDropbox;
     })(Images = UI.Images || (UI.Images = {}));
 })(UI || (UI = {}));
 var UI;
@@ -7365,11 +7505,12 @@ var Server;
             success = {
                 success: success,
                 handleEvent: function (data) {
+                    DB.ImageDB.updateFromObject(data);
                     this.success.handleEvent(data);
                 }
             };
             var ajax = new AJAXConfig(STORAGE_URL);
-            ajax.setTargetLeftWindow();
+            ajax.setTargetRightWindow();
             ajax.setResponseTypeJSON();
             ajax.data = { action: "restore", id: "images" };
             Server.AJAX.requestPage(ajax, success, error);

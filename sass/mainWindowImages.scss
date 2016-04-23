@@ -1,3 +1,34 @@
+.imagesFolder > .imagesFolderIcon {
+  @extend .icons-folderClosed;
+  display: block;
+  width: 30px;
+  height: 30px;
+  float: left;
+  pointer-events: none;
+}
+
+.imagesFolder.folderOpen > .imagesFolderIcon {
+  @extend .icons-folderOpen;
+}
+
+.imagesFolderTitle {
+  display: block;
+  line-height: 28px;
+  font-size: 24px;
+  font-weight: bold;
+  @extend .buttonBehavior;
+
+  &:hover {
+    background-color: #e4e4e4;
+    color: #272727;
+  }
+
+  &:active {
+    background-color: #d1d1d1;
+    color: #151515;
+  }
+}
+
 #imagesUpload {
   display: flex;
   margin-top: 25px;

@@ -298,7 +298,17 @@
           <p class='mainWindowParagraph language'>_IMAGESEXP01_</p>
           <p class='mainWindowParagraph language'>_IMAGESEXP02_</p>
           <p class='mainWindowParagraph language'>_IMAGESEXP03_</p>
-          <div id='imagesTarget'></div>
+          <div id='imagesTarget'>
+            <div class='language' id='imagesLoadError'>_IMAGESERROR_</div>
+            <div class='language' id='imagesSaveError'>_IMAGESSAVEERROR_</div>
+            <div>
+              <div class='imagesFolder'>
+                <a class='imagesFolderIcon'></a>
+                <span class='imagesFolderTitle' onclick="this.parentNode.classList.toggle('folderOpen');">Nome da Pasta</span>
+                <div class='imagesRow'></div>
+              </div>
+            </div>
+          </div>
           <div id='imagesUpload'>
             <div id='imagesUploadLeft'>
               <div id='linkImagesTitle'>

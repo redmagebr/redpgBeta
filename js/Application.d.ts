@@ -50,13 +50,14 @@ declare class ImageRed implements ImageInt {
     getName(): string;
     getId(): string;
 }
-declare class ImageLink implements ImageInt {
+declare class ImageLink {
     private name;
-    private id;
     private url;
+    private folder;
+    getFolder(): string;
     getLink(): string;
-    getId(): string;
     getName(): string;
+    constructor(name: string, url: string, folder: string);
 }
 declare class User {
     nickname: string;
@@ -780,10 +781,18 @@ declare module DB.SheetDB {
     function updateFromObject(obj: Array<Object>): void;
 }
 declare module DB.ImageDB {
+    function getImages(): ImageLink[];
     function getImageByName(name: string): ImageLink;
-    function hasImageByName(name: string): boolean;
     function getImageByLink(url: string): ImageLink;
+    function hasImageByName(name: string): boolean;
     function hasImageByLink(url: string): boolean;
+    function getImagesByFolder(): ImageLink[][];
+    function updateFromObject(obj: Array<Object>): void;
+    function addImage(img: ImageLink): void;
+    function addImages(imgs: Array<ImageLink>): void;
+    function triggerChange(image: ImageLink): void;
+    function addChangeListener(f: Listener | Function): void;
+    function removeChangeListener(f: Listener | Function): void;
 }
 declare module Application {
     function getMe(): User;
@@ -880,6 +889,10 @@ declare module UI.PageManager {
 }
 declare module UI.Images {
     function callSelf(): void;
+    function printImages(): void;
+    function printError(data: any, onLoad: boolean): void;
+    function callDropbox(): void;
+    function addDropbox(files: any): void;
 }
 declare module UI.Loading {
     var $leftLoader: JQuery;

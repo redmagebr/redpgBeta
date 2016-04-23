@@ -323,9 +323,9 @@
   font-size: 0.85em;
 }
 
-/* line 808, icons/*.png */
-.icons-sprite, .icons-chatAnon, .icons-chatAnonError, .icons-chatAvatarAFK, .avatarAFK, .icons-chatAvatarTyping, .avatarTyping, .icons-chatDamageExp, .icons-chatDamageHP, .icons-chatDamageMP, .icons-chatDiceRoll, .icons-chatDiceTower, .icons-chatDiceTowerOn, .icons-chatDown, .icons-chatFontMinus, .icons-chatFontPlus, .icons-chatFormStateAction, .icons-chatFormStateNormal, .icons-chatFormStateOff, .icons-chatFormStateStory, .icons-chatMessageTurn, .icons-chatNotDisconnected, .icons-chatNotReconnecting, .icons-chatPersonaButton, #personaAddButton, .icons-chatPersonaDelete, .chatAvatarChoiceBoxDelete, .icons-chatPersonaUse, .chatAvatarChoiceBoxUse, .icons-chatScrolldown, #chatScrollDown, .icons-chatSend, .icons-chatUp, .icons-d10, .icons-d100, .icons-d12, .icons-d20, .icons-d4, .icons-d6, .icons-d8, .icons-dropboxLogo, .icons-flagEN, .icons-flagFR, .icons-flagPT_BR, .icons-flagSP, .icons-handleLogout, .icons-handlerLTR, .icons-handlerRTL, .icons-link, .icons-soundPlayer, .icons-soundPlayerListButton, .icons-soundPlayerPause, .icons-soundPlayerPlay, .icons-soundPlayerRepeat, .icons-soundPlayerRepeatActive, .icons-soundPlayerStop, .icons-x, .xButton {
-  background-image: url('../images/icons-s07804906e5.png');
+/* line 824, icons/*.png */
+.icons-sprite, .icons-chatAnon, .icons-chatAnonError, .icons-chatAvatarAFK, .avatarAFK, .icons-chatAvatarTyping, .avatarTyping, .icons-chatDamageExp, .icons-chatDamageHP, .icons-chatDamageMP, .icons-chatDiceRoll, .icons-chatDiceTower, .icons-chatDiceTowerOn, .icons-chatDown, .icons-chatFontMinus, .icons-chatFontPlus, .icons-chatFormStateAction, .icons-chatFormStateNormal, .icons-chatFormStateOff, .icons-chatFormStateStory, .icons-chatMessageTurn, .icons-chatNotDisconnected, .icons-chatNotReconnecting, .icons-chatPersonaButton, #personaAddButton, .icons-chatPersonaDelete, .chatAvatarChoiceBoxDelete, .icons-chatPersonaUse, .chatAvatarChoiceBoxUse, .icons-chatScrolldown, #chatScrollDown, .icons-chatSend, .icons-chatUp, .icons-d10, .icons-d100, .icons-d12, .icons-d20, .icons-d4, .icons-d6, .icons-d8, .icons-dropboxLogo, .icons-flagEN, .icons-flagFR, .icons-flagPT_BR, .icons-flagSP, .icons-folderClosed, .imagesFolder > .imagesFolderIcon, .icons-folderOpen, .imagesFolder.folderOpen > .imagesFolderIcon, .icons-handleLogout, .icons-handlerLTR, .icons-handlerRTL, .icons-link, .icons-soundPlayer, .icons-soundPlayerListButton, .icons-soundPlayerPause, .icons-soundPlayerPlay, .icons-soundPlayerRepeat, .icons-soundPlayerRepeatActive, .icons-soundPlayerStop, .icons-x, .xButton {
+  background-image: url('../images/icons-s0367163f8a.png');
   background-repeat: no-repeat;
 }
 
@@ -366,11 +366,11 @@
 
 /* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatDiceRoll {
-  background-position: -40px -326px;
+  background-position: -68px -176px;
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatDiceRoll:hover, .icons-chatDiceRoll.chatDiceRoll-hover {
-  background-position: -30px -296px;
+  background-position: -70px -296px;
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatDiceRoll:active, .icons-chatDiceRoll.chatDiceRoll-active {
@@ -383,29 +383,29 @@
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatDiceTower:hover, .icons-chatDiceTower.chatDiceTower-hover {
-  background-position: -68px -176px;
+  background-position: -108px -176px;
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatDiceTower:active, .icons-chatDiceTower.chatDiceTower-active {
-  background-position: -108px -176px;
+  background-position: -110px -206px;
 }
 
 /* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatDiceTowerOn {
-  background-position: -70px -266px;
+  background-position: -70px -326px;
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatDiceTowerOn:hover, .icons-chatDiceTowerOn.chatDiceTowerOn-hover {
-  background-position: -110px -206px;
+  background-position: -30px -266px;
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatDiceTowerOn:active, .icons-chatDiceTowerOn.chatDiceTowerOn-active {
-  background-position: -30px -266px;
+  background-position: -70px -266px;
 }
 
 /* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatDown {
-  background-position: -24px -76px;
+  background-position: 0 -896px;
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatDown:hover, .icons-chatDown.chatDown-hover {
@@ -435,7 +435,7 @@
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatFontPlus:hover, .icons-chatFontPlus.chatFontPlus-hover {
-  background-position: -104px -126px;
+  background-position: -18px -51px;
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatFontPlus:active, .icons-chatFontPlus.chatFontPlus-active {
@@ -444,17 +444,17 @@
 
 /* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatFormStateAction {
-  background-position: -50px 0;
-}
-
-/* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
-.icons-chatFormStateNormal {
   background-position: -75px 0;
 }
 
 /* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
-.icons-chatFormStateOff {
+.icons-chatFormStateNormal {
   background-position: -25px 0;
+}
+
+/* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
+.icons-chatFormStateOff {
+  background-position: -50px 0;
 }
 
 /* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
@@ -479,41 +479,41 @@
 
 /* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatPersonaButton, #personaAddButton {
-  background-position: 0 -896px;
+  background-position: -64px -101px;
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatPersonaButton:hover, #personaAddButton:hover, .icons-chatPersonaButton.chatPersonaButton-hover, .chatPersonaButton-hover#personaAddButton {
-  background-position: -30px -206px;
+  background-position: -104px -151px;
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatPersonaButton:active, #personaAddButton:active, .icons-chatPersonaButton.chatPersonaButton-active, .chatPersonaButton-active#personaAddButton {
-  background-position: -64px -101px;
+  background-position: -30px -206px;
 }
 
 /* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatPersonaDelete, .chatAvatarChoiceBoxDelete {
-  background-position: -104px -151px;
+  background-position: -104px -126px;
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatPersonaDelete:hover, .chatAvatarChoiceBoxDelete:hover, .icons-chatPersonaDelete.chatPersonaDelete-hover, .chatPersonaDelete-hover.chatAvatarChoiceBoxDelete {
-  background-position: -24px -101px;
+  background-position: -70px -206px;
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatPersonaDelete:active, .chatAvatarChoiceBoxDelete:active, .icons-chatPersonaDelete.chatPersonaDelete-active, .chatPersonaDelete-active.chatAvatarChoiceBoxDelete {
-  background-position: -70px -206px;
+  background-position: -24px -76px;
 }
 
 /* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatPersonaUse, .chatAvatarChoiceBoxUse {
-  background-position: -98px -51px;
+  background-position: -24px -101px;
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatPersonaUse:hover, .chatAvatarChoiceBoxUse:hover, .icons-chatPersonaUse.chatPersonaUse-hover, .chatPersonaUse-hover.chatAvatarChoiceBoxUse {
-  background-position: -56px -26px;
+  background-position: -96px -26px;
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatPersonaUse:active, .chatAvatarChoiceBoxUse:active, .icons-chatPersonaUse.chatPersonaUse-active, .chatPersonaUse-active.chatAvatarChoiceBoxUse {
-  background-position: -96px -26px;
+  background-position: -98px -51px;
 }
 
 /* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
@@ -531,7 +531,7 @@
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatSend:hover, .icons-chatSend.chatSend-hover {
-  background-position: 0 -326px;
+  background-position: -30px -326px;
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatSend:active, .icons-chatSend.chatSend-active {
@@ -540,15 +540,15 @@
 
 /* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatUp {
-  background-position: -16px -26px;
+  background-position: -56px -26px;
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatUp:hover, .icons-chatUp.chatUp-hover {
-  background-position: -18px -51px;
+  background-position: -58px -51px;
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-chatUp:active, .icons-chatUp.chatUp-active {
-  background-position: -58px -51px;
+  background-position: -16px -26px;
 }
 
 /* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
@@ -621,7 +621,7 @@
 
 /* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-flagEN {
-  background-position: 0 -151px;
+  background-position: 0 -126px;
 }
 
 /* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
@@ -631,12 +631,22 @@
 
 /* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-flagPT_BR {
-  background-position: 0 -126px;
+  background-position: 0 -151px;
 }
 
 /* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-flagSP {
   background-position: 0 -101px;
+}
+
+/* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
+.icons-folderClosed, .imagesFolder > .imagesFolderIcon {
+  background-position: 0 -206px;
+}
+
+/* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
+.icons-folderOpen, .imagesFolder.folderOpen > .imagesFolderIcon {
+  background-position: 0 -266px;
 }
 
 /* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
@@ -700,15 +710,15 @@
 
 /* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-soundPlayerPlay {
-  background-position: -80px -356px;
+  background-position: -110px -356px;
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-soundPlayerPlay:hover, .icons-soundPlayerPlay.soundPlayerPlay-hover {
-  background-position: 0 -356px;
+  background-position: -30px -356px;
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-soundPlayerPlay:active, .icons-soundPlayerPlay.soundPlayerPlay-active {
-  background-position: -40px -356px;
+  background-position: -70px -356px;
 }
 
 /* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
@@ -726,7 +736,7 @@
 
 /* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-soundPlayerRepeatActive {
-  background-position: 0 -386px;
+  background-position: -80px -416px;
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-soundPlayerRepeatActive:hover, .icons-soundPlayerRepeatActive.soundPlayerRepeatActive-hover {
@@ -734,12 +744,12 @@
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-soundPlayerRepeatActive:active, .icons-soundPlayerRepeatActive.soundPlayerRepeatActive-active {
-  background-position: -80px -416px;
+  background-position: -110px -326px;
 }
 
 /* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-soundPlayerStop {
-  background-position: -80px -326px;
+  background-position: 0 -386px;
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-soundPlayerStop:hover, .icons-soundPlayerStop.soundPlayerStop-hover {
@@ -747,20 +757,20 @@
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-soundPlayerStop:active, .icons-soundPlayerStop.soundPlayerStop-active {
-  background-position: -70px -296px;
+  background-position: -30px -296px;
 }
 
 /* line 84, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-x, .xButton {
-  background-position: 0 -266px;
+  background-position: 0 -326px;
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-x:hover, .xButton:hover, .icons-x.x-hover, .x-hover.xButton {
-  background-position: 0 -296px;
+  background-position: 0 -356px;
 }
 /* line 59, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-x:active, .xButton:active, .icons-x.x-active, .x-active.xButton {
-  background-position: 0 -206px;
+  background-position: 0 -296px;
 }
 
 /* line 5, C:/Ruby23/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
@@ -916,7 +926,7 @@ body {
 }
 
 /* line 71, ../sass/generalView.scss */
-.buttonBehavior:hover, .simpleButton:hover, .textLink:hover, .sheetNameLink:hover, .handleButton:hover, .leftHandleButton:hover, .rightHandleButton:hover, #dropboxImagesButton:hover, .musicPlayerButton:hover, .sheetListGameName:hover, .sheetListFolderName:hover, #avatarUpButton:hover, #avatarDownButton:hover, #chatScrollDown:hover, .chatRightButton:hover, #chatMessageSendButton:hover, #personaAddButton:hover, .personaButton:hover, .diceButton:hover, #chatDiceTower:hover, #chatDiceSubmit:hover, .chatAvatarChoiceBoxUse:hover, .chatAvatarChoiceBoxDelete:hover, .chatWhisperLink:hover, .chatMessageVoteAmount:hover, .xButton:hover {
+.buttonBehavior:hover, .simpleButton:hover, .textLink:hover, .sheetNameLink:hover, .handleButton:hover, .leftHandleButton:hover, .rightHandleButton:hover, .imagesFolderTitle:hover, #dropboxImagesButton:hover, .musicPlayerButton:hover, .sheetListGameName:hover, .sheetListFolderName:hover, #avatarUpButton:hover, #avatarDownButton:hover, #chatScrollDown:hover, .chatRightButton:hover, #chatMessageSendButton:hover, #personaAddButton:hover, .personaButton:hover, .diceButton:hover, #chatDiceTower:hover, #chatDiceSubmit:hover, .chatAvatarChoiceBoxUse:hover, .chatAvatarChoiceBoxDelete:hover, .chatWhisperLink:hover, .chatMessageVoteAmount:hover, .xButton:hover {
   cursor: pointer;
 }
 
@@ -955,7 +965,7 @@ body {
 }
 
 /* line 109, ../sass/generalView.scss */
-.buttonBehavior:hover, .simpleButton:hover, .textLink:hover, .sheetNameLink:hover, .handleButton:hover, .leftHandleButton:hover, .rightHandleButton:hover, #dropboxImagesButton:hover, .musicPlayerButton:hover, .sheetListGameName:hover, .sheetListFolderName:hover, #avatarUpButton:hover, #avatarDownButton:hover, #chatScrollDown:hover, .chatRightButton:hover, #chatMessageSendButton:hover, #personaAddButton:hover, .personaButton:hover, .diceButton:hover, #chatDiceTower:hover, #chatDiceSubmit:hover, .chatAvatarChoiceBoxUse:hover, .chatAvatarChoiceBoxDelete:hover, .chatWhisperLink:hover, .chatMessageVoteAmount:hover, .xButton:hover {
+.buttonBehavior:hover, .simpleButton:hover, .textLink:hover, .sheetNameLink:hover, .handleButton:hover, .leftHandleButton:hover, .rightHandleButton:hover, .imagesFolderTitle:hover, #dropboxImagesButton:hover, .musicPlayerButton:hover, .sheetListGameName:hover, .sheetListFolderName:hover, #avatarUpButton:hover, #avatarDownButton:hover, #chatScrollDown:hover, .chatRightButton:hover, #chatMessageSendButton:hover, #personaAddButton:hover, .personaButton:hover, .diceButton:hover, #chatDiceTower:hover, #chatDiceSubmit:hover, .chatAvatarChoiceBoxUse:hover, .chatAvatarChoiceBoxDelete:hover, .chatWhisperLink:hover, .chatMessageVoteAmount:hover, .xButton:hover {
   cursor: pointer;
 }
 
@@ -1011,7 +1021,7 @@ body {
 
 /* UNselectable */
 /* line 159, ../sass/generalView.scss */
-.unselectable, .buttonBehavior, .simpleButton, .textLink, .sheetNameLink, .handleButton, .leftHandleButton, .rightHandleButton, #dropboxImagesButton, .musicPlayerButton, .sheetListGameName, .sheetListFolderName, #avatarUpButton, #avatarDownButton, #chatScrollDown, .chatRightButton, #chatMessageSendButton, #personaAddButton, .personaButton, .diceButton, #chatDiceTower, #chatDiceSubmit, .chatAvatarChoiceBoxUse, .chatAvatarChoiceBoxDelete, .chatWhisperLink, .chatMessageVoteAmount, .xButton {
+.unselectable, .buttonBehavior, .simpleButton, .textLink, .sheetNameLink, .handleButton, .leftHandleButton, .rightHandleButton, .imagesFolderTitle, #dropboxImagesButton, .musicPlayerButton, .sheetListGameName, .sheetListFolderName, #avatarUpButton, #avatarDownButton, #chatScrollDown, .chatRightButton, #chatMessageSendButton, #personaAddButton, .personaButton, .diceButton, #chatDiceTower, #chatDiceSubmit, .chatAvatarChoiceBoxUse, .chatAvatarChoiceBoxDelete, .chatWhisperLink, .chatMessageVoteAmount, .xButton {
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
@@ -1161,17 +1171,44 @@ body {
 }
 
 /* line 1, ../sass/mainWindowImages.scss */
+.imagesFolder > .imagesFolderIcon {
+  display: block;
+  width: 30px;
+  height: 30px;
+  float: left;
+  pointer-events: none;
+}
+
+/* line 14, ../sass/mainWindowImages.scss */
+.imagesFolderTitle {
+  display: block;
+  line-height: 28px;
+  font-size: 24px;
+  font-weight: bold;
+}
+/* line 21, ../sass/mainWindowImages.scss */
+.imagesFolderTitle:hover {
+  background-color: #e4e4e4;
+  color: #272727;
+}
+/* line 26, ../sass/mainWindowImages.scss */
+.imagesFolderTitle:active {
+  background-color: #d1d1d1;
+  color: #151515;
+}
+
+/* line 32, ../sass/mainWindowImages.scss */
 #imagesUpload {
   display: flex;
   margin-top: 25px;
 }
 
-/* line 6, ../sass/mainWindowImages.scss */
+/* line 37, ../sass/mainWindowImages.scss */
 #imagesUploadLeft, #imagesUploadRight {
   flex: 1 0 auto;
 }
 
-/* line 10, ../sass/mainWindowImages.scss */
+/* line 41, ../sass/mainWindowImages.scss */
 #dropboxImagesLogo {
   display: block;
   margin: auto;
@@ -1180,14 +1217,14 @@ body {
   margin-bottom: 15px;
 }
 
-/* line 18, ../sass/mainWindowImages.scss */
+/* line 49, ../sass/mainWindowImages.scss */
 #linkImagesTitle {
   display: block;
   height: 35px;
   text-align: center;
 }
 
-/* line 24, ../sass/mainWindowImages.scss */
+/* line 55, ../sass/mainWindowImages.scss */
 #linkImagesTitleText {
   display: inline-block;
   font-size: 25px;
@@ -1195,7 +1232,7 @@ body {
   line-height: 38px;
 }
 
-/* line 31, ../sass/mainWindowImages.scss */
+/* line 62, ../sass/mainWindowImages.scss */
 #linkImagesIcon {
   display: inline-block;
   height: 35px;
@@ -1203,7 +1240,7 @@ body {
   vertical-align: top;
 }
 
-/* line 38, ../sass/mainWindowImages.scss */
+/* line 69, ../sass/mainWindowImages.scss */
 #dropboxImagesButton {
   display: block;
   width: 170px;
@@ -1217,13 +1254,13 @@ body {
   color: #007ee5;
   font-weight: bold;
 }
-/* line 52, ../sass/mainWindowImages.scss */
+/* line 83, ../sass/mainWindowImages.scss */
 #dropboxImagesButton:hover {
   border: solid 1px #0065b7;
   background-color: #eaeff8;
   color: #008dfa;
 }
-/* line 58, ../sass/mainWindowImages.scss */
+/* line 89, ../sass/mainWindowImages.scss */
 #dropboxImagesButton:active {
   border: solid 1px #003468;
   background-color: #d4d9e1;
@@ -1288,19 +1325,20 @@ body {
   width: 120px;
   display: block;
   appearance: none;
+  box-sizing: border-box;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
-/* line 57, ../sass/mainWindowSounds.scss */
+/* line 58, ../sass/mainWindowSounds.scss */
 #musicPlayerProgress::-webkit-progress-bar, #musicPlayerProgress::-moz-progress-bar {
   background-color: #e2e2e2;
 }
-/* line 61, ../sass/mainWindowSounds.scss */
+/* line 62, ../sass/mainWindowSounds.scss */
 #musicPlayerProgress::-webkit-progress-value {
   background-color: #444444;
 }
 
-/* line 66, ../sass/mainWindowSounds.scss */
+/* line 67, ../sass/mainWindowSounds.scss */
 .musicPlayerButton {
   width: 40px;
   height: 30px;

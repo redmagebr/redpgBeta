@@ -1,17 +1,23 @@
-class ImageLink implements ImageInt {
+class ImageLink {
     private name :string;
-    private id : number;
     private url : string;
+    private folder : string;
 
-    public getLink () {
-        return this.url;
+    public getFolder () {
+        return this.folder;
     }
 
-    public getId () {
-        return this.id.toString();
+    public getLink () {
+        return Server.URL.fixURL(this.url);
     }
 
     public getName () {
         return this.name;
+    }
+
+    constructor (name : string, url : string, folder : string) {
+        this.name = name;
+        this.url = url;
+        this.folder = folder;
     }
 }

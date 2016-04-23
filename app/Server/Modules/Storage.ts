@@ -11,13 +11,13 @@ module Server.Storage {
         success = <Listener> {
             success : success,
             handleEvent : function (data) {
-                
+                DB.ImageDB.updateFromObject(data);
                 this.success.handleEvent(data);
             }
         };
 
         var ajax = new AJAXConfig(STORAGE_URL);
-        ajax.setTargetLeftWindow();
+        ajax.setTargetRightWindow();
         ajax.setResponseTypeJSON();
         ajax.data = {action : "restore", id : "images"}; // "store"
 

@@ -48,6 +48,12 @@ ptbr.setLingo("_IMAGESEXP02_", "Você deve adicionar imagens como um Link direto
 ptbr.setLingo("_IMAGESEXP03_", "O sistema tentará organizar as imagens adicionadas através do Dropbox em pastas automaticamente, porém você pode alterar essas pastas mais tarde. Imagens com um \"-\" no nome do arquivo terão tudo que estiver antes do traço como sendo o nome da pasta, e o que vier depois sendo considerado o nome da imagem. O sistema não vai permitir imagens repetidas (tanto como Link, quanto como Pasta/Nome).");
 ptbr.setLingo("_IMAGESDROPBOXCHOOSER_", "Escolher do Dropbox");
 ptbr.setLingo("_IMAGESLINKTITLE_", "Link Direto");
+ptbr.setLingo("_IMAGESERROR_", "Erro carregando a lista de imagens. Tente novamente.");
+ptbr.setLingo("_IMAGESSAVEERROR_", "Houve um erro salvando a lista de imagens.");
+ptbr.setLingo("", "");
+ptbr.setLingo("", "");
+ptbr.setLingo("", "");
+ptbr.setLingo("", "");
 ptbr.setLingo("", "");
 ptbr.setLingo("", "");
 
