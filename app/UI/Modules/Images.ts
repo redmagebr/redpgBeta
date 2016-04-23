@@ -1,3 +1,7 @@
+declare module Dropbox {
+    function choose (options);
+}
+
 module UI.Images {
     document.getElementById("imagesButton").addEventListener("click", function () { UI.Images.callSelf(); });
     document.getElementById("dropboxImagesButton").addEventListener("click", function () { UI.Images.callDropbox(); });

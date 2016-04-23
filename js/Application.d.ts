@@ -887,6 +887,9 @@ declare module UI.PageManager {
     function readWindows(): void;
     function getCurrentLeft(): String;
 }
+declare module Dropbox {
+    function choose(options: any): any;
+}
 declare module UI.Images {
     function callSelf(): void;
     function printImages(): void;

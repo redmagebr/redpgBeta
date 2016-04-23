@@ -39,6 +39,12 @@ ptbr.setLingo("_MENUCHAT_", "Chat");
 ptbr.setLingo("_MENUSHEETS_", "Fichas");
 ptbr.setLingo("_MENUIMAGES_", "Fotos");
 ptbr.setLingo("_MENUSOUNDS_", "Sons");
+ptbr.setLingo("_MENUIMAGE_", "Foto");
+ptbr.setLingo("_MENUHITBOX_", "Hitbox");
+ptbr.setLingo("_MENUYOUTUBE_", "Video");
+ptbr.setLingo("", "");
+ptbr.setLingo("", "");
+ptbr.setLingo("", "");
 ptbr.setLingo("", "");
 
 // Imagens
