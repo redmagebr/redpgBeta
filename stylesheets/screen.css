@@ -1308,8 +1308,8 @@ body {
 .imagesRowTitle {
   display: block;
   line-height: 22px;
-  font-size: 16px;
-  font-weight: bold;
+  height: 22px;
+  font-size: 14px;
   text-indent: 6px;
 }
 
@@ -1324,11 +1324,17 @@ body {
 }
 
 /* line 33, ../sass/mainWindowImages.scss */
+.imagesFolder {
+  clear: both;
+  margin-bottom: 10px;
+}
+
+/* line 38, ../sass/mainWindowImages.scss */
 .imagesFolder.folderOpen > .imagesRow {
   display: block;
 }
 
-/* line 37, ../sass/mainWindowImages.scss */
+/* line 42, ../sass/mainWindowImages.scss */
 .imagesFolder > .imagesFolderIcon {
   display: block;
   width: 30px;
@@ -1337,36 +1343,37 @@ body {
   pointer-events: none;
 }
 
-/* line 50, ../sass/mainWindowImages.scss */
+/* line 55, ../sass/mainWindowImages.scss */
 .imagesFolderTitle {
   display: block;
   line-height: 28px;
-  font-size: 24px;
+  height: 28px;
+  font-size: 22px;
   font-weight: bold;
 }
-/* line 57, ../sass/mainWindowImages.scss */
+/* line 63, ../sass/mainWindowImages.scss */
 .imagesFolderTitle:hover {
   background-color: #e4e4e4;
   color: #272727;
 }
-/* line 62, ../sass/mainWindowImages.scss */
+/* line 68, ../sass/mainWindowImages.scss */
 .imagesFolderTitle:active {
   background-color: #d1d1d1;
   color: #151515;
 }
 
-/* line 68, ../sass/mainWindowImages.scss */
+/* line 74, ../sass/mainWindowImages.scss */
 #imagesUpload {
   display: flex;
   margin-top: 25px;
 }
 
-/* line 73, ../sass/mainWindowImages.scss */
+/* line 79, ../sass/mainWindowImages.scss */
 #imagesUploadLeft, #imagesUploadRight {
   flex: 1 0 auto;
 }
 
-/* line 77, ../sass/mainWindowImages.scss */
+/* line 83, ../sass/mainWindowImages.scss */
 #dropboxImagesLogo {
   display: block;
   margin: auto;
@@ -1375,14 +1382,14 @@ body {
   margin-bottom: 15px;
 }
 
-/* line 85, ../sass/mainWindowImages.scss */
+/* line 91, ../sass/mainWindowImages.scss */
 #linkImagesTitle {
   display: block;
   height: 35px;
   text-align: center;
 }
 
-/* line 91, ../sass/mainWindowImages.scss */
+/* line 97, ../sass/mainWindowImages.scss */
 #linkImagesTitleText {
   display: inline-block;
   font-size: 25px;
@@ -1390,7 +1397,7 @@ body {
   line-height: 38px;
 }
 
-/* line 98, ../sass/mainWindowImages.scss */
+/* line 104, ../sass/mainWindowImages.scss */
 #linkImagesIcon {
   display: inline-block;
   height: 35px;
@@ -1398,7 +1405,7 @@ body {
   vertical-align: top;
 }
 
-/* line 105, ../sass/mainWindowImages.scss */
+/* line 111, ../sass/mainWindowImages.scss */
 #dropboxImagesButton {
   display: block;
   width: 170px;
@@ -1412,13 +1419,13 @@ body {
   color: #007ee5;
   font-weight: bold;
 }
-/* line 119, ../sass/mainWindowImages.scss */
+/* line 125, ../sass/mainWindowImages.scss */
 #dropboxImagesButton:hover {
   border: solid 1px #0065b7;
   background-color: #eaeff8;
   color: #008dfa;
 }
-/* line 125, ../sass/mainWindowImages.scss */
+/* line 131, ../sass/mainWindowImages.scss */
 #dropboxImagesButton:active {
   border: solid 1px #003468;
   background-color: #d4d9e1;

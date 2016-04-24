@@ -4057,7 +4057,7 @@ ptbr.setLingo("_IMAGESDROPBOXCHOOSER_", "Escolher do Dropbox");
 ptbr.setLingo("_IMAGESLINKTITLE_", "Link Direto");
 ptbr.setLingo("_IMAGESERROR_", "Erro carregando a lista de imagens. Tente novamente.");
 ptbr.setLingo("_IMAGESSAVEERROR_", "Houve um erro salvando a lista de imagens.");
-ptbr.setLingo("", "");
+ptbr.setLingo("_IMAGESNOFOLDERNAME_", "Sem Pasta");
 ptbr.setLingo("", "");
 ptbr.setLingo("", "");
 ptbr.setLingo("", "");
@@ -4562,7 +4562,6 @@ var UI;
         }
         function callSelf() {
             UI.PageManager.callPage(UI.idImages);
-            return;
             var cbs = { handleEvent: function () {
                     UI.Images.printImages();
                 } };
@@ -4574,6 +4573,58 @@ var UI;
         Images.callSelf = callSelf;
         function printImages() {
             emptyTarget();
+            var images = DB.ImageDB.getImagesByFolder();
+            for (var i = 0; i < images.length; i++) {
+                var folderName = images[i][0].getFolder();
+                if (folderName === "") {
+                    folderName = UI.Language.getLanguage().getLingo("_IMAGESNOFOLDERNAME_");
+                }
+                var folderContainer = document.createElement("div");
+                folderContainer.classList.add("imagesFolder");
+                var folderIcon = document.createElement("a");
+                folderIcon.classList.add("imagesFolderIcon");
+                var folderTitle = document.createElement("span");
+                folderTitle.classList.add("imagesFolderTitle");
+                folderTitle.addEventListener("click", function () { this.parentNode.classList.toggle('folderOpen'); });
+                folderTitle.appendChild(document.createTextNode(folderName));
+                folderContainer.appendChild(folderIcon);
+                folderContainer.appendChild(folderTitle);
+                for (var k = 0; k < images[i].length; k++) {
+                    var image = images[i][k];
+                    var imageContainer = document.createElement("div");
+                    imageContainer.classList.add("imagesRow");
+                    var shareButton = document.createElement("a");
+                    shareButton.classList.add("imagesLeftButton");
+                    shareButton.classList.add("icons-imagesShare");
+                    var viewButton = document.createElement("a");
+                    viewButton.classList.add("imagesLeftButton");
+                    viewButton.classList.add("icons-imagesView");
+                    var personaButton = document.createElement("a");
+                    personaButton.classList.add("imagesLeftButton");
+                    personaButton.classList.add("icons-imagesPersona");
+                    var deleteButton = document.createElement("a");
+                    deleteButton.classList.add("imagesRightButton");
+                    deleteButton.classList.add("icons-imagesDelete");
+                    var renameButton = document.createElement("a");
+                    renameButton.classList.add("imagesRightButton");
+                    renameButton.classList.add("icons-imagesRename");
+                    var folderButton = document.createElement("a");
+                    folderButton.classList.add("imagesRightButton");
+                    folderButton.classList.add("icons-imagesFolder");
+                    var imageTitle = document.createElement("a");
+                    imageTitle.classList.add("imagesRowTitle");
+                    imageTitle.appendChild(document.createTextNode(image.getName()));
+                    imageContainer.appendChild(shareButton);
+                    imageContainer.appendChild(viewButton);
+                    imageContainer.appendChild(personaButton);
+                    imageContainer.appendChild(deleteButton);
+                    imageContainer.appendChild(renameButton);
+                    imageContainer.appendChild(folderButton);
+                    imageContainer.appendChild(imageTitle);
+                    folderContainer.appendChild(imageContainer);
+                }
+                target.appendChild(folderContainer);
+            }
         }
         Images.printImages = printImages;
         function printError(data, onLoad) {
