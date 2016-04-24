@@ -1,3 +1,39 @@
+.imagesLeftButton, .imagesRightButton {
+  display: block;
+  width: 26px;
+  height: 22px;
+  @extend .buttonBehavior;
+}
+
+.imagesLeftButton {
+  float: left;
+}
+
+.imagesRightButton {
+  float: right;
+}
+
+.imagesRowTitle {
+  display: block;
+  line-height: 22px;
+  font-size: 16px;
+  font-weight: bold;
+  text-indent: 6px;
+}
+
+.imagesRow {
+  display: none;
+  clear: both;
+
+  &:hover {
+    background-color: #e8e8e8;
+  }
+}
+
+.imagesFolder.folderOpen > .imagesRow {
+  display: block;
+}
+
 .imagesFolder > .imagesFolderIcon {
   @extend .icons-folderClosed;
   display: block;
@@ -6,7 +42,6 @@
   float: left;
   pointer-events: none;
 }
-
 
 .imagesFolder.folderOpen > .imagesFolderIcon {
   @extend .icons-folderOpen;
