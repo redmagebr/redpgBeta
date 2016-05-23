@@ -131,6 +131,7 @@
 
             var strLength = JSON.stringify(stringedArt).length;
             console.log("Encoded Art Size: " + strLength + " (" + parseInt((strLength * 100)/origLength) + "%)");
+            console.log(stringedArt[2]);
             console.log(" ");
 
             currentArt = null;
@@ -143,7 +144,7 @@
     function Point () {
         this.x = 0;
         this.y = 0;
-        var maxCurve = 25;
+        var maxCurve = 0;
         var encoding = "0123456789abcdefghijklmnopqrstuvxwyzABCDEFGHIJKLMNOPQRSTUVXWYZ-+_=![]{}()*@/\\:;";
         var canvasSize = Math.pow(encoding.length, 2);
 

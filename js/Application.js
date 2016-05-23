@@ -6847,6 +6847,10 @@ var Server;
     Server.WEBSOCKET_SERVERURL = "ws://app.redpg.com.br";
     Server.WEBSOCKET_CONTEXT = "/service/";
     Server.WEBSOCKET_PORTS = [80, 8080, 8081];
+    Server.APPLICATION_URL = "http://localhost:8080/RedPG/";
+    Server.WEBSOCKET_SERVERURL = "ws://localhost";
+    Server.WEBSOCKET_CONTEXT = "/RedPG/";
+    Server.WEBSOCKET_PORTS = [8080];
     Application.Config.registerConfiguration("wsPort", new WsportConfiguration(Server.WEBSOCKET_PORTS[0]));
     function getWebsocketURL() {
         return Server.WEBSOCKET_SERVERURL + ":" + Application.Config.getConfig("wsPort").getValue() + Server.WEBSOCKET_CONTEXT;
