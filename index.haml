@@ -82,7 +82,9 @@
       -############## CONFIG
       -############################################
       #configSideWindow.leftSideWindow
-        .mainWindowHeader.language="_CONFIGTITLE_"
+        .mainWindowHeader.language
+          _CONFIGTITLE_
+          %a.xButton{:onclick => "UI.PageManager.closeLeftPage();"}
         .mainWindowContent.singleton
           %p.hoverable.mainWindowParagraph.centered
             %a#configSave.textLink.language="_CONFIGSAVE_"
@@ -331,5 +333,5 @@
       #youtubeSideWindow.rightSideWindow
     -# App Key for Dropbox Choooser
     %script{:type => 'text/javascript', :id => "dropboxjs", "data-app-key" => "nr1604ewqoph539"}
-    %script{:type => 'text/javascript', :src => 'js/lib/libraries160422.js'}
+    %script{:type => 'text/javascript', :src => 'js/lib/libraries160524.js'}
     %script{:type => 'text/javascript', :src => 'js/Application.js'}
