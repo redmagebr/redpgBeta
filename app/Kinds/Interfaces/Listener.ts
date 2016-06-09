@@ -1,3 +1,0 @@
-interface Listener {
-    handleEvent : Function;
-}
